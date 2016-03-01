@@ -1,0 +1,109 @@
+FORMAT: 1A
+
+# studyBox
+
+Rooms Admin Console API
+
+## Changelog
+
+### 0.0.1 (29/02/2016) mlo
+- create initial doc with example entity CRUD
+### 0.0.1 (01/03/2016) mlo
+- synchronize with github repository, branch: documentation
+
+
+## TODO
+- Document CRUD for deck, flashcard, stat
+
+# Group Entity
+
+## Entities [/entities]
+
+### Create new entity [POST]
+
++ Request (application/json)
+
+    + Attributes (Entity)
+
++ Response 201 (application/json)
+
+    This response is returned when entity was created.
+    
+    + Headers
+
+            Access-Control-Expose-Headers: Location
+            Location: /entity/1111-0000-0000-000000000001
+
+    + Body
+
+            + Response 200 (application/json)
+            + Attributes (Entity)
+
++ Response 400 (application/json)
+
+    This response is returned when entity validation failed.
+
+    + Body
+
+            {"Sample JSON": "Check default dropwizard response and describe it here"}
+
+
+### Get Entity by ID [GET /entities/{entityId}]
+
++ Response 200 (application/json)
+    + Attributes (Entity)
+
+### List all Entities [GET]
+
++ Response 200 (application/json)
+    + Attributes (EntityCollection)
+
+### Update entity [PUT /entities/{entityId}]
+
++ Parameters
+    
+    + entityId: `1233-0000-0000-000000000001` (string, required) - entity UUID to update
+
++ Request (application/json)
+
+    + Attributes (Entity)
+
++ Response 200 (application/json)
+
+    This response is returned when entity was created.
+    
+    + Attributes (Entity)
+
++ Response 400 (application/json)
+
+    This response is returned when entity validation failed.
+
+    + Body
+
+            {"Sample JSON": "Check default dropwizard response and describe it here"}
+
+### Remove Entity [DELETE /entities/{entityId}]
+
++ Parameters
+    + entityId: `1212-1212-1212-121212121212` (string, required) - Entity ID to remove
+
++ Response 200
+
++ Response 400 (application/json)
+
+    This response is returned when entity is not found.
+
+    + Body
+
+            {"Sample JSON": "Check default dropwizard response and describe it here"}
+
+# Data Structures
+
+## Entity (object)
++ id: `12345678-9012-3456-7890-123456789012` (string, required) - Entity UUID, 36 chars, 8-4-4-4-12 chars
++ name: `Sample name` (string, required) - name attribute for entity
+
+## EntityCollection (array)
++ 0: (Entity)
++ 1: (Entity)
++ 2: (Entity)
