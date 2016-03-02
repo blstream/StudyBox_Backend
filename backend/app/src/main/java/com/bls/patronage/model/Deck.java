@@ -1,9 +1,10 @@
 package com.bls.patronage.model;
 
-public class Deck extends StudyBoxEntity {
+public class Deck extends IdentifiableEntity {
     private String name;
 
     public Deck(String name) {
+        super(id);
         this.name = name;
     }
 

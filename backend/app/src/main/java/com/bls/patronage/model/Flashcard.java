@@ -1,10 +1,11 @@
 package com.bls.patronage.model;
 
-public class Flashcard extends StudyBoxEntity {
+public class Flashcard extends IdentifiableEntity {
     private String question;
     private String answer;
 
     public Flashcard(String question, String answer) {
+        super(id);
         this.question = question;
         this.answer = answer;
     }
