@@ -23,6 +23,20 @@ public class Flashcard extends IdentifiableEntity {
         this.answer = answer;
     }
 
+    public Flashcard() {
+        super();
+        this.question = null;
+        this.answer = null;
+    }
+
+    public Flashcard(String id) {
+        super(id);
+    }
+
+    public Flashcard(UUID id) {
+        super(id);
+    }
+
     public String getQuestion() {
         return question;
     }

@@ -9,9 +9,19 @@ public class Deck extends IdentifiableEntity {
         this.name = name;
     }
 
-    public Deck(String name, UUID id) {
+    public Deck(UUID id, String name) {
         super(id);
         this.name = name;
+    }
+
+    public Deck(String id, String name) {
+        super(id);
+        this.name = name;
+    }
+
+    public Deck() {
+        super();
+        this.name = null;
     }
 
     public String getName() {
