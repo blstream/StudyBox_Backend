@@ -2,10 +2,10 @@ package com.bls.patronage.model;
 
 import java.util.UUID;
 
-class IdentifiableEntity {
+public class IdentifiableEntity {
     private final UUID id;
 
-    IdentifiableEntity(UUID id) {
+    public IdentifiableEntity(UUID id) {
         this.id = id;
     }
 
