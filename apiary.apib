@@ -10,100 +10,176 @@ Rooms Admin Console API
 - create initial doc with example entity CRUD
 ### 0.0.1 (01/03/2016) mlo
 - synchronize with github repository, branch: documentation
-
+### 0.0.1 (01/03/2016) mlo
+- resources to create or update shouldn't have id
+- document HTTP 400 bad request response
 
 ## TODO
-- Document CRUD for deck, flashcard, stat
+- Document CRUD for stat
 
-# Group Entity
+# Client errors
 
-## Entities [/entities]
+Response with HTTP code different then **2xx** family should be treated as a failure response. 
+By default API return response with HTTP code **4xx** family.
 
-### Create new entity [POST]
+### Example HTTP 400 Bad request response:
+```
+{
+    "code": "E001",
+    "message": "Id cannot be null"
+}
+```
+
+# Group Deck
+
+## Decks [/decks]
+
+### Create new Deck [POST]
 
 + Request (application/json)
 
-    + Attributes (Entity)
+    + Attributes (DeckWithoutId)
 
 + Response 201 (application/json)
 
-    This response is returned when entity was created.
+    This response is returned when deck was created.
     
     + Headers
 
             Access-Control-Expose-Headers: Location
-            Location: /entity/1111-0000-0000-000000000001
+            Location: /decks/1111-0000-0000-000000000001
 
-    + Body
-
-            + Response 200 (application/json)
-            + Attributes (Entity)
+    + Attributes (Deck)
 
 + Response 400 (application/json)
 
-    This response is returned when entity validation failed.
+    This response is returned when deck validation failed.
 
     + Body
 
-            {"Sample JSON": "Check default dropwizard response and describe it here"}
 
-
-### Get Entity by ID [GET /entities/{entityId}]
+### Get Deck by ID [GET /decks/{deckId}]
 
 + Response 200 (application/json)
-    + Attributes (Entity)
-
-### List all Entities [GET]
+    + Attributes (Deck)
+    
+### Get all Decks [GET]
 
 + Response 200 (application/json)
-    + Attributes (EntityCollection)
+    + Attributes (DeckCollection)
 
-### Update entity [PUT /entities/{entityId}]
+### Search Decks by Name [GET /decks{?name}]
+
++ Parameters
+    + name (string, required) - name of a deck to find
+
++ Response 200 (application/json)
+    + Attributes (DeckCollection)
+
+### Update Deck [PUT /decks/{deckId}]
 
 + Parameters
     
-    + entityId: `1233-0000-0000-000000000001` (string, required) - entity UUID to update
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID to update
 
 + Request (application/json)
 
-    + Attributes (Entity)
+    + Attributes (DeckWithoutId)
 
 + Response 200 (application/json)
 
-    This response is returned when entity was created.
+    This response is returned when deck was updated.
     
-    + Attributes (Entity)
+    + Attributes (Deck)
 
-+ Response 400 (application/json)
-
-    This response is returned when entity validation failed.
-
-    + Body
-
-            {"Sample JSON": "Check default dropwizard response and describe it here"}
-
-### Remove Entity [DELETE /entities/{entityId}]
+### Remove Deck [DELETE /decks/{deckId}]
 
 + Parameters
-    + entityId: `1212-1212-1212-121212121212` (string, required) - Entity ID to remove
+    + deckId: `1212-1212-1212-121212121212` (string, required) - deck UUID to remove
+
++ Response 204
+
+# Group Flashcard
+
+## Flashcards [/decks/{deckId}/flashcards]
+
+### Create new Flashcard [POST]
+
++ Request (application/json)
+
+    + Attributes (FlashcardWithoutId)
+
++ Response 201 (application/json)
+
+    This response is returned when flashcard was created.
+    
+    + Headers
+
+            Access-Control-Expose-Headers: Location
+            Location: /decks/1111-0000-0000-000000000001/flashcards/1111-0000-0000-000000000002
+
+    + Attributes (Flashcard)
+
+### Get Flashcard by ID [GET /decks/{deckId}/flashcards/{flashcardId}]
+
++ Response 200 (application/json)
+    + Attributes (Flashcard)
+
+### List all Flashcards [GET]
+
++ Response 200 (application/json)
+    + Attributes (FlashcardCollection)
+
+### Update Flashcard [PUT /decks/{deckId}/flashcards/{flashcardId}]
+
++ Parameters
+    
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID to update
+
++ Request (application/json)
+
+    + Attributes (FlashcardWithoutId)
+
++ Response 200 (application/json)
+
+    This response is returned when flashcard was updated.
+    
+    + Attributes (Flashcard)
+
+### Remove Flashcard [DELETE /decks/{deckId}/flashcards/{flashcardId}]
+
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID to update
 
 + Response 200
 
-+ Response 400 (application/json)
-
-    This response is returned when entity is not found.
-
-    + Body
-
-            {"Sample JSON": "Check default dropwizard response and describe it here"}
-
 # Data Structures
 
-## Entity (object)
-+ id: `12345678-9012-3456-7890-123456789012` (string, required) - Entity UUID, 36 chars, 8-4-4-4-12 chars
-+ name: `Sample name` (string, required) - name attribute for entity
+## DeckWithoutId (object)
++ name: `Sample name` (string, required) - name attribute for Deck
 
-## EntityCollection (array)
-+ 0: (Entity)
-+ 1: (Entity)
-+ 2: (Entity)
+## Deck (DeckWithoutId)
++ id: `12345678-9012-3456-7890-123456789012` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
+
+## FlashcardWithoutId (object)
++ question: `Sample question` (string) - question attribute for Flashcard
++ answer: `Sample answer` (string) - answer attribute for Flashcard
+
+## Flashcard (FlashcardWithoutId)
++ id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
+
+## DeckCollection (array)
++ 0: (Deck)
++ 1: (Deck)
++ 2: (Deck)
+
+## FlashcardCollection (array)
++ 0: (Flashcard)
++ 1: (Flashcard)
++ 2: (Flashcard)
+
+## BadRequestResponse (object)
++ code: `E001` (string, required) - TODO sample error code
++ message: `Id cannot be null` (string, required) - TODO sample error message - human readable
