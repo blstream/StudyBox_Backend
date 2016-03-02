@@ -19,10 +19,12 @@ public class ApplicationTest {
 
     @Test
     public void creatingIdentifiableEntity() {
+        IdentifiableEntity identifiableEntity = new IdentifiableEntity(
+                UUID.fromString(testUUID)
+        ) {
+        };
         assertThat(
-                new IdentifiableEntity(
-                        UUID.fromString(testUUID)
-                ).getId()
+                identifiableEntity.getId()
         ).isEqualToComparingFieldByField(
                 UUID.fromString(testUUID)
         );
@@ -30,6 +32,9 @@ public class ApplicationTest {
 
     @Test
     public void creatingIdentifiableEntityWithoutParameters() {
-        assertThat(new IdentifiableEntity().getId()).isNull();
+        IdentifiableEntity identifiableEntity = new IdentifiableEntity() {
+        };
+
+        assertThat(identifiableEntity.getId()).isNull();
     }
 }
