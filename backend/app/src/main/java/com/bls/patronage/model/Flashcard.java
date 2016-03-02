@@ -1,21 +1,12 @@
 package com.bls.patronage.model;
 
-public class Flashcard {
-    private long UUID;
+public class Flashcard extends StudyBoxEntity {
     private String question;
     private String answer;
 
     public Flashcard(String question, String answer) {
         this.question = question;
         this.answer = answer;
-    }
-
-    public long getUUID() {
-        return UUID;
-    }
-
-    public void setUUID(long UUID) {
-        this.UUID = UUID;
     }
 
     public String getQuestion() {
@@ -41,7 +32,6 @@ public class Flashcard {
 
         Flashcard flashcard = (Flashcard) o;
 
-        if (getUUID() != flashcard.getUUID()) return false;
         if (!getQuestion().equals(flashcard.getQuestion())) return false;
         return getAnswer().equals(flashcard.getAnswer());
 
@@ -49,18 +39,18 @@ public class Flashcard {
 
     @Override
     public int hashCode() {
-        int result = (int) (getUUID() ^ (getUUID() >>> 32));
-        result = 31 * result + getQuestion().hashCode();
+        int result = getQuestion().hashCode();
         result = 31 * result + getAnswer().hashCode();
+        result = 31 * result + getId().hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "Flashcard{" +
-                "UUID=" + UUID +
-                ", question='" + question + '\'' +
-                ", answer='" + answer + '\'' +
+                "id='" + getId() + "\'" +
+                ", question='" + getQuestion() + '\'' +
+                ", answer='" + getAnswer() + '\'' +
                 '}';
     }
 }

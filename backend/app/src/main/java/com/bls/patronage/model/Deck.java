@@ -1,19 +1,10 @@
 package com.bls.patronage.model;
 
-public class Deck {
-    private long UUID;
+public class Deck extends StudyBoxEntity {
     private String name;
 
     public Deck(String name) {
         this.name = name;
-    }
-
-    public long getUUID() {
-        return UUID;
-    }
-
-    public void setUUID(long UUID) {
-        this.UUID = UUID;
     }
 
     public String getName() {
@@ -31,23 +22,22 @@ public class Deck {
 
         Deck deck = (Deck) o;
 
-        if (getUUID() != deck.getUUID()) return false;
+        if (getId() != deck.getId()) return false;
         return getName().equals(deck.getName());
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (getUUID() ^ (getUUID() >>> 32));
-        result = 31 * result + getName().hashCode();
-        return result;
+        int result = getName().hashCode();
+        return 31 * result + getId().hashCode();
     }
 
     @Override
     public String toString() {
         return "Deck{" +
-                "UUID=" + UUID +
-                ", name='" + name + '\'' +
+                "UUID=" + getId() +
+                ", name='" + getName() + '\'' +
                 '}';
     }
 }
