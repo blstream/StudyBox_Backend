@@ -1,9 +1,11 @@
 package com.bls.patronage.model;
 
+import java.util.UUID;
+
 public class Deck extends IdentifiableEntity {
     private String name;
 
-    public Deck(String name) {
+    public Deck(String name, UUID id) {
         super(id);
         this.name = name;
     }

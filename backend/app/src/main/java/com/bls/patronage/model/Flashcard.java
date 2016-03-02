@@ -1,10 +1,12 @@
 package com.bls.patronage.model;
 
+import java.util.UUID;
+
 public class Flashcard extends IdentifiableEntity {
     private String question;
     private String answer;
 
-    public Flashcard(String question, String answer) {
+    public Flashcard(String question, String answer, UUID id) {
         super(id);
         this.question = question;
         this.answer = answer;
