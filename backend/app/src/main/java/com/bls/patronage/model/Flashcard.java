@@ -6,7 +6,18 @@ public class Flashcard extends IdentifiableEntity {
     private String question;
     private String answer;
 
-    public Flashcard(String question, String answer, UUID id) {
+    public Flashcard(String question, String answer) {
+        this.question = question;
+        this.answer = answer;
+    }
+
+    public Flashcard(String id, String question, String answer) {
+        super(id);
+        this.question = question;
+        this.answer = answer;
+    }
+
+    public Flashcard(UUID id, String question, String answer) {
         super(id);
         this.question = question;
         this.answer = answer;
