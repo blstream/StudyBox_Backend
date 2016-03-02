@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.blstream.patronage</groupId>
+            <groupId>com.bls.patronage</groupId>
             <artifactId>db</artifactId>
             <version>${project.version}</version>
         </dependency>
