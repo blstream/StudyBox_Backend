@@ -1,4 +1,4 @@
-package com.bls.patronage.model;
+package com.bls.patronage.models;
 
 import java.util.UUID;
 
