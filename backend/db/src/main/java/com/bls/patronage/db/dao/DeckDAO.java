@@ -1,20 +1,24 @@
-package com.bls.patronage.db;
-
-import com.bls.patronage.core.Deck;
-import com.bls.patronage.mapper.DeckMapper;
-import org.skife.jdbi.v2.sqlobject.*;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+package com.bls.patronage.db.dao;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.BindBean;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+
+import com.bls.patronage.db.model.Deck;
+
 @RegisterMapper(DeckMapper.class)
 public interface DeckDAO {
 
-    @SqlQuery("select * from decks where id = :id")
+    @SqlQuery("select id, name from decks where id = :id")
     Deck getDeckById(@Bind("id") UUID id);
 
-    @SqlQuery("select * from decks")
+    @SqlQuery("select id, name from decks")
     List<Deck> getAllDecks();
 
     @GetGeneratedKeys
@@ -26,5 +30,4 @@ public interface DeckDAO {
 
     @SqlUpdate("delete from decks where id = :id")
     void deleteDeck(@Bind("id") UUID id);
-
 }

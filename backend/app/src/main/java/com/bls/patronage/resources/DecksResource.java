@@ -1,13 +1,18 @@
 package com.bls.patronage.resources;
 
-import com.bls.patronage.api.DeckRepresentation;
-import com.bls.patronage.core.Deck;
-import com.bls.patronage.db.DeckDAO;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.UUID;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import com.bls.patronage.api.DeckRepresentation;
+import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.model.Deck;
 
 @Path("/decks")
 @Produces(MediaType.APPLICATION_JSON)

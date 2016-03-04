@@ -1,8 +1,8 @@
 package com.bls.patronage;
 
-import com.bls.patronage.model.Deck;
-import com.bls.patronage.model.Flashcard;
-import com.bls.patronage.model.IdentifiableEntity;
+import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.model.Flashcard;
+import com.bls.patronage.db.model.IdentifiableEntity;
 import org.junit.Before;
 import org.junit.Test;
 
