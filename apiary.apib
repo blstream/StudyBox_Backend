@@ -13,6 +13,8 @@ Rooms Admin Console API
 ### 0.0.1 (01/03/2016) mlo
 - resources to create or update shouldn't have id
 - document HTTP 400 bad request response
+### 0.0.1 (04/03/2016) arka
+- create unique objects for collections
 
 ## TODO
 - Document CRUD for stat
@@ -51,13 +53,6 @@ By default API return response with HTTP code **4xx** family.
 
     + Attributes (Deck)
 
-+ Response 400 (application/json)
-
-    This response is returned when deck validation failed.
-
-    + Body
-
-
 ### Get Deck by ID [GET /decks/{deckId}]
 
 + Response 200 (application/json)
@@ -68,13 +63,22 @@ By default API return response with HTTP code **4xx** family.
 + Response 200 (application/json)
     + Attributes (DeckCollection)
 
-### Search Decks by Name [GET /decks{?name}]
+### Get all Decks by Name [GET /decks{?name}]
 
 + Parameters
     + name (string, required) - name of a deck to find
 
 + Response 200 (application/json)
     + Attributes (DeckCollection)
+
+### Get all decks with Flashcards number [GET /decks{?statusEnabled}]
+
++ Parameters
+    + statusEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
+
++ Response 200 (application/json)
+
+    + Attributes (DeckWithCountCollection)
 
 ### Update Deck [PUT /decks/{deckId}]
 
@@ -157,28 +161,75 @@ By default API return response with HTTP code **4xx** family.
 
 # Data Structures
 
-## DeckWithoutId (object)
+## Single objects
+
+### DeckWithoutId (object)
 + name: `Sample name` (string, required) - name attribute for Deck
 
-## Deck (DeckWithoutId)
+### Deck (DeckWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 
-## FlashcardWithoutId (object)
+### FlashcardWithoutId (object)
 + question: `Sample question` (string) - question attribute for Flashcard
 + answer: `Sample answer` (string) - answer attribute for Flashcard
 
-## Flashcard (FlashcardWithoutId)
+### Flashcard (FlashcardWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 
-## DeckCollection (array)
-+ 0: (Deck)
-+ 1: (Deck)
-+ 2: (Deck)
+## Objects for Collections
 
-## FlashcardCollection (array)
-+ 0: (Flashcard)
-+ 1: (Flashcard)
-+ 2: (Flashcard)
+### Deck0 (object)
++ name: `First name` (string, required) - name attribute for Deck
++ id: `1d92b949-38c7-4a1a-a184-1b5fb469ad9b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
+
+### Deck1 (object)
++ name: `Second name` (string, required) - name attribute for Deck
++ id: `6d48d685-53f4-4e41-aea0-ec54d8919f0b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
+
+### Deck2 (object)
++ name: `Third name` (string, required) - name attribute for Deck
++ id: `0d081870-553c-4df7-b9e2-be7e5ba791c0` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
+
+### DeckWithCount0 (Deck0)
++ count: `12` (number) - Count of the Flashcards in Deck
+
+### DeckWithCount1 (Deck1)
++ count: `3456` (number) - Count of the Flashcards in Deck
+
+### DeckWithCount2 (Deck2)
++ count: `789` (number) - Count of the Flashcards in Deck
+
+### Flashcard0 (object)
++ id: `00e60c87-1fac-46dc-a7ee-1dd1f3996ccc` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
++ question: `First question` (string) - question attribute for Flashcard
++ answer: `First answer` (string) - answer attribute for Flashcard
+
+### Flashcard1 (object)
++ id: `2c8815e6-4e16-41ce-95bf-d0039c35af2d` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
++ question: `Second question` (string) - question attribute for Flashcard
++ answer: `Second answer` (string) - answer attribute for Flashcard
+
+### Flashcard2 (object)
++ id: `369f0665-c895-41bb-bede-62b443519964` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
++ question: `Third question` (string) - question attribute for Flashcard
++ answer: `Third answer` (string) - answer attribute for Flashcard
+
+## Collections
+
+### DeckCollection (array)
++ 0: (Deck0)
++ 1: (Deck1)
++ 2: (Deck2)
+
+### FlashcardCollection (array)
++ 0: (Flashcard0)
++ 1: (Flashcard1)
++ 2: (Flashcard2)
+
+### DeckWithCountCollection (array)
++ 0: (DeckWithCount0)
++ 1: (DeckWithCount1)
++ 2: (DeckWithCount2)
 
 ## BadRequestResponse (object)
 + code: `E001` (string, required) - TODO sample error code
