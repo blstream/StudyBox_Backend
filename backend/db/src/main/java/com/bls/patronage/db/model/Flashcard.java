@@ -13,11 +13,24 @@ public class Flashcard extends IdentifiableEntity {
         this.deckID = deckID;
     }
 
+    public Flashcard(String question, String answer, String deckID) {
+        this.question = question;
+        this.answer = answer;
+        this.deckID = UUID.fromString(deckID);
+    }
+
     public Flashcard(String id, String question, String answer, UUID deckID) {
         super(id);
         this.question = question;
         this.answer = answer;
         this.deckID = deckID;
+    }
+
+    public Flashcard(String id, String question, String answer, String deckID) {
+        super(id);
+        this.question = question;
+        this.answer = answer;
+        this.deckID = UUID.fromString(deckID);
     }
 
     public Flashcard(UUID id, String question, String answer, UUID deckID) {
@@ -27,18 +40,39 @@ public class Flashcard extends IdentifiableEntity {
         this.deckID = deckID;
     }
 
-    public Flashcard(String id, UUID deckID) {
+    public Flashcard(UUID id, String question, String answer, String deckID) {
         super(id);
-        this.deckID = deckID;
-        question = null;
-        answer = null;
+        this.question = question;
+        this.answer = answer;
+        this.deckID = UUID.fromString(deckID);
     }
 
     public Flashcard(UUID id, UUID deckID) {
         super(id);
+        this.question = null;
+        this.answer = null;
         this.deckID = deckID;
-        question = null;
-        answer = null;
+    }
+
+    public Flashcard(UUID id, String deckID) {
+        super(id);
+        this.question = null;
+        this.answer = null;
+        this.deckID = UUID.fromString(deckID);
+    }
+
+    public Flashcard(String id, UUID deckID) {
+        super(id);
+        this.question = null;
+        this.answer = null;
+        this.deckID = deckID;
+    }
+
+    public Flashcard(String id, String deckID) {
+        super(id);
+        this.question = null;
+        this.answer = null;
+        this.deckID = UUID.fromString(deckID);
     }
 
     public String getQuestion() {
