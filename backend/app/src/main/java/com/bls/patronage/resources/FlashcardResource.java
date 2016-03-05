@@ -10,7 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
 
-@Path("flashcards/{flashcardId}")
+@Path("/decks/{deckId}/flashcards/{flashcardId}")
 @Produces(MediaType.APPLICATION_JSON)
 public class FlashcardResource {
     private final FlashcardDAO flashcardDAO;
@@ -31,10 +31,9 @@ public class FlashcardResource {
 
     @PUT
     public void updateFlashcard(@PathParam("flashcardId") UUID flashcardId,
-                                @Valid FlashcardRepresentation flashcard) {
-        Flashcard updatedFlashcard = flashcardDAO.getFlashcardById(flashcardId);
-        updatedFlashcard.setQuestion(flashcard.getQuestion());
-        updatedFlashcard.setAnswer(flashcard.getAnswer());
+                                @Valid FlashcardRepresentation flashcard,
+                                @PathParam("deckId") UUIDParam deckId) {
+        Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(), deckId.get());
         flashcardDAO.updateFlashcard(updatedFlashcard);
     }
 }

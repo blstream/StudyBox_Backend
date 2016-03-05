@@ -11,6 +11,6 @@ import java.util.UUID;
 class FlashcardMapper implements ResultSetMapper<Flashcard> {
 
     public Flashcard map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        return new Flashcard((UUID) r.getObject("id"), r.getString("question"), r.getString("answer"));
+        return new Flashcard(r.getObject("id", UUID.class), r.getString("question"), r.getString("answer"), r.getObject("deckID", UUID.class));
     }
 }
