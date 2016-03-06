@@ -26,6 +26,8 @@ public class DecksResource {
 
     @POST
     public Deck createDeck(DeckRepresentation deck) {
+        if (deck.getName().isEmpty())
+            throw new WebApplicationException(400);
         Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName());
         decksDAO.createDeck(createdDeck);
         return createdDeck;
