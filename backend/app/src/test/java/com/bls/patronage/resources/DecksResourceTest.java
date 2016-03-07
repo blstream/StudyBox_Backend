@@ -83,4 +83,38 @@ public class DecksResourceTest {
         verify(dao).getAllDecks();
         assertThat(response).containsAll(decks);
     }
+
+    @Test
+    public void listDecksByNames() throws Exception {
+        final ImmutableList<Deck> decks = ImmutableList.of(deck);
+        when(dao.getDecksByName("something")).thenReturn(decks);
+
+        final List<Deck> response = resources.client().target("/decks?name=something")
+                .request().get(new GenericType<List<Deck>>() {});
+
+        verify(dao).getDecksByName("something");
+        assertThat(response).containsAll(decks);
+    }
+
+    @Test
+    public void listDecksByNamesWhenThereIsBadNameTyped() throws Exception {
+        when(dao.getDecksByName("anotherThing")).thenReturn(null);
+
+        final List<Deck> response = resources.client().target("/decks?name=anotherThing")
+                .request().get(new GenericType<List<Deck>>() {});
+
+        verify(dao).getDecksByName("anotherThing");
+        assertThat(response).isNull();
+    }
+
+    @Test
+    public void listDecksByNamesWhenThereIsNoNameTyped() throws Exception {
+        when(dao.getDecksByName("")).thenReturn(null);
+
+        final List<Deck> response = resources.client().target("/decks?name=")
+                .request().get(new GenericType<List<Deck>>() {});
+
+        verify(dao).getDecksByName("");
+        assertThat(response).isNull();
+    }
 }
