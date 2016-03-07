@@ -21,6 +21,9 @@ public interface DeckDAO {
     @SqlQuery("select id, name from decks")
     List<Deck> getAllDecks();
 
+    @SqlQuery("select id, name from decks where name like :name")
+    List<Deck> getDecksByName(@Bind("name") String name);
+
     @GetGeneratedKeys
     @SqlUpdate("insert into decks (id, name) values (:id, :name)")
     UUID createDeck(@BindBean Deck deck);
