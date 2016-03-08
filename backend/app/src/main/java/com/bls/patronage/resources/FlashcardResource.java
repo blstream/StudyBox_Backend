@@ -6,6 +6,7 @@ import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
@@ -20,18 +21,28 @@ public class FlashcardResource {
     }
 
     @GET
-    public Flashcard getFlashcard(@PathParam("flashcardId") UUIDParam flashcardId) {
+    public Flashcard getFlashcard(
+            @Valid
+            @NotNull
+            @PathParam("flashcardId") UUIDParam flashcardId) {
         return flashcardDAO.getFlashcardById(flashcardId.get());
     }
 
     @DELETE
-    public void deleteFlashcard(@PathParam("flashcardId") UUIDParam flashcardId) {
+    public void deleteFlashcard(
+            @Valid
+            @NotNull @PathParam("flashcardId") UUIDParam flashcardId) {
         flashcardDAO.deleteFlashcard(flashcardDAO.getFlashcardById(flashcardId.get()).getId());
     }
 
     @PUT
-    public void updateFlashcard(@PathParam("flashcardId") UUID flashcardId,
-                                @Valid FlashcardRepresentation flashcard,
+    public void updateFlashcard(
+            @Valid
+            @NotNull
+            @PathParam("flashcardId") UUID flashcardId,
+            @Valid FlashcardRepresentation flashcard,
+            @Valid
+            @NotNull
                                 @PathParam("deckId") UUIDParam deckId) {
         Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(), deckId.get());
         flashcardDAO.updateFlashcard(updatedFlashcard);

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FlashcardRepresentation {
 
-    private String question;
-    private String answer;
+    private final String question;
+    private final String answer;
 
     public FlashcardRepresentation() {
+        question = null;
+        answer = null;
     }
 
     public FlashcardRepresentation(String question, String answer) {

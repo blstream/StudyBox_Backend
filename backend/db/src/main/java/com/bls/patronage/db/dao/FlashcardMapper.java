@@ -6,11 +6,10 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
 
 class FlashcardMapper implements ResultSetMapper<Flashcard> {
 
     public Flashcard map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        return new Flashcard(r.getObject("id", UUID.class), r.getString("question"), r.getString("answer"), r.getObject("deckID", UUID.class));
+        return new Flashcard(r.getString("id"), r.getString("question"), r.getString("answer"), r.getString("deckID"));
     }
 }

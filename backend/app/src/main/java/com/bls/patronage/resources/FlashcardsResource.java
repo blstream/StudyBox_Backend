@@ -5,6 +5,8 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.jersey.params.UUIDParam;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -21,7 +23,10 @@ public class FlashcardsResource {
     }
 
     @POST
-    public Flashcard createFlashcard(FlashcardRepresentation flashcard, @PathParam("deckId") UUIDParam id) {
+    public Flashcard createFlashcard(FlashcardRepresentation flashcard,
+                                     @Valid
+                                     @NotNull
+                                     @PathParam("deckId") UUIDParam id) {
         Flashcard createdFlashcard = new Flashcard(UUID.randomUUID(), flashcard.getQuestion(), flashcard.getAnswer(), id.get());
         flashcardDAO.createFlashcard(createdFlashcard);
         return createdFlashcard;

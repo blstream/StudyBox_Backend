@@ -10,10 +10,10 @@ import java.util.UUID;
 @RegisterMapper(FlashcardMapper.class)
 public interface FlashcardDAO {
 
-    @SqlQuery("select * from flashcards where id = :id")
+    @SqlQuery("select id,question,answer from flashcards where id = :id")
     Flashcard getFlashcardById(@Bind("id") UUID id);
 
-    @SqlQuery("select * from flashcards")
+    @SqlQuery("select id,question,answer from flashcards")
     List<Flashcard> getAllFlashcards();
 
     @GetGeneratedKeys
