@@ -1,6 +1,6 @@
 package com.bls.patronage.model;
 
-import static io.dropwizard.testing.FixtureHelpers.*;
+import static io.dropwizard.testing.FixtureHelpers.fixture;
 import static org.assertj.core.api.Assertions.assertThat;
 import io.dropwizard.jackson.Jackson;
 import org.junit.Before;

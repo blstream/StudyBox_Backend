@@ -11,6 +11,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.dao.DeckMapper;
 
 @RegisterMapper(DeckMapper.class)
 public interface DeckDAO {

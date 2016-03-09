@@ -4,6 +4,7 @@ import org.skife.jdbi.v2.DBI;
 
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.resources.DeckResource;
+import com.bls.patronage.resources.DecksResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -50,5 +51,6 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
     public void run(StudyBoxConfiguration configuration, Environment environment) throws Exception {
         final DBI jdbi = new DBIFactory().build(environment, configuration.getDatabase(), HEALTH_CHECK_DATABASE_NAME);
         environment.jersey().register(new DeckResource(jdbi.onDemand(DeckDAO.class)));
+        environment.jersey().register(new DecksResource(jdbi.onDemand(DeckDAO.class)));
     }
 }

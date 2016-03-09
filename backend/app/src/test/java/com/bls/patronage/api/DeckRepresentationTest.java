@@ -1,4 +1,4 @@
-package com.bls.patronage.model;
+package com.bls.patronage.api;
 
 import com.bls.patronage.api.DeckRepresentation;
 import com.fasterxml.jackson.databind.ObjectMapper;

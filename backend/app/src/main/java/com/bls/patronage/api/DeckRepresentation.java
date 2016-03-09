@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DeckRepresentation {
 
-    private String name;
+    final private String name;
 
     public DeckRepresentation() {
+        name = null;
     }
 
     public DeckRepresentation(String name) {
