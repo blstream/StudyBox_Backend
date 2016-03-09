@@ -47,49 +47,49 @@ public class DAOTest {
         handle.close();
     }
 
-//    @Test
-//    public void getAllDecks() throws Exception {
-//        final DeckDAO dao = dbi.open(DeckDAO.class);
-//        final List<Deck> decks = dao.getAllDecks();
-//        assertThat(decks).containsSequence(deckExample1,deckExample2);
-//    }
-//
-//    @Test
-//    public void getDeckById() throws Exception {
-//        final DeckDAO dao = dbi.open(DeckDAO.class);
-//        final Deck foundDeck = dao.getDeckById(deckExample1.getId());
-//        assertThat(foundDeck).isEqualTo(deckExample1);
-//    }
-//
-//    @Test
-//    public void getDeckByName() throws Exception {
-//        final DeckDAO dao = dbi.open(DeckDAO.class);
-//        final List<Deck> decks = dao.getDecksByName(deckExample1.getName());
-//        assertThat(decks).containsOnly(deckExample1);
-//    }
-//
-//    @Test
-//    public void createDeck() throws Exception {
-//        final Deck createdDeck = new Deck(UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398"),"sport");
-//        final DeckDAO dao = dbi.open(DeckDAO.class);
-//        dao.createDeck(createdDeck);
-//        assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
-//    }
-//
-//    @Test
-//    public void deleteDeck() throws Exception {
-//        final DeckDAO dao = dbi.open(DeckDAO.class);
-//        dao.deleteDeck(deckExample2.getId());
-//        assertThat(dao.getDeckById(deckExample2.getId())).isNull();
-//    }
-//
-//    @Test
-//    public void updateDeck() throws Exception {
-//        final Deck updatedDeck = new Deck(deckExample1.getId(),"miscellanous");
-//        final DeckDAO dao = dbi.open(DeckDAO.class);
-//        dao.updateDeck(updatedDeck);
-//        assertThat(dao.getDeckById(deckExample1.getId())).isEqualTo(updatedDeck);
-//    }
+    @Test
+    public void getAllDecks() throws Exception {
+        final DeckDAO dao = dbi.open(DeckDAO.class);
+        final List<Deck> decks = dao.getAllDecks();
+        assertThat(decks).containsSequence(deckExample1,deckExample2);
+    }
+
+    @Test
+    public void getDeckById() throws Exception {
+        final DeckDAO dao = dbi.open(DeckDAO.class);
+        final Deck foundDeck = dao.getDeckById(deckExample1.getId());
+        assertThat(foundDeck).isEqualTo(deckExample1);
+    }
+
+    @Test
+    public void getDeckByName() throws Exception {
+        final DeckDAO dao = dbi.open(DeckDAO.class);
+        final List<Deck> decks = dao.getDecksByName(deckExample1.getName());
+        assertThat(decks).containsOnly(deckExample1);
+    }
+
+    @Test
+    public void createDeck() throws Exception {
+        final Deck createdDeck = new Deck(UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398"),"sport");
+        final DeckDAO dao = dbi.open(DeckDAO.class);
+        dao.createDeck(createdDeck);
+        assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
+    }
+
+    @Test
+    public void deleteDeck() throws Exception {
+        final DeckDAO dao = dbi.open(DeckDAO.class);
+        dao.deleteDeck(deckExample2.getId());
+        assertThat(dao.getDeckById(deckExample2.getId())).isNull();
+    }
+
+    @Test
+    public void updateDeck() throws Exception {
+        final Deck updatedDeck = new Deck(deckExample1.getId(),"miscellanous");
+        final DeckDAO dao = dbi.open(DeckDAO.class);
+        dao.updateDeck(updatedDeck);
+        assertThat(dao.getDeckById(deckExample1.getId())).isEqualTo(updatedDeck);
+    }
 
     protected DataSourceFactory getDataSourceFactory()
     {
