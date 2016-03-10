@@ -13,12 +13,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ModelTests {
 
     private String testUUID;
+    private UUID testDeckUUID;
     private String testQuestion;
     private String testAnswer;
     private String testName;
 
     @Before
     public void setup() {
+        testDeckUUID = UUID.fromString("12345678-9012-3456-7890-123456789012");
         testUUID = "12345678-9012-3456-7890-123456789012";
         testQuestion = "Are you ok?";
         testAnswer = "Yes, thank you.";
@@ -88,65 +90,62 @@ public class ModelTests {
     }
 
     @Test
-    public void creatingFlashcardWithoutArguments() {
-        Flashcard flashcard = new Flashcard();
-
-        assertThat(flashcard.getAnswer()).isNull();
-        assertThat(flashcard.getQuestion()).isNull();
-        assertThat(flashcard.getId()).isNull();
-    }
-
-    @Test
     public void creatingFlashcardWithTwoNulls() {
-        Flashcard flashcard = new Flashcard(null, null);
+        Flashcard flashcard = new Flashcard(null, null, testDeckUUID);
 
         assertThat(flashcard.getAnswer()).isNull();
         assertThat(flashcard.getQuestion()).isNull();
         assertThat(flashcard.getId()).isNull();
+        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
     }
 
     @Test
     public void creatingFlashcardWithTwoStrings() {
-        Flashcard flashcard = new Flashcard(testQuestion, testAnswer);
+        Flashcard flashcard = new Flashcard(testQuestion, testAnswer, testDeckUUID);
 
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
         assertThat(flashcard.getId()).isNull();
+        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
     }
 
     @Test
     public void creatingFlashcardWithStringId() {
-        Flashcard flashcard = new Flashcard(testUUID);
+        Flashcard flashcard = new Flashcard(testUUID, testDeckUUID);
 
         assertThat(flashcard.getAnswer()).isNull();
         assertThat(flashcard.getQuestion()).isNull();
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
+        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
     }
 
     @Test
     public void creatingFlashcardWithId() {
-        Flashcard flashcard = new Flashcard(UUID.fromString(testUUID));
+        Flashcard flashcard = new Flashcard(UUID.fromString(testUUID), testDeckUUID);
 
         assertThat(flashcard.getAnswer()).isNull();
         assertThat(flashcard.getQuestion()).isNull();
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
+        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
     }
 
     @Test
     public void creatingFlashcardWithAllArgumentsString() {
-        Flashcard flashcard = new Flashcard(testUUID, testQuestion, testAnswer);
+        Flashcard flashcard = new Flashcard(testUUID, testQuestion, testAnswer, testDeckUUID);
 
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
+        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
     }
 
     @Test
     public void creatingFlashcardWithAllArguments() {
-        Flashcard flashcard = new Flashcard(UUID.fromString(testUUID), testQuestion, testAnswer);
+        Flashcard flashcard = new Flashcard(UUID.fromString(testUUID), testQuestion, testAnswer, testDeckUUID);
 
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
+        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
     }
 }

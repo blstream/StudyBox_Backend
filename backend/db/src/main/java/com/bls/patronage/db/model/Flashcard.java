@@ -3,54 +3,88 @@ package com.bls.patronage.db.model;
 import java.util.UUID;
 
 public class Flashcard extends IdentifiableEntity {
-    private String question;
-    private String answer;
+    private final String question;
+    private final String answer;
+    private final UUID deckID;
 
-    public Flashcard(String question, String answer) {
+    public Flashcard(String question, String answer, UUID deckID) {
         this.question = question;
         this.answer = answer;
+        this.deckID = deckID;
     }
 
-    public Flashcard(String id, String question, String answer) {
+    public Flashcard(String question, String answer, String deckID) {
+        this.question = question;
+        this.answer = answer;
+        this.deckID = UUID.fromString(deckID);
+    }
+
+    public Flashcard(String id, String question, String answer, UUID deckID) {
         super(id);
         this.question = question;
         this.answer = answer;
+        this.deckID = deckID;
     }
 
-    public Flashcard(UUID id, String question, String answer) {
+    public Flashcard(String id, String question, String answer, String deckID) {
         super(id);
         this.question = question;
         this.answer = answer;
+        this.deckID = UUID.fromString(deckID);
     }
 
-    public Flashcard() {
-        super();
+    public Flashcard(UUID id, String question, String answer, UUID deckID) {
+        super(id);
+        this.question = question;
+        this.answer = answer;
+        this.deckID = deckID;
+    }
+
+    public Flashcard(UUID id, String question, String answer, String deckID) {
+        super(id);
+        this.question = question;
+        this.answer = answer;
+        this.deckID = UUID.fromString(deckID);
+    }
+
+    public Flashcard(UUID id, UUID deckID) {
+        super(id);
         this.question = null;
         this.answer = null;
+        this.deckID = deckID;
     }
 
-    public Flashcard(String id) {
+    public Flashcard(UUID id, String deckID) {
         super(id);
+        this.question = null;
+        this.answer = null;
+        this.deckID = UUID.fromString(deckID);
     }
 
-    public Flashcard(UUID id) {
+    public Flashcard(String id, UUID deckID) {
         super(id);
+        this.question = null;
+        this.answer = null;
+        this.deckID = deckID;
+    }
+
+    public Flashcard(String id, String deckID) {
+        super(id);
+        this.question = null;
+        this.answer = null;
+        this.deckID = UUID.fromString(deckID);
     }
 
     public String getQuestion() {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
     public String getAnswer() {
         return answer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public UUID getDeckID() {
+        return deckID;
     }
 
     @Override
@@ -60,25 +94,28 @@ public class Flashcard extends IdentifiableEntity {
 
         Flashcard flashcard = (Flashcard) o;
 
-        if (!getQuestion().equals(flashcard.getQuestion())) return false;
-        return getAnswer().equals(flashcard.getAnswer());
+        if (getQuestion() != null ? !getQuestion().equals(flashcard.getQuestion()) : flashcard.getQuestion() != null)
+            return false;
+        if (getAnswer() != null ? !getAnswer().equals(flashcard.getAnswer()) : flashcard.getAnswer() != null)
+            return false;
+        return getDeckID().equals(flashcard.getDeckID());
 
     }
 
     @Override
     public int hashCode() {
-        int result = getQuestion().hashCode();
-        result = 31 * result + getAnswer().hashCode();
-        result = 31 * result + getId().hashCode();
+        int result = getQuestion() != null ? getQuestion().hashCode() : 0;
+        result = 31 * result + (getAnswer() != null ? getAnswer().hashCode() : 0);
+        result = 31 * result + getDeckID().hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "Flashcard{" +
-                "id='" + getId() + "\'" +
-                ", question='" + getQuestion() + '\'' +
-                ", answer='" + getAnswer() + '\'' +
+                "question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
+                ", deckID=" + deckID +
                 '}';
     }
 }
