@@ -3,6 +3,7 @@ package com.bls.patronage;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.resources.DeckResource;
+import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import io.dropwizard.Application;
@@ -51,7 +52,9 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
     public void run(StudyBoxConfiguration configuration, Environment environment) throws Exception {
         final DBI jdbi = new DBIFactory().build(environment, configuration.getDatabase(), HEALTH_CHECK_DATABASE_NAME);
         environment.jersey().register(new DeckResource(jdbi.onDemand(DeckDAO.class)));
+        environment.jersey().register(new DecksResource(jdbi.onDemand(DeckDAO.class)));
         environment.jersey().register(new FlashcardResource(jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new FlashcardsResource(jdbi.onDemand(FlashcardDAO.class)));
+
     }
 }
