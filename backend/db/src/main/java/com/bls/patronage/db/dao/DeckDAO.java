@@ -11,6 +11,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.dao.DeckMapper;
 
 @RegisterMapper(DeckMapper.class)
 public interface DeckDAO {
@@ -20,6 +21,9 @@ public interface DeckDAO {
 
     @SqlQuery("select id, name from decks")
     List<Deck> getAllDecks();
+
+    @SqlQuery("select id, name from decks where name like :name")
+    List<Deck> getDecksByName(@Bind("name") String name);
 
     @GetGeneratedKeys
     @SqlUpdate("insert into decks (id, name) values (:id, :name)")

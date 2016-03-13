@@ -39,7 +39,7 @@ public class Deck extends IdentifiableEntity {
 
         Deck deck = (Deck) o;
 
-        if (getId() != deck.getId()) return false;
+        if (!getId().equals(deck.getId())) return false;
         return getName().equals(deck.getName());
 
     }
