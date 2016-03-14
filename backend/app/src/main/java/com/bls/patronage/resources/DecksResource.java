@@ -1,20 +1,14 @@
 package com.bls.patronage.resources;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.QueryParam;
-
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.exception.EntityBadRequestException;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
+import java.util.UUID;
 
 @Path("/decks")
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,16 +22,16 @@ public class DecksResource {
 
     @POST
     public Deck createDeck(DeckRepresentation deck) {
-        if(deck.getName().isEmpty())
-            throw new WebApplicationException(400);
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName());
+        if (deck.getName().isEmpty())
+            throw new EntityBadRequestException("Deck name cannot be empty.");
+        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.isPublic());
         decksDAO.createDeck(createdDeck);
         return createdDeck;
     }
 
     @GET
     public List<Deck> listDecks(@QueryParam("name") String name) {
-        if(name==null)
+        if (name == null)
             return decksDAO.getAllDecks();
         else
             return decksDAO.getDecksByName(name);
