@@ -15,6 +15,10 @@ Study Box REST API backend documentation and mock.
  - document HTTP 400 bad request response
 ## 04/03/2016 arka
  - create unique objects for collections
+## 12/03/2016 arka
+ - added tags and tips
+ - added "public" field for decks
+ 
 
 # TODO
 - Document CRUD for stat
@@ -155,9 +159,124 @@ By default API return response with HTTP code **4xx** family.
 
 + Parameters
     + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
-    + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID to update
+    + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID to delete
 
 + Response 200
+
+# Group Tip
+
+## Tips [/decks/{deckId}/flashcards/{flashcardId}/tips]
+
+### Create new Tip [POST]
+
++ Request (application/json)
+
+    + Attributes (TipWithoutId)
+
++ Response 201 (application/json)
+
+    This response is returned when tip was created.
+    
+    + Headers
+
+            Access-Control-Expose-Headers: Location
+            Location: /decks/1111-0000-0000-000000000001/flashcards/1111-0000-0000-000000000002/tips/1111-0000-0000-000000000003
+
+    + Attributes (Tip)
+
+### Get Tip by ID [GET /decks/{deckId}/flashcards/{flashcardId}/tips/{tipId}]
+
++ Response 200 (application/json)
+    + Attributes (Tip)
+
+### List all Tips [GET]
+
++ Response 200 (application/json)
+    + Attributes (TipCollection)
+
+### Update Tip [PUT /decks/{deckId}/flashcards/{flashcardId}/tips/{tipId}]
+
++ Parameters
+    
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID which contain tip
+    + tipId: `1233-0000-0000-000000000001` (string, required) - tip UUID to update
+
++ Request (application/json)
+
+    + Attributes (TipWithoutId)
+
++ Response 200 (application/json)
+
+    This response is returned when tip was updated.
+    
+    + Attributes (Tip)
+
+### Remove Tip [DELETE /decks/{deckId}/flashcards/{flashcardId}/tips/{tipId}]
+
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID which contain tip
+    + tipId: `1233-0000-0000-000000000001` (string, required) - tip UUID to delete
++ Response 200
+
+# Group Tag
+
+## Tags [/decks/{deckId}/tags]
+
+### Create new Tag [POST]
+
++ Request (application/json)
+
+    + Attributes (TagWithoutId)
+
++ Response 201 (application/json)
+
+    This response is returned when tag was created.
+    
+    + Headers
+
+            Access-Control-Expose-Headers: Location
+            Location: /decks/1111-0000-0000-000000000001/tags/1111-0000-0000-000000000002
+
+    + Attributes (Tag)
+
+### Get Tag by ID [GET /decks/{deckId}/tags/{tagId}]
+
++ Response 200 (application/json)
+    + Attributes (Tag)
+
+### List all Tags [GET]
+
++ Response 200 (application/json)
+    + Attributes (TagCollection)
+
+### Update Tag [PUT /decks/{deckId}/tags/{tagId}]
+
++ Parameters
+    
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain tag
+    + tagId: `1233-0000-0000-000000000001` (string, required) - tag UUID to update
+
+
++ Request (application/json)
+
+    + Attributes (TagWithoutId)
+
++ Response 200 (application/json)
+
+    This response is returned when tag was updated.
+    
+    + Attributes (Tag)
+
+### Remove Tag [DELETE /decks/{deckId}/tags/{tagId}]
+
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain tag
+    + tagId: `1233-0000-0000-000000000001` (string, required) - tag UUID to delete
+
++ Response 200
+
 
 # Data Structures
 
@@ -168,6 +287,7 @@ By default API return response with HTTP code **4xx** family.
 
 ### Deck (DeckWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
++ public: `true` (boolean, required) - status of Deck access rights
 
 ### FlashcardWithoutId (object)
 + question: `Sample question` (string) - question attribute for Flashcard
@@ -176,19 +296,35 @@ By default API return response with HTTP code **4xx** family.
 ### Flashcard (FlashcardWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 
+### TipWithoutId (object)
++ prompt: `Sample prompt` (string) - prompt attribute for Tip
+
+### Tip (TipWithoutId)
++ id: `12345678-9012-3456-7890-123456789012` (string, required) - tip UUID, 36 chars, 8-4-4-4-12 chars
+
+### TagWithoutId (object)
++ name: `Sample tag name` (string) - name attribute for Tag
+
+### Tag (TagWithoutId)
++ id: `12345678-9012-3456-7890-123456789012` (string, required) - tag UUID, 36 chars, 8-4-4-4-12 chars
+
+
 ## Objects for Collections
 
 ### Deck0 (object)
 + name: `First name` (string, required) - name attribute for Deck
 + id: `1d92b949-38c7-4a1a-a184-1b5fb469ad9b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
++ public: `true` (boolean, required) - status of Deck access rights
 
 ### Deck1 (object)
 + name: `Second name` (string, required) - name attribute for Deck
 + id: `6d48d685-53f4-4e41-aea0-ec54d8919f0b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
++ public: `false` (boolean, required) - status of Deck access rights
 
 ### Deck2 (object)
 + name: `Third name` (string, required) - name attribute for Deck
 + id: `0d081870-553c-4df7-b9e2-be7e5ba791c0` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
++ public: `false` (boolean, required) - status of Deck access rights
 
 ### DeckWithCount0 (Deck0)
 + count: `12` (number) - Count of the Flashcards in Deck
@@ -214,6 +350,30 @@ By default API return response with HTTP code **4xx** family.
 + question: `Third question` (string) - question attribute for Flashcard
 + answer: `Third answer` (string) - answer attribute for Flashcard
 
+### Tip0 (object)
++ id: `51155739-1028-4479-a425-9ebaa501d9fe` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
++ prompt: `First prompt` (string) - prompt attribute for Tip
+
+### Tip1 (object)
++ id: `6351db42-6597-42ba-909c-11488ee9814a` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
++ prompt: `Second prompt` (string) - prompt attribute for Tip\
+
+### Tip2 (object)
++ id: `e9b7760a-b645-4c35-9b4e-f5af5c1826c0` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
++ prompt: `Third prompt` (string) - prompt attribute for Tip
+
+### Tag0 (object)
++ id: `13972214-cf00-4239-aff6-eaad03f4b841` (string, required) - Tag UUID, 36 chars, 8-4-4-4-12 chars
++ name: `First sample tag name` (string) - name attribute for Tag
+
+### Tag1 (object)
++ id: `2b8970c6-db84-4bbc-80d6-093f0aa22bdd` (string, required) - Tag UUID, 36 chars, 8-4-4-4-12 chars
++ name: `Second sample tag name` (string) - name attribute for Tag
+
+### Tag2 (object)
++ id: `8ccc1c09-3f4a-4734-9c04-dc7bc4df15e2` (string, required) - Tag UUID, 36 chars, 8-4-4-4-12 chars
++ name: `Third sample tag name` (string) - name attribute for Tag
+
 ## Collections
 
 ### DeckCollection (array)
@@ -230,6 +390,16 @@ By default API return response with HTTP code **4xx** family.
 + 0: (DeckWithCount0)
 + 1: (DeckWithCount1)
 + 2: (DeckWithCount2)
+
+### TipCollection (array)
++ 0: (Tip0)
++ 1: (Tip1)
++ 2: (Tip2)
+
+### TagCollection (array)
++ 0: (Tag0)
++ 1: (Tag1)
++ 2: (Tag2)
 
 ## BadRequestResponse (object)
 + code: `E001` (string, required) - TODO sample error code
