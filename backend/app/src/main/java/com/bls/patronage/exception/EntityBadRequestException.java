@@ -1,18 +1,19 @@
 package com.bls.patronage.exception;
 
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 
-public class ObjectBadRequestException extends WebApplicationException {
+public class EntityBadRequestException extends WebApplicationException {
     private static final long serialVersionUID = 1L;
 
-    public ObjectBadRequestException() {
+    public EntityBadRequestException() {
         super(Response.status(Response.Status.BAD_REQUEST).build());
     }
 
-    public ObjectBadRequestException(String message) {
+    public EntityBadRequestException(String message) {
 
         super(Response.status(Response.Status.BAD_REQUEST)
                 .type(MediaType.APPLICATION_JSON_TYPE)
@@ -22,5 +23,6 @@ public class ObjectBadRequestException extends WebApplicationException {
                         put("message", message);
                     }
                 }).build());
+
     }
 }
