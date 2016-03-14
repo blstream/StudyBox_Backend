@@ -1,35 +1,31 @@
 package com.bls.patronage.db.dao;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.bls.patronage.db.model.Deck;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
-import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
-import com.bls.patronage.db.model.Deck;
-import com.bls.patronage.db.dao.DeckMapper;
+import java.util.List;
+import java.util.UUID;
 
 @RegisterMapper(DeckMapper.class)
 public interface DeckDAO {
 
-    @SqlQuery("select id, name from decks where id = :id")
+    @SqlQuery("select id, name, public from decks where id = :id")
     Deck getDeckById(@Bind("id") UUID id);
 
-    @SqlQuery("select id, name from decks")
+    @SqlQuery("select id, name, public from decks")
     List<Deck> getAllDecks();
 
-    @SqlQuery("select id, name from decks where name like :name")
+    @SqlQuery("select id, name, public from decks where name like :name")
     List<Deck> getDecksByName(@Bind("name") String name);
 
-    @GetGeneratedKeys
-    @SqlUpdate("insert into decks (id, name) values (:id, :name)")
-    UUID createDeck(@BindBean Deck deck);
+    @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :public)")
+    void createDeck(@BindBean Deck deck);
 
-    @SqlUpdate("update decks set name = :name where id = :id")
+    @SqlUpdate("update decks set name = :name, public = :public where id = :id")
     void updateDeck(@BindBean Deck deck);
 
     @SqlUpdate("delete from decks where id = :id")

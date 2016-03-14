@@ -33,13 +33,13 @@ public class DAOTest {
 
     @Before
     public void setUp() throws Exception {
-        Environment environment = new Environment( "test-environment", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
-        dbi = new DBIFactory().build( environment, getDataSourceFactory(), "test");
+        Environment environment = new Environment("test-environment", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
+        dbi = new DBIFactory().build(environment, getDataSourceFactory(), "test");
         handle = dbi.open();
         setUpDatabaseContent(handle);
 
-        deckExample1 = new Deck(UUID.fromString("020276e9-285c-4162-b585-32f272a947b1"),"math");
-        deckExample2 = new Deck(UUID.fromString("b5e9aa75-64d6-4d21-87a6-d0a91c70f997"),"bio");
+        deckExample1 = new Deck(UUID.fromString("020276e9-285c-4162-b585-32f272a947b1"), "math", false);
+        deckExample2 = new Deck(UUID.fromString("b5e9aa75-64d6-4d21-87a6-d0a91c70f997"), "bio", true);
     }
 
     @After
@@ -51,7 +51,7 @@ public class DAOTest {
     public void getAllDecks() throws Exception {
         final DeckDAO dao = dbi.open(DeckDAO.class);
         final List<Deck> decks = dao.getAllDecks();
-        assertThat(decks).containsSequence(deckExample1,deckExample2);
+        assertThat(decks).containsSequence(deckExample1, deckExample2);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class DAOTest {
 
     @Test
     public void createDeck() throws Exception {
-        final Deck createdDeck = new Deck(UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398"),"sport");
+        final Deck createdDeck = new Deck(UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398"), "sport", true);
         final DeckDAO dao = dbi.open(DeckDAO.class);
         dao.createDeck(createdDeck);
         assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
@@ -85,14 +85,13 @@ public class DAOTest {
 
     @Test
     public void updateDeck() throws Exception {
-        final Deck updatedDeck = new Deck(deckExample1.getId(),"miscellanous");
+        final Deck updatedDeck = new Deck(deckExample1.getId(), "miscellanous", true);
         final DeckDAO dao = dbi.open(DeckDAO.class);
         dao.updateDeck(updatedDeck);
         assertThat(dao.getDeckById(deckExample1.getId())).isEqualTo(updatedDeck);
     }
 
-    protected DataSourceFactory getDataSourceFactory()
-    {
+    protected DataSourceFactory getDataSourceFactory() {
         DataSourceFactory dataSourceFactory = new DataSourceFactory();
         dataSourceFactory.setDriverClass(JDBC_DRIVER);
         dataSourceFactory.setUrl(JDBC_URL);
@@ -104,15 +103,17 @@ public class DAOTest {
     private void setUpDatabaseContent(Handle handle) {
         handle.createCall("DROP TABLE decks IF EXISTS").invoke();
         handle.createCall(
-                "CREATE TABLE decks (id uuid primary key, name varchar(50) not null)")
+                "CREATE TABLE decks (id uuid primary key, name varchar(50) not null, public boolean)")
                 .invoke();
-        handle.createStatement("INSERT INTO decks VALUES (?, ?)")
+        handle.createStatement("INSERT INTO decks VALUES (?, ?, ?)")
                 .bind(0, "020276e9-285c-4162-b585-32f272a947b1")
                 .bind(1, "math")
+                .bind(2, false)
                 .execute();
-        handle.createStatement("INSERT INTO decks VALUES (?, ?)")
+        handle.createStatement("INSERT INTO decks VALUES (?, ?, ?)")
                 .bind(0, "b5e9aa75-64d6-4d21-87a6-d0a91c70f997")
                 .bind(1, "bio")
+                .bind(2, true)
                 .execute();
     }
 }
