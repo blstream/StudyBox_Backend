@@ -4,17 +4,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DeckRepresentation {
 
-    private final String name;
+    @JsonProperty
+    final private String name;
+    @JsonProperty("public")
+    final private boolean publicAccessible;
 
     public DeckRepresentation() {
-        name = null;
+        this.name = null;
+        this.publicAccessible = false;
     }
 
     public DeckRepresentation(String name) {
         this.name = name;
+        this.publicAccessible = false;
     }
 
-    @JsonProperty
+    public DeckRepresentation(String name, boolean publicAccessible) {
+        this.name = name;
+        this.publicAccessible = publicAccessible;
+    }
+
+
+    public boolean isPublic() { return publicAccessible; }
+
     public String getName() {
         return name;
     }
