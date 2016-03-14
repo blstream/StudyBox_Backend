@@ -1,21 +1,14 @@
 package com.bls.patronage.resources;
 
-import java.util.UUID;
-
-import javax.validation.Valid;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
-
+import com.bls.patronage.exception.ObjectBadRequestException;
 import io.dropwizard.jersey.params.UUIDParam;
+
+import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 @Path("/decks/{deckId}")
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,20 +20,40 @@ public class DeckResource {
     }
 
     @GET
-    public Deck getDeck(@PathParam("deckId") UUIDParam deckId) {
-        return decksDAO.getDeckById(deckId.get());
+    public Deck getDeck(
+            @Valid
+            @PathParam("deckId") UUIDParam deckId) {
+        final Deck deck = decksDAO.getDeckById(deckId.get());
+        if (deck == null) {
+            throw new ObjectBadRequestException("There is no deck with specified ID.");
+        }
+        return deck;
     }
 
     @DELETE
-    public void deleteDeck(@PathParam("deckId") UUIDParam deckId) {
-        decksDAO.deleteDeck(decksDAO.getDeckById(deckId.get()).getId());
+    public void deleteDeck(
+            @Valid
+            @PathParam("deckId") UUIDParam deckId) {
+        final Deck deck = decksDAO.getDeckById(deckId.get());
+        if (deck == null) {
+            throw new ObjectBadRequestException("There is no deck with specified ID.");
+        }
+        decksDAO.deleteDeck(deck.getId());
     }
 
     @PUT
-    public void updateDeck(@PathParam("deckId") UUID deckId,
-                           @Valid DeckRepresentation deck) {
-        Deck updatedDeck = decksDAO.getDeckById(deckId);
+    public Deck updateDeck(
+            @Valid
+            @PathParam("deckId") UUIDParam deckId,
+            @Valid DeckRepresentation deck) {
+        if (deck.getName().isEmpty())
+            throw new ObjectBadRequestException("Deck name cannot be empty.");
+        Deck updatedDeck = decksDAO.getDeckById(deckId.get());
+        if (updatedDeck == null) {
+            throw new ObjectBadRequestException("There is no deck with specified ID.");
+        }
         updatedDeck.setName(deck.getName());
         decksDAO.updateDeck(updatedDeck);
+        return updatedDeck;
     }
 }
