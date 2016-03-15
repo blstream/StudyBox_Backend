@@ -21,7 +21,7 @@ public interface DeckDAO {
     List<Deck> getAllDecks();
 
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) " +
+    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
             "from decks\n" +
             "left join flashcards\n" +
             "on decks.id = flashcards.deckid " +
