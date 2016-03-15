@@ -2,7 +2,9 @@ package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableList;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jdbi.DBIFactory;
@@ -30,7 +32,6 @@ public class DAOTest {
     private Deck deckExample1;
     private Deck deckExample2;
 
-
     @Before
     public void setUp() throws Exception {
         Environment environment = new Environment("test-environment", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
@@ -52,6 +53,20 @@ public class DAOTest {
         final DeckDAO dao = dbi.open(DeckDAO.class);
         final List<Deck> decks = dao.getAllDecks();
         assertThat(decks).containsSequence(deckExample1, deckExample2);
+    }
+
+    @Test
+    public void getAllDecksWithFlashcardsNumber() throws Exception {
+        final DeckWithFlashcardsNumber deckWithFlashcards1
+                = new DeckWithFlashcardsNumber(deckExample1.getId(),
+                "math", false, 1);
+        final DeckWithFlashcardsNumber deckWithFlashcards2
+                = new DeckWithFlashcardsNumber(deckExample2.getId(),
+                "bio", true, 0);
+
+        final DeckDAO dao = dbi.open(DeckDAO.class);
+        final List<DeckWithFlashcardsNumber> foundDecks = dao.getAllDecksWithFlashcardsNumber();
+        assertThat(foundDecks).contains(deckWithFlashcards1, deckWithFlashcards2);
     }
 
     @Test
@@ -85,7 +100,7 @@ public class DAOTest {
 
     @Test
     public void updateDeck() throws Exception {
-        final Deck updatedDeck = new Deck(deckExample1.getId(), "miscellanous", true);
+        final Deck updatedDeck = new Deck(deckExample1.getId(), "miscellaneous", true);
         final DeckDAO dao = dbi.open(DeckDAO.class);
         dao.updateDeck(updatedDeck);
         assertThat(dao.getDeckById(deckExample1.getId())).isEqualTo(updatedDeck);
@@ -114,6 +129,17 @@ public class DAOTest {
                 .bind(0, "b5e9aa75-64d6-4d21-87a6-d0a91c70f997")
                 .bind(1, "bio")
                 .bind(2, true)
+                .execute();
+        handle.createCall("DROP TABLE flashcards IF EXISTS").invoke();
+        handle.createCall(
+                "CREATE TABLE flashcards (id uuid primary key, question varchar(1000) not null," +
+                        " answer varchar(1000) not null, deckid uuid not null)")
+                .invoke();
+        handle.createStatement("INSERT INTO flashcards VALUES (?, ?, ?, ?)")
+                .bind(0, "15bb54d4-bd08-40b4-a0fb-2f35865173fe")
+                .bind(1, "ping")
+                .bind(2, "pong")
+                .bind(3, "020276e9-285c-4162-b585-32f272a947b1")
                 .execute();
     }
 }
