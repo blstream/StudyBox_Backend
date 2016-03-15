@@ -53,7 +53,7 @@ public class DeckResource {
             throw new EntityBadRequestException("There is no deck with specified ID.");
         }
         updatedDeck.setName(deck.getName());
-        updatedDeck.setPublic(deck.isPublic());
+        updatedDeck.setIsPublic(deck.getIsPublic());
         decksDAO.updateDeck(updatedDeck);
         return updatedDeck;
     }

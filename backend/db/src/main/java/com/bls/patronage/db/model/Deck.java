@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Deck extends IdentifiableEntity {
     private String name;
-    private boolean publicAccessible;
+    private boolean isPublic;
 
     public Deck() {
     }
@@ -12,25 +12,25 @@ public class Deck extends IdentifiableEntity {
     public Deck(UUID id, String name) {
         super(id);
         this.name = name;
-        this.publicAccessible = false;
+        this.isPublic = false;
     }
 
     public Deck(String id, String name) {
         super(id);
         this.name = name;
-        this.publicAccessible = false;
+        this.isPublic = false;
     }
 
-    public Deck(UUID id, String name, boolean publicAccessible) {
+    public Deck(UUID id, String name, boolean isPublic) {
         super(id);
         this.name = name;
-        this.publicAccessible = publicAccessible;
+        this.isPublic = isPublic;
     }
 
-    public Deck(String id, String name, boolean publicAccessible) {
+    public Deck(String id, String name, boolean isPublic) {
         super(id);
         this.name = name;
-        this.publicAccessible = publicAccessible;
+        this.isPublic = isPublic;
     }
 
     public Deck(String name) {
@@ -45,12 +45,12 @@ public class Deck extends IdentifiableEntity {
         this.name = name;
     }
 
-    public boolean isPublic() {
-        return publicAccessible;
+    public boolean getIsPublic() {
+        return isPublic;
     }
 
-    public void setPublic(boolean publicAccessible) {
-        this.publicAccessible = publicAccessible;
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Deck extends IdentifiableEntity {
         Deck deck = (Deck) o;
 
         if (!getId().equals(deck.getId())) return false;
-        if (isPublic() != deck.isPublic()) return false;
+        if (getIsPublic() != deck.getIsPublic()) return false;
         return getName().equals(deck.getName());
 
     }
@@ -77,7 +77,7 @@ public class Deck extends IdentifiableEntity {
         return "Deck{" +
                 "UUID=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", public=" + isPublic() +
+                ", public=" + getIsPublic() +
                 '}';
     }
 }

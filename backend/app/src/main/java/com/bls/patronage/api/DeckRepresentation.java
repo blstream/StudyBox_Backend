@@ -6,26 +6,27 @@ public class DeckRepresentation {
 
     @JsonProperty
     final private String name;
-    @JsonProperty("public")
-    final private boolean publicAccessible;
+    @JsonProperty
+    final private boolean isPublic;
 
     public DeckRepresentation() {
         this.name = null;
-        this.publicAccessible = false;
+        this.isPublic = false;
     }
 
     public DeckRepresentation(String name) {
         this.name = name;
-        this.publicAccessible = false;
+        this.isPublic = false;
     }
 
     public DeckRepresentation(String name, boolean publicAccessible) {
         this.name = name;
-        this.publicAccessible = publicAccessible;
+        this.isPublic = publicAccessible;
     }
 
-
-    public boolean isPublic() { return publicAccessible; }
+    public boolean getIsPublic() {
+        return isPublic;
+    }
 
     public String getName() {
         return name;

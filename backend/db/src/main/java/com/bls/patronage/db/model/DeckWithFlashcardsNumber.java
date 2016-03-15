@@ -4,30 +4,30 @@ import java.util.UUID;
 
 public class DeckWithFlashcardsNumber extends IdentifiableEntity {
     private String name;
-    private boolean publicAccessible;
+    private boolean isPublic;
     private int flashcardsNumber;
 
     public DeckWithFlashcardsNumber() {
         this.name = null;
-        this.publicAccessible = false;
+        this.isPublic = false;
         flashcardsNumber = 0;
     }
 
     public DeckWithFlashcardsNumber(UUID id, String name,
-                                    boolean publicAccessible,
+                                    boolean isPublic,
                                     int flashcardsNumber) {
         super(id);
         this.name = name;
-        this.publicAccessible = publicAccessible;
+        this.isPublic = isPublic;
         this.flashcardsNumber = flashcardsNumber;
     }
 
-    public boolean isPublic() {
-        return publicAccessible;
+    public boolean getIsPublic() {
+        return isPublic;
     }
 
-    public void setPublic(boolean publicAccessible) {
-        this.publicAccessible = publicAccessible;
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public String getName() {
@@ -50,7 +50,7 @@ public class DeckWithFlashcardsNumber extends IdentifiableEntity {
         DeckWithFlashcardsNumber deck = (DeckWithFlashcardsNumber) o;
 
         if (!getId().equals(deck.getId())) return false;
-        if (isPublic() != deck.isPublic()) return false;
+        if (getIsPublic() != deck.getIsPublic()) return false;
         if (getCount() != deck.getCount()) return false;
         return getName().equals(deck.getName());
 
@@ -68,7 +68,7 @@ public class DeckWithFlashcardsNumber extends IdentifiableEntity {
         return "Deck{" +
                 "UUID=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", public=" + isPublic() +
+                ", public=" + getIsPublic() +
                 ", count=" + getCount() +
                 '}';
     }

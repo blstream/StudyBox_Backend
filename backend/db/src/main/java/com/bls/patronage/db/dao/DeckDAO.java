@@ -31,10 +31,10 @@ public interface DeckDAO {
     @SqlQuery("select id, name, public from decks where name like :name")
     List<Deck> getDecksByName(@Bind("name") String name);
 
-    @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :public)")
+    @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
     void createDeck(@BindBean Deck deck);
 
-    @SqlUpdate("update decks set name = :name, public = :public where id = :id")
+    @SqlUpdate("update decks set name = :name, public = :isPublic where id = :id")
     void updateDeck(@BindBean Deck deck);
 
     @SqlUpdate("delete from decks where id = :id")

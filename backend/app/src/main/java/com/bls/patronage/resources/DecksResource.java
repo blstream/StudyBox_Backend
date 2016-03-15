@@ -24,7 +24,7 @@ public class DecksResource {
     public Deck createDeck(DeckRepresentation deck) {
         if (deck.getName().isEmpty())
             throw new EntityBadRequestException("Deck name cannot be empty.");
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.isPublic());
+        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
         decksDAO.createDeck(createdDeck);
         return createdDeck;
     }
