@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FlashcardResourceTest {
+public class FlashcardsResourceTest {
     private static final FlashcardDAO dao = mock(FlashcardDAO.class);
 
     @ClassRule
