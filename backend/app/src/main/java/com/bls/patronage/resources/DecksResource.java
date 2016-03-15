@@ -4,6 +4,7 @@ import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,7 +21,7 @@ public class DecksResource {
     }
 
     @POST
-    public Deck createDeck(DeckRepresentation deck) {
+    public Deck createDeck(@Valid DeckRepresentation deck) {
         Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
         decksDAO.createDeck(createdDeck);
         return createdDeck;

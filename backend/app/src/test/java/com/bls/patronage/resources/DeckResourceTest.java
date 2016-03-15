@@ -129,7 +129,7 @@ public class DeckResourceTest {
 
         verify(dao, never()).getDeckById(deckId);
         verify(dao, never()).updateDeck(any(Deck.class));
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
+        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 }
 

@@ -69,7 +69,7 @@ public class DecksResourceTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON_TYPE));
 
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.BAD_REQUEST);
+        assertThat(response.getStatus()).isEqualTo(422);
     }
 
     @Test
