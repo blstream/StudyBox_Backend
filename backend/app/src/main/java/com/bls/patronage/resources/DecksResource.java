@@ -31,11 +31,13 @@ public class DecksResource {
     public Response listDecks(@QueryParam("name") String name,
                               @QueryParam("statusEnabled") boolean statusEnabled) {
         if (name == null) {
-            if (statusEnabled == false)
+            if (statusEnabled == false) {
                 return Response.ok(decksDAO.getAllDecks(), MediaType.APPLICATION_JSON).build();
-            else
+            } else {
                 return Response.ok(decksDAO.getAllDecksWithFlashcardsNumber(), MediaType.APPLICATION_JSON).build();
-        } else
+            }
+        } else {
             return Response.ok(decksDAO.getDecksByName(name), MediaType.APPLICATION_JSON).build();
+        }
     }
 }
