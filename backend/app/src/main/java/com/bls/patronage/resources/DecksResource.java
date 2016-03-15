@@ -7,7 +7,7 @@ import com.bls.patronage.exception.EntityBadRequestException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+import javax.ws.rs.core.Response;
 import java.util.UUID;
 
 @Path("/decks")
@@ -30,10 +30,14 @@ public class DecksResource {
     }
 
     @GET
-    public List<Deck> listDecks(@QueryParam("name") String name) {
-        if (name == null)
-            return decksDAO.getAllDecks();
-        else
-            return decksDAO.getDecksByName(name);
+    public Response listDecks(@QueryParam("name") String name,
+                              @QueryParam("statusEnabled") boolean statusEnabled) {
+        if (name == null) {
+            if (statusEnabled == false)
+                return Response.ok(decksDAO.getAllDecks(), MediaType.APPLICATION_JSON).build();
+            else
+                return Response.ok(decksDAO.getAllDecksWithFlashcardsNumber(), MediaType.APPLICATION_JSON).build();
+        } else
+            return Response.ok(decksDAO.getDecksByName(name), MediaType.APPLICATION_JSON).build();
     }
 }

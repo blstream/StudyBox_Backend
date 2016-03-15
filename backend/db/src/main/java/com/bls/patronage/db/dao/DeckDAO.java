@@ -1,6 +1,7 @@
 package com.bls.patronage.db.dao;
 
 import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
@@ -18,6 +19,14 @@ public interface DeckDAO {
 
     @SqlQuery("select id, name, public from decks")
     List<Deck> getAllDecks();
+
+    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
+    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) " +
+            "from decks\n" +
+            "left join flashcards\n" +
+            "on decks.id = flashcards.deckid " +
+            "group by decks.id")
+    List<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
 
     @SqlQuery("select id, name, public from decks where name like :name")
     List<Deck> getDecksByName(@Bind("name") String name);
