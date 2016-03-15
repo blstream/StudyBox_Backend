@@ -14,14 +14,14 @@ import java.util.UUID;
 @RegisterMapper(FlashcardMapper.class)
 public interface FlashcardDAO {
 
-    @SqlQuery("select id,question,answer from flashcards where id = :id")
+    @SqlQuery("select id,question,answer,deckID from flashcards where id = :id")
     Flashcard getFlashcardById(@Bind("id") UUID id);
 
-    @SqlQuery("select id,question,answer from flashcards")
-    List<Flashcard> getAllFlashcards();
+    @SqlQuery("select id,question,answer,deckID from flashcards where deckID = :deckID")
+    List<Flashcard> getAllFlashcards(@Bind("deckID") UUID deckId);
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into flashcards values (:id, :question, :answer)")
+    @SqlUpdate("insert into flashcards values (:id, :question, :answer, :deckID)")
     UUID createFlashcard(@BindBean Flashcard flashcard);
 
     @SqlUpdate("update flashcards set question = :question, answer = :answer where id = :id")
