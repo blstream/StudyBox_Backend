@@ -17,7 +17,7 @@ public class DeckRepresentationTest {
     @Before
     public void setup() {
         deck = new DeckRepresentation("math",true);
-        deckWithDifferentName = new DeckRepresentation("physics");
+        deckWithDifferentName = new DeckRepresentation("physics",false);
     }
 
     @Test

@@ -14,11 +14,6 @@ public class DeckRepresentation {
         this.isPublic = false;
     }
 
-    public DeckRepresentation(String name) {
-        this.name = name;
-        this.isPublic = false;
-    }
-
     public DeckRepresentation(String name, boolean publicAccessible) {
         this.name = name;
         this.isPublic = publicAccessible;

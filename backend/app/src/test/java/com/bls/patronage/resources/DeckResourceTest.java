@@ -43,7 +43,7 @@ public class DeckResourceTest {
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
         deck = new Deck(deckId,"math");
-        deckRepresentation = new DeckRepresentation("biology");
+        deckRepresentation = new DeckRepresentation("biology", false);
     }
 
     @After
@@ -125,7 +125,7 @@ public class DeckResourceTest {
         when(dao.getDeckById(deckId)).thenReturn(deck);
         final Response response = resources.client().target("/decks/" + deckId)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.entity(new DeckRepresentation(""), MediaType.APPLICATION_JSON));
+                .put(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON));
 
         verify(dao, never()).getDeckById(deckId);
         verify(dao, never()).updateDeck(any(Deck.class));

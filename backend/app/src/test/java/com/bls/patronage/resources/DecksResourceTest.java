@@ -43,7 +43,7 @@ public class DecksResourceTest {
     @Before
     public void setUp() {
         deck = new Deck("12345678-9012-3456-7890-123456789012", "math");
-        deckRepresentation = new DeckRepresentation("math");
+        deckRepresentation = new DeckRepresentation("math", false);
     }
 
     @After
@@ -67,7 +67,7 @@ public class DecksResourceTest {
     public void createDeckWithoutName() throws JsonProcessingException {
         final Response response = resources.client().target("/decks")
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(new DeckRepresentation(""), MediaType.APPLICATION_JSON_TYPE));
+                .post(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.BAD_REQUEST);
     }
