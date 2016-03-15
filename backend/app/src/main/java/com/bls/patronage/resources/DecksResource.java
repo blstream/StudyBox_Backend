@@ -3,7 +3,6 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
-import com.bls.patronage.exception.EntityBadRequestException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,8 +21,6 @@ public class DecksResource {
 
     @POST
     public Deck createDeck(DeckRepresentation deck) {
-        if (deck.getName().isEmpty())
-            throw new EntityBadRequestException("Deck name cannot be empty.");
         Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
         decksDAO.createDeck(createdDeck);
         return createdDeck;

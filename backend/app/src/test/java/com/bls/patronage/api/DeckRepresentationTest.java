@@ -1,6 +1,5 @@
 package com.bls.patronage.api;
 
-import com.bls.patronage.api.DeckRepresentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
 import org.junit.Before;
@@ -16,7 +15,7 @@ public class DeckRepresentationTest {
 
     @Before
     public void setup() {
-        deck = new DeckRepresentation("math",true);
+        deck = new DeckRepresentation("math", true);
         deckWithDifferentName = new DeckRepresentation("physics",false);
     }
 
