@@ -1,9 +1,5 @@
 package com.bls.patronage.dao;
 
-import com.bls.patronage.db.dao.DeckDAO;
-import com.bls.patronage.db.exception.DataAccessException;
-import com.bls.patronage.db.model.Deck;
-import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.codahale.metrics.MetricRegistry;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jackson.Jackson;
@@ -15,12 +11,7 @@ import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 
-import java.util.Collection;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class DAOTest {
+abstract public class DAOTest {
     private static final String JDBC_DRIVER = org.h2.Driver.class.getName();
     private static final String JDBC_URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
     private static final String USER = "sa";
@@ -48,6 +39,8 @@ public class DAOTest {
         handle.close();
     }
 
+    protected DataSourceFactory getDataSourceFactory()
+    {
     @Test
     public void getAllDecks() throws Exception {
         final DeckDAO dao = dbi.open(DeckDAO.class);
@@ -115,6 +108,7 @@ public class DAOTest {
         return dataSourceFactory;
     }
 
+    abstract protected void setUpDatabaseContent(Handle handle);
     private void setUpDatabaseContent(Handle handle) {
         handle.createCall("DROP TABLE decks IF EXISTS").invoke();
         handle.createCall(
