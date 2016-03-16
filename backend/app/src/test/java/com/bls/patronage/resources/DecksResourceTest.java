@@ -41,12 +41,25 @@ public class DecksResourceTest {
     private Deck deck;
     private DeckRepresentation deckRepresentation;
     private String decksURI;
+    private String decksByNameURI;
+    private String decksByBadNameURI;
+    private String decksWithFlashcardNumberURI;
+    private String decksByEmptyNameURI;
 
     @Before
     public void setUp() {
         deck = new Deck("12345678-9012-3456-7890-123456789012", "math");
         deckRepresentation = new DeckRepresentation("math", false);
         decksURI = UriBuilder.fromResource(DecksResource.class).build().toString();
+
+        decksByNameURI = UriBuilder.fromResource(DecksResource.class)
+                .queryParam("name","something").build().toString();
+        decksByBadNameURI = UriBuilder.fromResource(DecksResource.class)
+                .queryParam("name","anotherThing").build().toString();
+        decksByEmptyNameURI = UriBuilder.fromResource(DecksResource.class)
+                .queryParam("name","").build().toString();
+        decksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class)
+                .queryParam("isEnabled",true).build().toString();
     }
 
     @After
@@ -93,7 +106,7 @@ public class DecksResourceTest {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getDecksByName("something")).thenReturn(decks);
 
-        final List<Deck> response = resources.client().target(decksURI + "?name=something")
+        final List<Deck> response = resources.client().target(decksByNameURI)
                 .request().get(new GenericType<List<Deck>>() {
                 });
 
@@ -105,7 +118,7 @@ public class DecksResourceTest {
     public void listDecksByNamesWhenThereIsBadNameTyped() throws Exception {
         when(dao.getDecksByName("anotherThing")).thenReturn(null);
 
-        final List<Deck> response = resources.client().target(decksURI + "?name=anotherThing")
+        final List<Deck> response = resources.client().target(decksByBadNameURI)
                 .request().get(new GenericType<List<Deck>>() {
                 });
 
@@ -117,7 +130,7 @@ public class DecksResourceTest {
     public void listDecksByNamesWhenThereIsNoNameTyped() throws Exception {
         when(dao.getDecksByName("")).thenReturn(null);
 
-        final List<Deck> response = resources.client().target(decksURI + "?name=")
+        final List<Deck> response = resources.client().target(decksByEmptyNameURI)
                 .request().get(new GenericType<List<Deck>>() {
                 });
 
@@ -132,7 +145,7 @@ public class DecksResourceTest {
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
         when(dao.getAllDecksWithFlashcardsNumber()).thenReturn(decks);
 
-        final List<DeckWithFlashcardsNumber> response = resources.client().target(decksURI + "?isEnabled=true")
+        final List<DeckWithFlashcardsNumber> response = resources.client().target(decksWithFlashcardNumberURI)
                 .request().get(new GenericType<List<DeckWithFlashcardsNumber>>() {
                 });
 
