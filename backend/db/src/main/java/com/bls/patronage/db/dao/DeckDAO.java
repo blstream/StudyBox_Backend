@@ -1,24 +1,25 @@
 package com.bls.patronage.db.dao;
 
+import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.BindBean;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
 import java.util.UUID;
 
 @RegisterMapper(DeckMapper.class)
-public interface DeckDAO {
+public abstract class  DeckDAO {
 
     @SqlQuery("select id, name, public from decks where id = :id")
-    Deck getDeckById(@Bind("id") UUID id);
+    abstract Deck getDeck(@Bind("id") UUID id);
+
+    @SqlQuery("select id, name, public from decks where name like :name")
+    abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
     @SqlQuery("select id, name, public from decks")
-    List<Deck> getAllDecks();
+    public abstract List<Deck> getAllDecks();
 
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
@@ -26,17 +27,32 @@ public interface DeckDAO {
             "left join flashcards " +
             "on decks.id = flashcards.deckid " +
             "group by decks.id")
-    List<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
-
-    @SqlQuery("select id, name, public from decks where name like :name")
-    List<Deck> getDecksByName(@Bind("name") String name);
+    public abstract List<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
 
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
-    void createDeck(@BindBean Deck deck);
+    public abstract void createDeck(@BindBean Deck deck);
 
     @SqlUpdate("update decks set name = :name, public = :isPublic where id = :id")
-    void updateDeck(@BindBean Deck deck);
+    public abstract void updateDeck(@BindBean Deck deck);
 
     @SqlUpdate("delete from decks where id = :id")
-    void deleteDeck(@Bind("id") UUID id);
+    public abstract void deleteDeck(@Bind("id") UUID id);
+
+
+    public Deck getDeckById(UUID uuid) {
+        Deck deck = getDeck(uuid);
+        if(deck==null) {
+            throw new DataAccessException("There is no deck with specified ID");
+        }
+        return deck;
+    }
+
+    public List<Deck> getDecksByName(String name) {
+        List<Deck> decks = getDecksUsingName(name);
+        if(decks.isEmpty()) {
+            throw new DataAccessException("There are no decks matching this name");
+        }
+        return decks;
+    }
+
 }

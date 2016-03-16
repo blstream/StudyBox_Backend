@@ -2,6 +2,8 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.exception.DataAccessException;
+import com.bls.patronage.db.exception.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.Deck;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
@@ -29,6 +31,7 @@ public class DeckResourceTest {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new DeckResource(dao))
+            .addProvider(new DataAccessExceptionMapper())
             .build();
 
     @Captor
@@ -42,8 +45,8 @@ public class DeckResourceTest {
     public void setUp() {
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
-        deck = new Deck(deckId,"math");
-        deckRepresentation = new DeckRepresentation("biology", false);
+        deck = new Deck(deckId, "math");
+        deckRepresentation = new DeckRepresentation("biology",false);
     }
 
     @After
@@ -63,7 +66,7 @@ public class DeckResourceTest {
 
     @Test
     public void getDeckNotFound() {
-        when(dao.getDeckById(fakeId)).thenReturn(null);
+        when(dao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
         final Response response = resources.getJerseyTest().target("/decks/" + fakeId).request().get();
 
         verify(dao).getDeckById(fakeId);
@@ -84,7 +87,7 @@ public class DeckResourceTest {
 
     @Test
     public void deleteDeckWhenThereIsNoDeck() {
-        when(dao.getDeckById(fakeId)).thenReturn(null);
+        when(dao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
         final Response response = resources.client().target("/decks/" + fakeId)
                 .request()
                 .delete();
@@ -110,7 +113,7 @@ public class DeckResourceTest {
 
     @Test
     public void updateDeckWhenThereIsNoDeck() {
-        when(dao.getDeckById(fakeId)).thenReturn(null);
+        when(dao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
         final Response response = resources.client().target("/decks/" + fakeId)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
@@ -125,7 +128,7 @@ public class DeckResourceTest {
         when(dao.getDeckById(deckId)).thenReturn(deck);
         final Response response = resources.client().target("/decks/" + deckId)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON));
+                .put(Entity.entity(new DeckRepresentation("",false), MediaType.APPLICATION_JSON));
 
         verify(dao, never()).getDeckById(deckId);
         verify(dao, never()).updateDeck(any(Deck.class));

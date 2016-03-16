@@ -1,6 +1,7 @@
 package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.codahale.metrics.MetricRegistry;
@@ -91,7 +92,7 @@ public class DAOTest {
         assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
     }
 
-    @Test
+    @Test(expected = DataAccessException.class)
     public void deleteDeck() throws Exception {
         final DeckDAO dao = dbi.open(DeckDAO.class);
         dao.deleteDeck(deckExample2.getId());
