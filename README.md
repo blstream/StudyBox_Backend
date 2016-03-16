@@ -14,6 +14,10 @@ Prerequisites:
 
         (cd backend && mvn -T4 clean package)
 
+## Create database
+
+	(java -jar backend/app/target/app-1.0-SNAPSHOT.jar db migrate backend/app/studybox-h2.yml)
+
 ## Running on H2
 
         (java -jar backend/app/target/app-1.0-SNAPSHOT.jar server backend/app/studybox-h2.yml)
