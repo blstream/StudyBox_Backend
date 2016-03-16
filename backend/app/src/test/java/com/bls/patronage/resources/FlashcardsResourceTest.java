@@ -3,7 +3,6 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Flashcard;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
@@ -36,7 +35,6 @@ public class FlashcardsResourceTest {
     private ArgumentCaptor<Flashcard> flashcardCaptor;
     private Flashcard flashcard;
     private FlashcardRepresentation flashcardRepresentation;
-    //private Deck deck;
 
     @Before
     public void setUp() {
@@ -50,7 +48,7 @@ public class FlashcardsResourceTest {
     }
 
     @Test
-    public void createFlashcard() throws JsonProcessingException {
+    public void createFlashcard() {
         final Response response = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(flashcardRepresentation, MediaType.APPLICATION_JSON_TYPE));
@@ -63,7 +61,7 @@ public class FlashcardsResourceTest {
     }
 
     @Test
-    public void createFlashcardWithoutQuestionAndAnswer() throws JsonProcessingException {
+    public void createFlashcardWithoutQuestionAndAnswer() {
         final Response response = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(new FlashcardRepresentation(), MediaType.APPLICATION_JSON_TYPE));
@@ -72,7 +70,7 @@ public class FlashcardsResourceTest {
     }
 
     @Test
-    public void listFlashcards() throws Exception {
+    public void listFlashcards() {
         final ImmutableList<Flashcard> flashcards = ImmutableList.of(flashcard);
         when(dao.getAllFlashcards(flashcard.getDeckID())).thenReturn(flashcards);
 
