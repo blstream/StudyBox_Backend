@@ -18,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,13 +41,17 @@ public class DeckResourceTest {
     private DeckRepresentation deckRepresentation;
     private UUID deckId;
     private UUID fakeId;
+    private String deckURI;
+    private String fakeURI;
 
     @Before
     public void setUp() {
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
         deck = new Deck(deckId, "math");
-        deckRepresentation = new DeckRepresentation("biology",false);
+        deckRepresentation = new DeckRepresentation("biology", false);
+        deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
+        fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
     }
 
     @After
@@ -58,7 +63,10 @@ public class DeckResourceTest {
     public void getDeckSuccess() {
         when(dao.getDeckById(deckId)).thenReturn(deck);
 
-        Deck found = resources.getJerseyTest().target("/decks/" + deckId).request().get(Deck.class);
+
+        Deck found = resources.getJerseyTest()
+                .target(deckURI)
+                .request().get(Deck.class);
 
         verify(dao).getDeckById(deckId);
         assertThat(found).isEqualTo(deck);
@@ -67,7 +75,9 @@ public class DeckResourceTest {
     @Test
     public void getDeckNotFound() {
         when(dao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
-        final Response response = resources.getJerseyTest().target("/decks/" + fakeId).request().get();
+        final Response response = resources.getJerseyTest()
+                .target(fakeURI)
+                .request().get();
 
         verify(dao).getDeckById(fakeId);
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
@@ -76,7 +86,8 @@ public class DeckResourceTest {
     @Test
     public void deleteDeck() {
         when(dao.getDeckById(deckId)).thenReturn(deck);
-        final Response response = resources.client().target("/decks/" + deckId)
+        final Response response = resources.client()
+                .target(deckURI)
                 .request()
                 .delete();
 
@@ -88,7 +99,7 @@ public class DeckResourceTest {
     @Test
     public void deleteDeckWhenThereIsNoDeck() {
         when(dao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
-        final Response response = resources.client().target("/decks/" + fakeId)
+        final Response response = resources.client().target(fakeURI)
                 .request()
                 .delete();
 
@@ -100,7 +111,8 @@ public class DeckResourceTest {
     @Test
     public void updateDeck() {
         when(dao.getDeckById(deckId)).thenReturn(deck);
-        final Response response = resources.client().target("/decks/" + deckId)
+        final Response response = resources.client()
+                .target(deckURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
         Deck updatedDeck = response.readEntity(Deck.class);
@@ -114,7 +126,7 @@ public class DeckResourceTest {
     @Test
     public void updateDeckWhenThereIsNoDeck() {
         when(dao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
-        final Response response = resources.client().target("/decks/" + fakeId)
+        final Response response = resources.client().target(fakeURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
@@ -126,9 +138,10 @@ public class DeckResourceTest {
     @Test
     public void updateDeckWithEmptyName() {
         when(dao.getDeckById(deckId)).thenReturn(deck);
-        final Response response = resources.client().target("/decks/" + deckId)
+        final Response response = resources.client()
+                .target(deckURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.entity(new DeckRepresentation("",false), MediaType.APPLICATION_JSON));
+                .put(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON));
 
         verify(dao, never()).getDeckById(deckId);
         verify(dao, never()).updateDeck(any(Deck.class));
