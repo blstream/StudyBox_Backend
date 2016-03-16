@@ -71,7 +71,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void createDeck() throws JsonProcessingException {
+    public void createDeck() {
         final Response response = resources.client().target(decksURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
@@ -83,7 +83,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void createDeckWithoutName() throws JsonProcessingException {
+    public void createDeckWithoutName() {
         final Response response = resources.client().target(decksURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON_TYPE));
@@ -92,7 +92,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecks() throws Exception {
+    public void listDecks() {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getAllDecks()).thenReturn(decks);
 
@@ -103,7 +103,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNames() throws Exception {
+    public void listDecksByNames() {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getDecksByName("something")).thenReturn(decks);
 
@@ -114,7 +114,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsBadNameTyped() throws Exception {
+    public void listDecksByNamesWhenThereIsBadNameTyped() {
         when(dao.getDecksByName("anotherThing")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByBadNameURI);
@@ -124,7 +124,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsNoNameTyped() throws Exception {
+    public void listDecksByNamesWhenThereIsNoNameTyped() {
         when(dao.getDecksByName("")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByEmptyNameURI);
