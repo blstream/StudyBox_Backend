@@ -5,8 +5,12 @@ import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,9 +35,9 @@ public class DecksResource {
 
     @GET
     public Collection<Deck> listDecks(@QueryParam("name") String name,
-                                                @QueryParam("isEnabled") Boolean isEnabled) {
+                                      @QueryParam("isEnabled") Boolean isEnabled) {
         if (name == null) {
-            if (isEnabled==null || isEnabled==false) {
+            if (isEnabled == null || isEnabled == false) {
                 return decksDAO.getAllDecks();
             } else {
                 Collection<Deck> decks = new ArrayList<>();

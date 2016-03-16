@@ -25,7 +25,10 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DecksResourceTest {
@@ -53,13 +56,13 @@ public class DecksResourceTest {
         decksURI = UriBuilder.fromResource(DecksResource.class).build().toString();
 
         decksByNameURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("name","something").build().toString();
+                .queryParam("name", "something").build().toString();
         decksByBadNameURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("name","anotherThing").build().toString();
+                .queryParam("name", "anotherThing").build().toString();
         decksByEmptyNameURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("name","").build().toString();
+                .queryParam("name", "").build().toString();
         decksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("isEnabled",true).build().toString();
+                .queryParam("isEnabled", true).build().toString();
     }
 
     @After

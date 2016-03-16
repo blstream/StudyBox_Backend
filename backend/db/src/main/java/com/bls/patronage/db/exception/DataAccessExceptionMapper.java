@@ -8,21 +8,21 @@ import java.util.HashMap;
 
 @Provider
 public class DataAccessExceptionMapper
-    implements ExceptionMapper<DataAccessException> {
+        implements ExceptionMapper<DataAccessException> {
 
-        public DataAccessExceptionMapper() {
-        }
+    public DataAccessExceptionMapper() {
+    }
 
-        @Override
-        public Response toResponse(DataAccessException dataAccessException) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON_TYPE)
-                    .entity(new HashMap<String, String>() {
-                        {
-                            put("code", "400");
-                            put("message", dataAccessException.getMessage());
-                        }
-                    }).build();
+    @Override
+    public Response toResponse(DataAccessException dataAccessException) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(new HashMap<String, String>() {
+                    {
+                        put("code", "400");
+                        put("message", dataAccessException.getMessage());
+                    }
+                }).build();
 
-        }
+    }
 }
