@@ -31,9 +31,9 @@ public class DecksResource {
 
     @GET
     public Collection<Deck> listDecks(@QueryParam("name") String name,
-                                                @QueryParam("statusEnabled") Boolean statusEnabled) {
+                                                @QueryParam("isEnabled") Boolean isEnabled) {
         if (name == null) {
-            if (statusEnabled==null || statusEnabled==false) {
+            if (isEnabled==null || isEnabled==false) {
                 return decksDAO.getAllDecks();
             } else {
                 Collection<Deck> decks = new ArrayList<>();

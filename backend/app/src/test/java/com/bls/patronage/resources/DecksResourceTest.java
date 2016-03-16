@@ -132,7 +132,7 @@ public class DecksResourceTest {
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
         when(dao.getAllDecksWithFlashcardsNumber()).thenReturn(decks);
 
-        final List<DeckWithFlashcardsNumber> response = resources.client().target(decksURI + "?statusEnabled=true")
+        final List<DeckWithFlashcardsNumber> response = resources.client().target(decksURI + "?isEnabled=true")
                 .request().get(new GenericType<List<DeckWithFlashcardsNumber>>() {
                 });
 
