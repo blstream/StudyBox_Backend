@@ -37,7 +37,7 @@ public abstract class DeckDAO {
     public abstract void createDeck(@BindBean Deck deck);
 
     @SqlUpdate("update decks set name = :name, public = :isPublic where id = :id")
-    public abstract void updateDeck(@BindBean Deck deck);
+    public abstract void update(@BindBean Deck deck);
 
     @SqlUpdate("delete from decks where id = :id")
     public abstract void deleteDeck(@Bind("id") UUID id);

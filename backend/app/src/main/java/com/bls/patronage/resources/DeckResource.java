@@ -42,7 +42,7 @@ public class DeckResource {
         Deck deckToUpdate = decksDAO.getDeckById(deckId.get());
         deckToUpdate.setName(deck.getName());
         deckToUpdate.setIsPublic(deck.getIsPublic());
-        decksDAO.updateDeck(deckToUpdate);
+        decksDAO.update(deckToUpdate);
         return deckToUpdate;
     }
 }

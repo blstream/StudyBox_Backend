@@ -117,7 +117,7 @@ public class DeckResourceTest {
                 .put(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
         Deck updatedDeck = response.readEntity(Deck.class);
         verify(dao).getDeckById(deckId);
-        verify(dao).updateDeck(any(Deck.class));
+        verify(dao).update(any(Deck.class));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(updatedDeck.getId()).isEqualTo(deckId);
         assertThat(updatedDeck.getName()).isEqualTo(deckRepresentation.getName());
@@ -131,7 +131,7 @@ public class DeckResourceTest {
                 .put(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
         verify(dao).getDeckById(fakeId);
-        verify(dao, never()).updateDeck(any(Deck.class));
+        verify(dao, never()).update(any(Deck.class));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -144,7 +144,7 @@ public class DeckResourceTest {
                 .put(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON));
 
         verify(dao, never()).getDeckById(deckId);
-        verify(dao, never()).updateDeck(any(Deck.class));
+        verify(dao, never()).update(any(Deck.class));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 }

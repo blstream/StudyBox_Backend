@@ -16,7 +16,6 @@ import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -103,7 +102,7 @@ public class DAOTest {
     public void updateDeck() throws Exception {
         final Deck updatedDeck = new Deck(deckExample1.getId(), "miscellaneous", true);
         final DeckDAO dao = dbi.open(DeckDAO.class);
-        dao.updateDeck(updatedDeck);
+        dao.update(updatedDeck);
         assertThat(dao.getDeckById(deckExample1.getId())).isEqualTo(updatedDeck);
     }
 
