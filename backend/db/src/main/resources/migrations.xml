@@ -8,7 +8,7 @@
 
     <changeSet id="1" author="arka">
         <createTable tableName="decks">
-            <column name="id" type="varchar(32)">
+            <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(100)">
