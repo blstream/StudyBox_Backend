@@ -2,36 +2,17 @@ package com.bls.patronage.db.model;
 
 import java.util.UUID;
 
-public class DeckWithFlashcardsNumber extends IdentifiableEntity {
-    private String name;
-    private boolean isPublic;
+public class DeckWithFlashcardsNumber extends Deck {
     private int flashcardsNumber;
 
     public DeckWithFlashcardsNumber() {
-        this.name = null;
-        this.isPublic = false;
-        flashcardsNumber = 0;
     }
 
     public DeckWithFlashcardsNumber(UUID id, String name,
                                     boolean isPublic,
                                     int flashcardsNumber) {
-        super(id);
-        this.name = name;
-        this.isPublic = isPublic;
+        super(id, name, isPublic);
         this.flashcardsNumber = flashcardsNumber;
-    }
-
-    public boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getCount() {

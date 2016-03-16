@@ -3,14 +3,18 @@ package com.bls.patronage.db.dao;
 import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
-import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.BindBean;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @RegisterMapper(DeckMapper.class)
-public abstract class  DeckDAO {
+public abstract class DeckDAO {
 
     @SqlQuery("select id, name, public from decks where id = :id")
     abstract Deck getDeck(@Bind("id") UUID id);
@@ -19,7 +23,7 @@ public abstract class  DeckDAO {
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
     @SqlQuery("select id, name, public from decks")
-    public abstract List<Deck> getAllDecks();
+    public abstract Collection<Deck> getAllDecks();
 
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
@@ -27,7 +31,7 @@ public abstract class  DeckDAO {
             "left join flashcards " +
             "on decks.id = flashcards.deckid " +
             "group by decks.id")
-    public abstract List<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
+    public abstract Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
 
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
     public abstract void createDeck(@BindBean Deck deck);
@@ -41,15 +45,15 @@ public abstract class  DeckDAO {
 
     public Deck getDeckById(UUID uuid) {
         Deck deck = getDeck(uuid);
-        if(deck==null) {
+        if (deck == null) {
             throw new DataAccessException("There is no deck with specified ID");
         }
         return deck;
     }
 
-    public List<Deck> getDecksByName(String name) {
+    public Collection<Deck> getDecksByName(String name) {
         List<Deck> decks = getDecksUsingName(name);
-        if(decks.isEmpty()) {
+        if (decks.isEmpty()) {
             throw new DataAccessException("There are no decks matching this name");
         }
         return decks;

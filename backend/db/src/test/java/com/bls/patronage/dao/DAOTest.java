@@ -5,7 +5,6 @@ import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableList;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jdbi.DBIFactory;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +52,7 @@ public class DAOTest {
     @Test
     public void getAllDecks() throws Exception {
         final DeckDAO dao = dbi.open(DeckDAO.class);
-        final List<Deck> decks = dao.getAllDecks();
+        final Collection<Deck> decks = dao.getAllDecks();
         assertThat(decks).containsSequence(deckExample1, deckExample2);
     }
 
@@ -66,7 +66,7 @@ public class DAOTest {
                 "bio", true, 0);
 
         final DeckDAO dao = dbi.open(DeckDAO.class);
-        final List<DeckWithFlashcardsNumber> foundDecks = dao.getAllDecksWithFlashcardsNumber();
+        final Collection<DeckWithFlashcardsNumber> foundDecks = dao.getAllDecksWithFlashcardsNumber();
         assertThat(foundDecks).contains(deckWithFlashcards1, deckWithFlashcards2);
     }
 
@@ -80,7 +80,7 @@ public class DAOTest {
     @Test
     public void getDeckByName() throws Exception {
         final DeckDAO dao = dbi.open(DeckDAO.class);
-        final List<Deck> decks = dao.getDecksByName(deckExample1.getName());
+        final Collection<Deck> decks = dao.getDecksByName(deckExample1.getName());
         assertThat(decks).containsOnly(deckExample1);
     }
 
