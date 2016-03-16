@@ -17,8 +17,8 @@ public interface FlashcardDAO {
     @SqlQuery("select id,question,answer,deckID from flashcards where id = :id")
     Flashcard getFlashcardById(@Bind("id") UUID id);
 
-    @SqlQuery("select id,question,answer,deckID from flashcards where deckID = :deckID")
-    List<Flashcard> getAllFlashcards(@Bind("deckID") UUID deckId);
+    @SqlQuery("select id,question,answer,deckID from flashcards where deckId = :deckId")
+    List<Flashcard> getAllFlashcards(@Bind("deckId") UUID deckId);
 
     @GetGeneratedKeys
     @SqlUpdate("insert into flashcards values (:id, :question, :answer, :deckID)")
