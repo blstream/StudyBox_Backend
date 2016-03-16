@@ -7,6 +7,7 @@ import com.bls.patronage.db.model.Deck;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -28,13 +29,15 @@ public class DecksResource {
     }
 
     @GET
-    public Collection<? extends Deck> listDecks(@QueryParam("name") String name,
+    public Collection<Deck> listDecks(@QueryParam("name") String name,
                                                 @QueryParam("statusEnabled") boolean statusEnabled) {
         if (name == null) {
-            if (statusEnabled == false) {
+            if (!statusEnabled) {
                 return decksDAO.getAllDecks();
             } else {
-                return decksDAO.getAllDecksWithFlashcardsNumber();
+                Collection<Deck> decks = new ArrayList<>();
+                decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber());
+                return decks;
             }
         } else {
             return decksDAO.getDecksByName(name);
