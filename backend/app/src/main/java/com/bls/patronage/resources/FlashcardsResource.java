@@ -6,7 +6,6 @@ import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
