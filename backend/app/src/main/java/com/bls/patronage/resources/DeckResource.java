@@ -39,10 +39,10 @@ public class DeckResource {
             @PathParam("deckId") UUIDParam deckId,
             @Valid DeckRepresentation deck) {
 
-        Deck updatedDeck = decksDAO.getDeckById(deckId.get());
-        updatedDeck.setName(deck.getName());
-        updatedDeck.setIsPublic(deck.getIsPublic());
-        decksDAO.updateDeck(updatedDeck);
-        return updatedDeck;
+        Deck deckToUpdate = decksDAO.getDeckById(deckId.get());
+        deckToUpdate.setName(deck.getName());
+        deckToUpdate.setIsPublic(deck.getIsPublic());
+        decksDAO.updateDeck(deckToUpdate);
+        return deckToUpdate;
     }
 }
