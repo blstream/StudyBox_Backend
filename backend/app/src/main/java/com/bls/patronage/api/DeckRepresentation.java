@@ -1,28 +1,23 @@
 package com.bls.patronage.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class DeckRepresentation {
 
     @NotEmpty
-    @JsonProperty
     final private String name;
 
-    @JsonProperty
-    final private boolean isPublic;
+    final private Boolean isPublic;
 
-    public DeckRepresentation() {
-        this.name = null;
-        this.isPublic = false;
-    }
-
-    public DeckRepresentation(String name, boolean publicAccessible) {
+    public DeckRepresentation(@JsonProperty("name") String name,
+                              @JsonProperty("isPublic") Boolean isPublic) {
         this.name = name;
-        this.isPublic = publicAccessible;
+        this.isPublic = isPublic;
     }
 
-    public boolean getIsPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 

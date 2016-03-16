@@ -5,6 +5,7 @@ import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -30,9 +31,9 @@ public class DecksResource {
 
     @GET
     public Collection<Deck> listDecks(@QueryParam("name") String name,
-                                                @QueryParam("statusEnabled") boolean statusEnabled) {
+                                                @QueryParam("statusEnabled") Boolean statusEnabled) {
         if (name == null) {
-            if (!statusEnabled) {
+            if (statusEnabled==null || statusEnabled==false) {
                 return decksDAO.getAllDecks();
             } else {
                 Collection<Deck> decks = new ArrayList<>();

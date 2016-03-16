@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Deck extends IdentifiableEntity {
     private String name;
-    private boolean isPublic;
+    private Boolean isPublic;
 
     public Deck() {
     }
@@ -21,13 +21,13 @@ public class Deck extends IdentifiableEntity {
         this.isPublic = false;
     }
 
-    public Deck(UUID id, String name, boolean isPublic) {
+    public Deck(UUID id, String name, Boolean isPublic) {
         super(id);
         this.name = name;
         this.isPublic = isPublic;
     }
 
-    public Deck(String id, String name, boolean isPublic) {
+    public Deck(String id, String name, Boolean isPublic) {
         super(id);
         this.name = name;
         this.isPublic = isPublic;
@@ -49,7 +49,7 @@ public class Deck extends IdentifiableEntity {
         return isPublic;
     }
 
-    public void setIsPublic(boolean isPublic) {
+    public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
     }
 
