@@ -96,9 +96,7 @@ public class DecksResourceTest {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getAllDecks()).thenReturn(decks);
 
-        final List<Deck> response = resources.client().target(decksURI)
-                .request().get(new GenericType<List<Deck>>() {
-                });
+        final List<Deck> response = getListFromResponse(decksURI);
 
         verify(dao).getAllDecks();
         assertThat(response).containsAll(decks);
@@ -109,9 +107,7 @@ public class DecksResourceTest {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getDecksByName("something")).thenReturn(decks);
 
-        final List<Deck> response = resources.client().target(decksByNameURI)
-                .request().get(new GenericType<List<Deck>>() {
-                });
+        final List<Deck> response = getListFromResponse(decksByNameURI);
 
         verify(dao).getDecksByName("something");
         assertThat(response).containsAll(decks);
@@ -121,9 +117,7 @@ public class DecksResourceTest {
     public void listDecksByNamesWhenThereIsBadNameTyped() throws Exception {
         when(dao.getDecksByName("anotherThing")).thenReturn(null);
 
-        final List<Deck> response = resources.client().target(decksByBadNameURI)
-                .request().get(new GenericType<List<Deck>>() {
-                });
+        final List<Deck> response = getListFromResponse(decksByBadNameURI);
 
         verify(dao).getDecksByName("anotherThing");
         assertThat(response).isNull();
@@ -133,9 +127,7 @@ public class DecksResourceTest {
     public void listDecksByNamesWhenThereIsNoNameTyped() throws Exception {
         when(dao.getDecksByName("")).thenReturn(null);
 
-        final List<Deck> response = resources.client().target(decksByEmptyNameURI)
-                .request().get(new GenericType<List<Deck>>() {
-                });
+        final List<Deck> response = getListFromResponse(decksByEmptyNameURI);
 
         verify(dao).getDecksByName("");
         assertThat(response).isNull();
@@ -155,5 +147,11 @@ public class DecksResourceTest {
         verify(dao).getAllDecksWithFlashcardsNumber();
         assertThat(response).containsAll(decks);
         assertThat(response.get(0).getCount()).isNotNull();
+    }
+
+    static private List<Deck> getListFromResponse(String uri) {
+        return resources.client().target(uri)
+                .request().get(new GenericType<List<Deck>>() {
+                });
     }
 }
