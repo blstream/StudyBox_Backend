@@ -4,24 +4,37 @@ import java.util.UUID;
 
 public class Deck extends IdentifiableEntity {
     private String name;
+    private Boolean isPublic;
 
-    public Deck(String name) {
-        this.name = name;
+    public Deck() {
     }
 
     public Deck(UUID id, String name) {
         super(id);
         this.name = name;
+        this.isPublic = false;
     }
 
     public Deck(String id, String name) {
         super(id);
         this.name = name;
+        this.isPublic = false;
     }
 
-    public Deck() {
-        super();
-        this.name = null;
+    public Deck(UUID id, String name, Boolean isPublic) {
+        super(id);
+        this.name = name;
+        this.isPublic = isPublic;
+    }
+
+    public Deck(String id, String name, Boolean isPublic) {
+        super(id);
+        this.name = name;
+        this.isPublic = isPublic;
+    }
+
+    public Deck(String name) {
+        this.name = name;
     }
 
     public String getName() {
@@ -32,6 +45,14 @@ public class Deck extends IdentifiableEntity {
         this.name = name;
     }
 
+    public boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,6 +61,7 @@ public class Deck extends IdentifiableEntity {
         Deck deck = (Deck) o;
 
         if (!getId().equals(deck.getId())) return false;
+        if (getIsPublic() != deck.getIsPublic()) return false;
         return getName().equals(deck.getName());
 
     }
@@ -55,6 +77,7 @@ public class Deck extends IdentifiableEntity {
         return "Deck{" +
                 "UUID=" + getId() +
                 ", name='" + getName() + '\'' +
+                ", public=" + getIsPublic() +
                 '}';
     }
 }

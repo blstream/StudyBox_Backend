@@ -7,7 +7,12 @@ import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
 
@@ -43,7 +48,7 @@ public class FlashcardResource {
             @Valid FlashcardRepresentation flashcard,
             @Valid
             @NotNull
-                                @PathParam("deckId") UUIDParam deckId) {
+            @PathParam("deckId") UUIDParam deckId) {
         Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(), deckId.get());
         flashcardDAO.updateFlashcard(updatedFlashcard);
     }

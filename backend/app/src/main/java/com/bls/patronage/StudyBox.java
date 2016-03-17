@@ -2,6 +2,7 @@ package com.bls.patronage;
 
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.exception.DataAccessExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
@@ -55,6 +56,6 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new DecksResource(jdbi.onDemand(DeckDAO.class)));
         environment.jersey().register(new FlashcardResource(jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new FlashcardsResource(jdbi.onDemand(FlashcardDAO.class)));
-
+        environment.jersey().register(new DataAccessExceptionMapper());
     }
 }
