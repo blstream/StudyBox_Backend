@@ -14,17 +14,25 @@ Prerequisites:
 
         (cd backend && mvn -T4 clean package)
 
-## Create database
+# H2 database
 
-	(java -jar backend/app/target/app-1.0-SNAPSHOT.jar db migrate backend/app/studybox-h2.yml)
+## Create db
 
-## Running on H2
+	java -jar backend/app/target/app-1.0-SNAPSHOT.jar db migrate backend/app/studybox-h2.yml
 
-        (java -jar backend/app/target/app-1.0-SNAPSHOT.jar server backend/app/studybox-h2.yml)
+## Run
 
-## Running on PostgreSQL
+        java -jar backend/app/target/app-1.0-SNAPSHOT.jar server backend/app/studybox-h2.yml
 
-        (java -jar backend/app/target/app-1.0-SNAPSHOT.jar server backend/app/studybox-pg.yml)
+# PostgreSQL
+
+## Create db
+
+	java -jar backend/app/target/app-1.0-SNAPSHOT.jar db migrate backend/app/studybox-pg.yml
+
+## Run
+
+        java -jar backend/app/target/app-1.0-SNAPSHOT.jar server backend/app/studybox-pg.yml
 
 
 [Oracle jdk download link]:http://www.oracle.com/technetwork/java/javase/downloads/index.html
