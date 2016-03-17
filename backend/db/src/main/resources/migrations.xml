@@ -14,12 +14,15 @@
             <column name="name" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
+            <column name="public" type="boolean">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createTable tableName="flashcards">
-            <column name="id" type="varchar(32)">
+            <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="deckId" type="varchar(32)">
+            <column name="deckId" type="uuid">
                 <constraints nullable="false"/>
             </column>
             <column name="question" type="varchar(1000)">
@@ -31,3 +34,4 @@
         </createTable>
     </changeSet>
 </databaseChangeLog>
+
