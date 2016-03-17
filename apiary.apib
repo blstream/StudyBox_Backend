@@ -21,7 +21,8 @@ Study Box REST API backend documentation and mock.
 ## 16/03/2016 toja
  - name of boolean statusEnabled changed to isEnabled
  - name of boolean public changed to isPublic
-
+## 16/03/2016 toja
+ - resources for Test results added
  
 
 # TODO
@@ -281,6 +282,27 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 200
 
+# Group Test Mode
+
+## Test results [/decks/{deckId}/results]
+
+### Get Test Results [GET]
+    
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    
++ Response 200 (application/json)
+    + Attributes (FlashcardResultCollection)
+    
+### Save Test Results [POST]
+
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+
++ Request (application/json)
+    + Attributes (FlashcardResultCollection)
+    
++ Response 200 
 
 # Data Structures
 
@@ -378,6 +400,18 @@ By default API return response with HTTP code **4xx** family.
 + id: `8ccc1c09-3f4a-4734-9c04-dc7bc4df15e2` (string, required) - Tag UUID, 36 chars, 8-4-4-4-12 chars
 + name: `Third sample tag name` (string) - name attribute for Tag
 
+### FlashcardResult0 (object)
++ flashcardId: `00e60c87-1fac-46dc-a7ee-1dd1f3996ccc` (string, required) - Flashcard UUID
++ isCorrectAnswer: `true` (boolean, required) - Shows whether an answer was correct or not
+
+### FlashcardResult1 (object)
++ flashcardId: `2c8815e6-4e16-41ce-95bf-d0039c35af2d` (string, required) - Flashcard UUID
++ isCorrectAnswer: `false` (boolean, required) - Shows whether an answer was correct or not
+
+### FlashcardResult2 (object)
++ flashcardId: `369f0665-c895-41bb-bede-62b443519964` (string, required) - Flashcard UUID
++ isCorrectAnswer: `true` (boolean, required) - Shows whether an answer was correct or not
+
 ## Collections
 
 ### DeckCollection (array)
@@ -404,6 +438,11 @@ By default API return response with HTTP code **4xx** family.
 + 0: (Tag0)
 + 1: (Tag1)
 + 2: (Tag2)
+
+### FlashcardResultCollection (array)
++ 0: (FlashcardResult0)
++ 1: (FlashcardResult1)
++ 2: (FlashcardResult2)
 
 ## BadRequestResponse (object)
 + code: `E001` (string, required) - TODO sample error code
