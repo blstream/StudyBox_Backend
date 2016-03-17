@@ -18,6 +18,10 @@ Study Box REST API backend documentation and mock.
 ## 12/03/2016 arka
  - added tags and tips
  - added "public" field for decks
+## 16/03/2016 toja
+ - name of boolean statusEnabled changed to isEnabled
+ - name of boolean public changed to isPublic
+
  
 
 # TODO
@@ -75,10 +79,10 @@ By default API return response with HTTP code **4xx** family.
 + Response 200 (application/json)
     + Attributes (DeckCollection)
 
-### Get all decks with Flashcards number [GET /decks{?statusEnabled}]
+### Get all decks with Flashcards number [GET /decks{?isEnabled}]
 
 + Parameters
-    + statusEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
+    + isEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
 
 + Response 200 (application/json)
 
@@ -314,17 +318,17 @@ By default API return response with HTTP code **4xx** family.
 ### Deck0 (object)
 + name: `First name` (string, required) - name attribute for Deck
 + id: `1d92b949-38c7-4a1a-a184-1b5fb469ad9b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
-+ public: `true` (boolean, required) - status of Deck access rights
++ isPublic: `true` (boolean, required) - status of Deck access rights
 
 ### Deck1 (object)
 + name: `Second name` (string, required) - name attribute for Deck
 + id: `6d48d685-53f4-4e41-aea0-ec54d8919f0b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
-+ public: `false` (boolean, required) - status of Deck access rights
++ isPublic: `false` (boolean, required) - status of Deck access rights
 
 ### Deck2 (object)
 + name: `Third name` (string, required) - name attribute for Deck
 + id: `0d081870-553c-4df7-b9e2-be7e5ba791c0` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
-+ public: `false` (boolean, required) - status of Deck access rights
++ isPublic: `false` (boolean, required) - status of Deck access rights
 
 ### DeckWithCount0 (Deck0)
 + count: `12` (number) - Count of the Flashcards in Deck
