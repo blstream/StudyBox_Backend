@@ -4,7 +4,6 @@ import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
@@ -48,6 +47,12 @@ public class DecksResourceTest {
     private String decksByBadNameURI;
     private String decksWithFlashcardNumberURI;
     private String decksByEmptyNameURI;
+
+    static private List<Deck> getListFromResponse(String uri) {
+        return resources.client().target(uri)
+                .request().get(new GenericType<List<Deck>>() {
+                });
+    }
 
     @Before
     public void setUp() {
@@ -134,7 +139,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksWithFlashcardsNumber() throws Exception {
+    public void listDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(UUID.randomUUID(),
                 "math", true, 3);
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
@@ -147,11 +152,5 @@ public class DecksResourceTest {
         verify(dao).getAllDecksWithFlashcardsNumber();
         assertThat(response).containsAll(decks);
         assertThat(response.get(0).getCount()).isNotNull();
-    }
-
-    static private List<Deck> getListFromResponse(String uri) {
-        return resources.client().target(uri)
-                .request().get(new GenericType<List<Deck>>() {
-                });
     }
 }

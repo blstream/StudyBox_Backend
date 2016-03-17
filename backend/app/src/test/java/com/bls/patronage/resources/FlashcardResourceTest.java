@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,11 +34,13 @@ public class FlashcardResourceTest {
     private ArgumentCaptor<Flashcard> flashcardCaptor;
     private Flashcard flashcard;
     private FlashcardRepresentation flashcardRepresentation;
+    private String flashcardURI;
 
     @Before
     public void setUp() {
         flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes", "8ad4b503-5bfc-4d8a-a761-0908374892b1");
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok");
+        flashcardURI = UriBuilder.fromResource(FlashcardResource.class).build(flashcard.getDeckID(), flashcard.getId()).toString();
     }
 
     @After
@@ -47,7 +50,7 @@ public class FlashcardResourceTest {
 
     @Test
     public void updateFlashcard() {
-        final Response response = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards/" + flashcard.getId())
+        final Response response = resources.client().target(flashcardURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(flashcardRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
@@ -57,7 +60,7 @@ public class FlashcardResourceTest {
     @Test
     public void deleteFlashcard() {
         when(dao.getFlashcardById(flashcard.getId())).thenReturn(flashcard);
-        final Response response = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards/" + flashcard.getId())
+        final Response response = resources.client().target(flashcardURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .delete();
 
@@ -67,7 +70,7 @@ public class FlashcardResourceTest {
     @Test
     public void getFlashcard() {
         when(dao.getFlashcardById(any(UUID.class))).thenReturn(flashcard);
-        final Flashcard recievedFlashcard = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards/" + flashcard.getId())
+        final Flashcard recievedFlashcard = resources.client().target(flashcardURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get(Flashcard.class);
 

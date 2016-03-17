@@ -18,6 +18,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,11 +36,13 @@ public class FlashcardsResourceTest {
     private ArgumentCaptor<Flashcard> flashcardCaptor;
     private Flashcard flashcard;
     private FlashcardRepresentation flashcardRepresentation;
+    private String flashcardsURI;
 
     @Before
     public void setUp() {
         flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes", "8ad4b503-5bfc-4d8a-a761-0908374892b1");
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok");
+        flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckID()).toString();
     }
 
     @After
@@ -49,7 +52,7 @@ public class FlashcardsResourceTest {
 
     @Test
     public void createFlashcard() {
-        final Response response = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards")
+        final Response response = resources.client().target(flashcardsURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(flashcardRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
@@ -62,7 +65,7 @@ public class FlashcardsResourceTest {
 
     @Test
     public void createFlashcardWithoutQuestionAndAnswer() {
-        final Response response = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards")
+        final Response response = resources.client().target(flashcardsURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(new FlashcardRepresentation(), MediaType.APPLICATION_JSON_TYPE));
 
@@ -74,7 +77,7 @@ public class FlashcardsResourceTest {
         final ImmutableList<Flashcard> flashcards = ImmutableList.of(flashcard);
         when(dao.getAllFlashcards(flashcard.getDeckID())).thenReturn(flashcards);
 
-        final List<Flashcard> response = resources.client().target("/decks/" + flashcard.getDeckID() + "/flashcards")
+        final List<Flashcard> response = resources.client().target(flashcardsURI)
                 .request().get(new GenericType<List<Flashcard>>() {
                 });
 
