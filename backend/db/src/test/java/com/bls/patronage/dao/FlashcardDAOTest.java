@@ -69,7 +69,7 @@ public class FlashcardDAOTest extends DAOTest {
     @Test
     public void deleteFlashcard(){
         dao.deleteFlashcard(flashcardExample2.getId());
-        assertThat(dao.getFlashcardById(flashcardExample2.getId())).isNull();
+        assertThat(dao.getAllFlashcards(flashcardExample2.getDeckID())).doesNotContain(flashcardExample2);
     }
 
     @Test
