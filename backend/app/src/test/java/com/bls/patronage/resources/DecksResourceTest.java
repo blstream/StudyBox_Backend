@@ -4,7 +4,6 @@ import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
@@ -49,6 +48,12 @@ public class DecksResourceTest {
     private String decksWithFlashcardNumberURI;
     private String decksByEmptyNameURI;
 
+    static private List<Deck> getListFromResponse(String uri) {
+        return resources.client().target(uri)
+                .request().get(new GenericType<List<Deck>>() {
+                });
+    }
+
     @Before
     public void setUp() {
         deck = new Deck("12345678-9012-3456-7890-123456789012", "math");
@@ -71,7 +76,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void createDeck() throws JsonProcessingException {
+    public void createDeck() {
         final Response response = resources.client().target(decksURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
@@ -83,7 +88,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void createDeckWithoutName() throws JsonProcessingException {
+    public void createDeckWithoutName() {
         final Response response = resources.client().target(decksURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON_TYPE));
@@ -92,7 +97,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecks() throws Exception {
+    public void listDecks() {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getAllDecks()).thenReturn(decks);
 
@@ -103,7 +108,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNames() throws Exception {
+    public void listDecksByNames() {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getDecksByName("something")).thenReturn(decks);
 
@@ -114,7 +119,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsBadNameTyped() throws Exception {
+    public void listDecksByNamesWhenThereIsBadNameTyped() {
         when(dao.getDecksByName("anotherThing")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByBadNameURI);
@@ -124,7 +129,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsNoNameTyped() throws Exception {
+    public void listDecksByNamesWhenThereIsNoNameTyped() {
         when(dao.getDecksByName("")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByEmptyNameURI);
@@ -134,7 +139,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksWithFlashcardsNumber() throws Exception {
+    public void listDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(UUID.randomUUID(),
                 "math", true, 3);
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
@@ -147,11 +152,5 @@ public class DecksResourceTest {
         verify(dao).getAllDecksWithFlashcardsNumber();
         assertThat(response).containsAll(decks);
         assertThat(response.get(0).getCount()).isNotNull();
-    }
-
-    static private List<Deck> getListFromResponse(String uri) {
-        return resources.client().target(uri)
-                .request().get(new GenericType<List<Deck>>() {
-                });
     }
 }
