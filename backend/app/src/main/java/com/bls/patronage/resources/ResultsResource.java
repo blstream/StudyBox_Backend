@@ -14,7 +14,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,9 +35,15 @@ public class ResultsResource {
     @POST
     public void createResult(@Valid ResultRepresentation result,
                              @Valid @PathParam("deckId") UUIDParam id) {
-        int correctAnswers = resultDAO.getResult(result.getFlashcardId()).getCorrectAnswers() + (result.isCorrectAnswer() ? 1 : 0);
-        Result createdResult = new Result(result.getFlashcardId(), correctAnswers);
-        resultDAO.createResult(createdResult);
+        Set<UUID> uuids = resultDAO.getAllResults(id.get()).stream().map(Result::getId).collect(Collectors.toSet());
+
+        if (!uuids.contains(result.getFlashcardId())) {
+            resultDAO.createResult(new Result(result.getFlashcardId(), 0));
+        } else {
+            int correctAnswers = resultDAO.getResult(result.getFlashcardId()).getCorrectAnswers() + (result.isCorrectAnswer() ? 1 : 0);
+            Result createdResult = new Result(result.getFlashcardId(), correctAnswers);
+            resultDAO.createResult(createdResult);
+        }
     }
 
     @GET

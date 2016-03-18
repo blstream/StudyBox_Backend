@@ -60,8 +60,9 @@ public class ResultsResourceTest {
     }
 
     @Test
-    public void createResult() {
+    public void createExistingResult() {
         when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenReturn(result);
+        when(resultDAO.getAllResults(deckId)).thenReturn(ImmutableList.of(result));
 
         final Response response = resources.client().target(resultsURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -71,6 +72,21 @@ public class ResultsResourceTest {
         verify(resultDAO).createResult(resultCaptor.capture());
         assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
         assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(result.getCorrectAnswers() + 1);
+    }
+
+    @Test
+    public void createNewResult() {
+        when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenReturn(result);
+        when(resultDAO.getAllResults(deckId)).thenReturn(anyListOf(Result.class));
+
+        final Response response = resources.client().target(resultsURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(resultRepresentation, MediaType.APPLICATION_JSON_TYPE));
+
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.NO_CONTENT);
+        verify(resultDAO).createResult(resultCaptor.capture());
+        assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
+        assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(0);
     }
 
     @Test
