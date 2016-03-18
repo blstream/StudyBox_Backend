@@ -4,7 +4,6 @@ import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -69,7 +68,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void createDeck() throws JsonProcessingException {
+    public void createDeck() {
         final Response response = postDeck(decksURI, deck.getName(), deck.getIsPublic());
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
@@ -79,19 +78,19 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void createDeckWithoutName() throws JsonProcessingException {
+    public void createDeckWithoutName()  {
         final Response response = postDeck(decksURI, "", false);
         assertThat(response.getStatus()).isEqualTo(422);
     }
 
     @Test
-    public void createDeckWithTooLongName() throws JsonProcessingException {
+    public void createDeckWithTooLongName()  {
         final Response response = postDeck(decksURI, RandomStringUtils.random(51), false);
         assertThat(response.getStatus()).isEqualTo(422);
     }
 
     @Test
-    public void listDecks() {
+    public void listDecks() throws Exception {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getAllDecks()).thenReturn(decks);
 
@@ -102,7 +101,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNames() {
+    public void listDecksByNames() throws Exception {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getDecksByName("something")).thenReturn(decks);
 
@@ -113,7 +112,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsBadNameTyped() {
+    public void listDecksByNamesWhenThereIsBadNameTyped() throws Exception {
         when(dao.getDecksByName("anotherThing")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByBadNameURI);
@@ -123,7 +122,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsNoNameTyped() {
+    public void listDecksByNamesWhenThereIsNoNameTyped() throws Exception {
         when(dao.getDecksByName("")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByEmptyNameURI);
@@ -133,7 +132,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksWithFlashcardsNumber() {
+    public void listDecksWithFlashcardsNumber() throws Exception {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(UUID.randomUUID(),
                 "math", true, 3);
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
