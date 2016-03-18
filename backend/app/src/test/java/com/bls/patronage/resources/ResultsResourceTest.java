@@ -1,12 +1,9 @@
 package com.bls.patronage.resources;
 
-import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.api.ResultRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
-import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.Result;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;

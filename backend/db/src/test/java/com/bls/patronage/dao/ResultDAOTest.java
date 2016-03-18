@@ -1,6 +1,5 @@
 package com.bls.patronage.dao;
 
-import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.Result;
@@ -12,8 +11,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
 
 public class ResultDAOTest extends DAOTest {
 
