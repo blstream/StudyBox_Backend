@@ -3,7 +3,10 @@ package com.bls.patronage.db.dao;
 import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.Result;
-import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.BindBean;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -19,6 +22,10 @@ abstract public class ResultDAO {
     @SqlUpdate("insert into results values (:id, :correctAnswers)")
     public abstract void createResult(@BindBean Result result);
 
+    @SqlQuery("select results.flashcardId, results.correctAnswers from results left join flashcards on results.flashcardId = flashcards.id where flashcards.deckId = :deckId")
+    public abstract List<Result> getAllResults(@Bind("deckId") UUID deckId);
+
+
     @SqlUpdate("update results set correctAnswers = :correctAnswers where flashcardId = :id")
     public abstract void updateResult(@BindBean Result result);
 
@@ -27,10 +34,6 @@ abstract public class ResultDAO {
 
     public Result getResult(UUID id) {
         Optional<Result> result = Optional.ofNullable(get(id));
-        return result.orElseGet(() -> {
-            Result newResult = new Result(id, 0);
-            createResult(newResult);
-            return newResult;
-        });
+        return result.orElseThrow(() -> new DataAccessException("There is no result with specified id"));
     }
 }

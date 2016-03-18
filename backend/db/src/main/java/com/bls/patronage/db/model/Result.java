@@ -7,6 +7,9 @@ import java.util.UUID;
 public class Result extends IdentifiableEntity {
     private int correctAnswers;
 
+    public Result() {
+    }
+
     public Result(UUID id) {
         super(id);
     }
@@ -34,7 +37,7 @@ public class Result extends IdentifiableEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Result result = (Result) o;
-        return getId() == result.getId() && getCorrectAnswers() == result.getCorrectAnswers();
+        return getId().equals(result.getId()) && getCorrectAnswers() == result.getCorrectAnswers();
     }
 
     @Override
