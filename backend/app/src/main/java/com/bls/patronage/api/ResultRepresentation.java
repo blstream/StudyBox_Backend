@@ -18,6 +18,7 @@ public class ResultRepresentation {
         return flashcardId;
     }
 
+    @JsonProperty("isCorrectAnswer")
     public boolean isCorrectAnswer() {
         return isCorrectAnswer;
     }
