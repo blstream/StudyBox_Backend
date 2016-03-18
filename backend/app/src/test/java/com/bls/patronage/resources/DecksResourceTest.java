@@ -90,7 +90,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecks() throws Exception {
+    public void listDecks() {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getAllDecks()).thenReturn(decks);
 
@@ -101,7 +101,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNames() throws Exception {
+    public void listDecksByNames() {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
         when(dao.getDecksByName("something")).thenReturn(decks);
 
@@ -112,7 +112,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsBadNameTyped() throws Exception {
+    public void listDecksByNamesWhenThereIsBadNameTyped() {
         when(dao.getDecksByName("anotherThing")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByBadNameURI);
@@ -122,7 +122,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksByNamesWhenThereIsNoNameTyped() throws Exception {
+    public void listDecksByNamesWhenThereIsNoNameTyped() {
         when(dao.getDecksByName("")).thenReturn(null);
 
         final List<Deck> response = getListFromResponse(decksByEmptyNameURI);
@@ -132,7 +132,7 @@ public class DecksResourceTest {
     }
 
     @Test
-    public void listDecksWithFlashcardsNumber() throws Exception {
+    public void listDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(UUID.randomUUID(),
                 "math", true, 3);
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
