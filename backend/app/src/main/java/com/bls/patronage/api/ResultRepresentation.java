@@ -9,9 +9,9 @@ public class ResultRepresentation {
     private boolean isCorrectAnswer;
 
     public ResultRepresentation(@JsonProperty("flashcardId") UUID flashcardId,
-                                @JsonProperty("isCorrectAnswer") boolean correctAnswer) {
+                                @JsonProperty("isCorrectAnswer") boolean isCorrectAnswer) {
         this.flashcardId = flashcardId;
-        this.isCorrectAnswer = correctAnswer;
+        this.isCorrectAnswer = isCorrectAnswer;
     }
 
     public UUID getFlashcardId() {
