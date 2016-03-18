@@ -1,11 +1,13 @@
 package com.bls.patronage.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class DeckRepresentation {
 
     @NotEmpty
+    @Length(min = 1, max = 50)
     final private String name;
 
     final private Boolean isPublic;

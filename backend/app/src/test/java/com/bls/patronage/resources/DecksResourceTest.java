@@ -7,6 +7,7 @@ import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -42,7 +43,6 @@ public class DecksResourceTest {
     @Captor
     private ArgumentCaptor<Deck> deckCaptor;
     private Deck deck;
-    private DeckRepresentation deckRepresentation;
     private String decksURI;
     private String decksByNameURI;
     private String decksByBadNameURI;
@@ -52,9 +52,7 @@ public class DecksResourceTest {
     @Before
     public void setUp() {
         deck = new Deck("12345678-9012-3456-7890-123456789012", "math");
-        deckRepresentation = new DeckRepresentation("math", false);
         decksURI = UriBuilder.fromResource(DecksResource.class).build().toString();
-
         decksByNameURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("name", "something").build().toString();
         decksByBadNameURI = UriBuilder.fromResource(DecksResource.class)
@@ -72,9 +70,7 @@ public class DecksResourceTest {
 
     @Test
     public void createDeck() throws JsonProcessingException {
-        final Response response = resources.client().target(decksURI)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(deckRepresentation, MediaType.APPLICATION_JSON_TYPE));
+        final Response response = postDeck(decksURI, deck.getName(), deck.getIsPublic());
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
         verify(dao).createDeck(deckCaptor.capture());
@@ -84,10 +80,13 @@ public class DecksResourceTest {
 
     @Test
     public void createDeckWithoutName() throws JsonProcessingException {
-        final Response response = resources.client().target(decksURI)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(new DeckRepresentation("", false), MediaType.APPLICATION_JSON_TYPE));
+        final Response response = postDeck(decksURI, "", false);
+        assertThat(response.getStatus()).isEqualTo(422);
+    }
 
+    @Test
+    public void createDeckWithTooLongName() throws JsonProcessingException {
+        final Response response = postDeck(decksURI, RandomStringUtils.random(51), false);
         assertThat(response.getStatus()).isEqualTo(422);
     }
 
@@ -147,6 +146,12 @@ public class DecksResourceTest {
         verify(dao).getAllDecksWithFlashcardsNumber();
         assertThat(response).containsAll(decks);
         assertThat(response.get(0).getCount()).isNotNull();
+    }
+
+    static private Response postDeck(String uri,String name, Boolean isPublic) {
+        return resources.client().target(uri)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(new DeckRepresentation(name, isPublic), MediaType.APPLICATION_JSON_TYPE));
     }
 
     static private List<Deck> getListFromResponse(String uri) {
