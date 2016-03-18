@@ -33,7 +33,8 @@ public class ResultsResource {
     @POST
     public void createResult(@Valid ResultRepresentation result,
                              @Valid @PathParam("deckId") UUIDParam id) {
-        Result createdResult = new Result(result.getFlashcardId(), 0);
+        int correctAnswers = resultDAO.getResult(result.getFlashcardId()).getCorrectAnswers() + (result.isCorrectAnswer() ? 1 : 0);
+        Result createdResult = new Result(result.getFlashcardId(), correctAnswers);
         resultDAO.createResult(createdResult);
     }
 
