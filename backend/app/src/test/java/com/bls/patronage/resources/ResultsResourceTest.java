@@ -6,6 +6,7 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.Result;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +48,7 @@ public class ResultsResourceTest {
 
     @Before
     public void setUp() {
-        result = new Result(UUID.randomUUID(), anyInt());
+        result = new Result(UUID.randomUUID(), new Random().nextInt());
         resultRepresentation = new ResultRepresentation(result.getId(), true);
         deckId = UUID.randomUUID();
         resultsURI = UriBuilder.fromResource(ResultsResource.class).build(deckId).toString();
@@ -69,6 +71,17 @@ public class ResultsResourceTest {
         verify(resultDAO).createResult(resultCaptor.capture());
         assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
         assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(result.getCorrectAnswers() + 1);
+    }
+
+    @Test
+    public void createIncorrectResult() {
+        ResultRepresentation requestEntity = new ResultRepresentation(null, false);
+
+        final Response response = resources.client().target(resultsURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(requestEntity, MediaType.APPLICATION_JSON_TYPE));
+
+        assertThat(response.getStatus()).isEqualTo(422);
     }
 
     @Test
