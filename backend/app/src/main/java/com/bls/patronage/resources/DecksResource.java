@@ -1,20 +1,20 @@
 package com.bls.patronage.resources;
 
-import java.util.List;
-import java.util.UUID;
+import com.bls.patronage.api.DeckRepresentation;
+import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.model.Deck;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.QueryParam;
-
-import com.bls.patronage.api.DeckRepresentation;
-import com.bls.patronage.db.dao.DeckDAO;
-import com.bls.patronage.db.model.Deck;
+import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 
 @Path("/decks")
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,19 +27,26 @@ public class DecksResource {
     }
 
     @POST
-    public Deck createDeck(DeckRepresentation deck) {
-        if(deck.getName().isEmpty())
-            throw new WebApplicationException(400);
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName());
+    public Deck createDeck(@Valid DeckRepresentation deck) {
+        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
         decksDAO.createDeck(createdDeck);
         return createdDeck;
     }
 
     @GET
-    public List<Deck> listDecks(@QueryParam("name") String name) {
-        if(name==null)
-            return decksDAO.getAllDecks();
-        else
+    public Collection<Deck> listDecks(@QueryParam("name") String name,
+                                      @QueryParam("isEnabled") Boolean isEnabled) {
+        if (name == null) {
+            if (isEnabled == null || !isEnabled) {
+                return decksDAO.getAllDecks();
+            } else {
+                Collection<Deck> decks = new ArrayList<>();
+                decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber());
+                return decks;
+            }
+        } else {
             return decksDAO.getDecksByName(name);
+        }
+
     }
 }

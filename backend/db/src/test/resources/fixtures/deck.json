@@ -1,4 +1,5 @@
 {
-  "id":"8ad4b503-5bfc-4d8a-a761-0908374892b1",
-  "name": "biology"
+  "id": "8ad4b503-5bfc-4d8a-a761-0908374892b1",
+  "name": "biology",
+  "isPublic": false
 }

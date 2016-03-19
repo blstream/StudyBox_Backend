@@ -1,13 +1,15 @@
 package com.bls.patronage.model;
 
-import static io.dropwizard.testing.FixtureHelpers.fixture;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.bls.patronage.db.model.Deck;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
 import org.junit.Before;
 import org.junit.Test;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.UUID;
-import com.bls.patronage.db.model.Deck;
+
+import static io.dropwizard.testing.FixtureHelpers.fixture;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DeckTest {
 
