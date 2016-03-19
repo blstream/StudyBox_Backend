@@ -42,7 +42,7 @@ public class FlashcardsResourceTest {
     public void setUp() {
         flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes", "8ad4b503-5bfc-4d8a-a761-0908374892b1");
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok");
-        flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckID()).toString();
+        flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckId()).toString();
     }
 
     @After
@@ -75,13 +75,13 @@ public class FlashcardsResourceTest {
     @Test
     public void listFlashcards() {
         final ImmutableList<Flashcard> flashcards = ImmutableList.of(flashcard);
-        when(dao.getAllFlashcards(flashcard.getDeckID())).thenReturn(flashcards);
+        when(dao.getAllFlashcards(flashcard.getDeckId())).thenReturn(flashcards);
 
         final List<Flashcard> response = resources.client().target(flashcardsURI)
                 .request().get(new GenericType<List<Flashcard>>() {
                 });
 
-        verify(dao).getAllFlashcards(flashcard.getDeckID());
+        verify(dao).getAllFlashcards(flashcard.getDeckId());
         assertThat(response).containsAll(flashcards);
     }
 }

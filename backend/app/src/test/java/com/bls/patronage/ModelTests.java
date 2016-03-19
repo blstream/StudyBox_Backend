@@ -96,7 +96,7 @@ public class ModelTests {
         assertThat(flashcard.getAnswer()).isNull();
         assertThat(flashcard.getQuestion()).isNull();
         assertThat(flashcard.getId()).isNull();
-        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
+        assertThat(flashcard.getDeckId()).isEqualTo(testDeckUUID);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class ModelTests {
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
         assertThat(flashcard.getId()).isNull();
-        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
+        assertThat(flashcard.getDeckId()).isEqualTo(testDeckUUID);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class ModelTests {
         assertThat(flashcard.getAnswer()).isNull();
         assertThat(flashcard.getQuestion()).isNull();
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
-        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
+        assertThat(flashcard.getDeckId()).isEqualTo(testDeckUUID);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ModelTests {
         assertThat(flashcard.getAnswer()).isNull();
         assertThat(flashcard.getQuestion()).isNull();
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
-        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
+        assertThat(flashcard.getDeckId()).isEqualTo(testDeckUUID);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ModelTests {
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
-        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
+        assertThat(flashcard.getDeckId()).isEqualTo(testDeckUUID);
     }
 
     @Test
@@ -146,6 +146,6 @@ public class ModelTests {
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
         assertThat(flashcard.getId()).isEqualTo(UUID.fromString(testUUID));
-        assertThat(flashcard.getDeckID()).isEqualTo(testDeckUUID);
+        assertThat(flashcard.getDeckId()).isEqualTo(testDeckUUID);
     }
 }
