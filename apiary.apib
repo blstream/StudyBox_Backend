@@ -168,6 +168,49 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 200
 
+# Group User
+
+## Users [/users]
+
+### Create new User [POST]
+
++ Request (application/json)
+    + Attributes (UserWithoutId)
+
++ Response 200 (application/json)
+    + Attributes (User)
+
+
+### Get User by ID [GET /users/{userId}]
+
++ Parameters
+    + userId: `1233-0000-0000-000000000001` (string, required) - user's UUID
+
++ Response 200 (application/json)
+    + Attributes (User)
+
+### List all users [GET]
+
++ Response 200 (application/json)
+    + Attributes (UsersWithoutPasswordCollection)
+
+### Update User [PUT /users/{userId}]
+
++ Parameters
+    + userId: `1233-0000-0000-000000000001` (string, required) - user's UUID
+
++ Request (application/json)
+    + Attributes (UserWithoutId)
+
++ Response 201 (application/json)
+
+### Remove User [DELETE /users/{userId}]
+
++ Parameters
+    + userId: `1233-0000-0000-000000000001` (string, required) - user's UUID
+
++ Response 201
+
 # Group Tip
 
 ## Tips [/decks/{deckId}/flashcards/{flashcardId}/tips]
@@ -308,6 +351,14 @@ By default API return response with HTTP code **4xx** family.
 
 ## Single objects
 
+### UserWithoutId
++ email: `test@mail.com` (string, required) - email of the user
++ name: `Foo Bar` (string, required) - name of the user
++ password: `password` (string, required) - encrypted password
+
+### User (UserWithoutId)
++ id: `12345678-9012-3456-7890-123456789012` (string, required) - user's id
+
 ### DeckWithoutId (object)
 + name: `Sample name` (string, required) - name attribute for Deck
 
@@ -316,8 +367,8 @@ By default API return response with HTTP code **4xx** family.
 + public: `true` (boolean, required) - status of Deck access rights
 
 ### FlashcardWithoutId (object)
-+ question: `Sample question` (string) - question attribute for Flashcard
-+ answer: `Sample answer` (string) - answer attribute for Flashcard
++ question: `Sample question` (string, required) - question attribute for Flashcard
++ answer: `Sample answer` (string, required) - answer attribute for Flashcard
 
 ### Flashcard (FlashcardWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
@@ -336,6 +387,21 @@ By default API return response with HTTP code **4xx** family.
 
 
 ## Objects for Collections
+
+### UserWithoutPassword0 (object)
++ id: `11111111-9012-3456-7890-123456789012` (string, required) - user's id
++ email: `first@mail.com` (string, required) - email of the user
++ name: `Foo Foo` (string, required) - name of the user
+
+### UserWithoutPassword1 (object)
++ id: `22222222-9012-3456-7890-123456789012` (string, required) - user's id
++ email: `second@mail.com` (string, required) - email of the user
++ name: `Bar Bar` (string, required) - name of the user
+
+### UserWithoutPassword2 (object)
++ id: `33333333-9012-3456-7890-123456789012` (string, required) - user's id
++ email: `third@mail.com` (string, required) - email of the user
++ name: `Baz Baz` (string, required) - name of the user
 
 ### Deck0 (object)
 + name: `First name` (string, required) - name attribute for Deck
@@ -413,6 +479,11 @@ By default API return response with HTTP code **4xx** family.
 + isCorrectAnswer: `true` (boolean, required) - Shows whether an answer was correct or not
 
 ## Collections
+
+### UsersWithoutPasswordCollection (array)
++ 0: (UserWithoutPassword0)
++ 1: (UserWithoutPassword1)
++ 2: (UserWithoutPassword2)
 
 ### DeckCollection (array)
 + 0: (Deck0)
