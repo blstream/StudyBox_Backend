@@ -67,7 +67,7 @@ public class FlashcardsResourceTest {
     public void createFlashcardWithoutQuestionAndAnswer() {
         final Response response = resources.client().target(flashcardsURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(new FlashcardRepresentation(), MediaType.APPLICATION_JSON_TYPE));
+                .post(Entity.entity(new FlashcardRepresentation("", ""), MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatus()).isEqualTo(422);
     }

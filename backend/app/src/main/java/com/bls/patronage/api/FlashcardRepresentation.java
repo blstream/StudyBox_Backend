@@ -2,33 +2,25 @@ package com.bls.patronage.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class FlashcardRepresentation {
+    @NotEmpty
+    @Length(max = 1000)
     private final String question;
+    @NotEmpty
+    @Length(max = 1000)
     private final String answer;
 
-    public FlashcardRepresentation() {
-        question = null;
-        answer = null;
-    }
-
-    public FlashcardRepresentation(String question, String answer) {
+    public FlashcardRepresentation(@JsonProperty("question") String question, @JsonProperty("answer") String answer) {
         this.question = question;
         this.answer = answer;
     }
 
-    @JsonProperty
-    @NotNull
-    @Length(min = 1)
     public String getQuestion() {
         return question;
     }
 
-    @JsonProperty
-    @NotNull
-    @Length(min = 1)
     public String getAnswer() {
         return answer;
     }
