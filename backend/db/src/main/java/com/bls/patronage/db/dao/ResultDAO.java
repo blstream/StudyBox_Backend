@@ -1,6 +1,7 @@
 package com.bls.patronage.db.dao;
 
 import com.bls.patronage.db.exception.DataAccessException;
+import com.bls.patronage.db.mappers.ResultMapper;
 import com.bls.patronage.db.model.Result;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
