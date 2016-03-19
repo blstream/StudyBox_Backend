@@ -1,4 +1,4 @@
-package com.bls.patronage.db.dao;
+package com.bls.patronage.db.mappers;
 
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import org.skife.jdbi.v2.StatementContext;
