@@ -22,13 +22,13 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="deckId" type="uuid">
-                <constraints nullable="false"/>
-            </column>
             <column name="question" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
             <column name="answer" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deckId" type="uuid">
                 <constraints nullable="false"/>
             </column>
         </createTable>
