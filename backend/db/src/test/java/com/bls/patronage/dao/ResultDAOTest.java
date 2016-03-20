@@ -55,13 +55,13 @@ public class ResultDAOTest extends DAOTest {
                 .bind(0, flashcardExample1.getId())
                 .bind(1, flashcardExample1.getQuestion())
                 .bind(2, flashcardExample1.getAnswer())
-                .bind(3, flashcardExample1.getDeckID())
+                .bind(3, flashcardExample1.getDeckId())
                 .execute();
         handle.createStatement("INSERT INTO flashcards VALUES (?, ?, ?, ?)")
                 .bind(0, flashcardExample2.getId())
                 .bind(1, flashcardExample2.getQuestion())
                 .bind(2, flashcardExample2.getAnswer())
-                .bind(3, flashcardExample1.getDeckID())
+                .bind(3, flashcardExample1.getDeckId())
                 .execute();
     }
 

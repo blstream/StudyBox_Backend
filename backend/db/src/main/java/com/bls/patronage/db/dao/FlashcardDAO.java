@@ -16,17 +16,17 @@ import java.util.UUID;
 @RegisterMapper(FlashcardMapper.class)
 abstract public class FlashcardDAO {
 
-    @SqlQuery("select id,question,answer,deckID from flashcards where id = :id")
+    @SqlQuery("select id,question,answer,deckId from flashcards where id = :id")
     abstract Flashcard get(@Bind("id") UUID id);
 
-    @SqlQuery("select id,question,answer,deckID from flashcards where deckId = :deckId")
+    @SqlQuery("select id,question,answer,deckId from flashcards where deckId = :deckId")
     public abstract List<Flashcard> getAllFlashcards(@Bind("deckId") UUID deckId);
 
     @SqlQuery("select id from flashcards where deckId = :deckId")
     public abstract List<UUID> getFlashcardsIdFromSelectedDeck(@Bind("deckId") UUID deckId);
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into flashcards values (:id, :question, :answer, :deckID)")
+    @SqlUpdate("insert into flashcards values (:id, :question, :answer, :deckId)")
     public abstract UUID createFlashcard(@BindBean Flashcard flashcard);
 
     @SqlUpdate("update flashcards set question = :question, answer = :answer where id = :id")
