@@ -54,6 +54,12 @@ public class FlashcardDAOTest extends DAOTest {
     }
 
     @Test
+    public void getFlashcardsIdFromSelectedDeck() {
+        final List<UUID> ids = dao.getFlashcardsIdFromSelectedDeck(deckID);
+        assertThat(ids).containsSequence(flashcardExample1.getId(), flashcardExample2.getId());
+    }
+
+    @Test
     public void getFlashcardById(){
         final Flashcard flashcardById = dao.getFlashcardById(flashcardExample1.getId());
         assertThat(flashcardById).isEqualTo(flashcardExample1);
