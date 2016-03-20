@@ -45,7 +45,7 @@
     </changeSet>
     <changeSet id="3" author="lupi">
         <createTable tableName="users">
-            <column name="userId" type="uuid">
+            <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="email" type="text">
