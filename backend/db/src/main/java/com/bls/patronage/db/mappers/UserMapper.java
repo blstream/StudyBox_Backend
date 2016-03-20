@@ -11,6 +11,6 @@ import java.util.UUID;
 public class UserMapper implements ResultSetMapper<User> {
     @Override
     public User map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        return new User((UUID) r.getObject("userId"), r.getString("email"), r.getString("name"), r.getString("password"));
+        return new User((UUID) r.getObject("id"), r.getString("email"), r.getString("name"), r.getString("password"));
     }
 }
