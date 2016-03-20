@@ -25,7 +25,7 @@ abstract public class UserDAO {
 
     @RegisterMapper(UserWithoutPasswordMapper.class)
     @SqlQuery("select id,email,name from users")
-    public abstract List<UserWithoutPassword> getAllUsers(@Bind("deckId") UUID deckId);
+    public abstract List<UserWithoutPassword> getAllUsers();
 
     @GetGeneratedKeys
     @SqlUpdate("insert into users values (:id, :email, :name, :password)")
