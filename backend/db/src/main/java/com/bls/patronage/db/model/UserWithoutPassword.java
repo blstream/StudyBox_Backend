@@ -20,9 +20,6 @@ public class UserWithoutPassword extends IdentifiableEntity {
         this.name = name;
     }
 
-    public UserWithoutPassword() {
-    }
-
     public String getEmail() {
         return email;
     }
