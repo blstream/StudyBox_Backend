@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 
 import java.util.UUID;
 
-public class User extends UserWithoutId {
+public class User extends UserWithoutPassword {
     private String password;
 
     public User(String id, String email, String name, String password) {
