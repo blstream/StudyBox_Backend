@@ -7,6 +7,9 @@ import java.util.UUID;
 public class User extends UserWithoutPassword {
     private String password;
 
+    public User() {
+    }
+
     public User(String id, String email, String name, String password) {
         super(id, email, name);
         this.password = password;
