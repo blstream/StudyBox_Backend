@@ -35,7 +35,7 @@ public class FlashcardsResource {
     }
 
     @GET
-    public List<Flashcard> listDecks(@Valid @PathParam("deckId") UUIDParam id) {
+    public List<Flashcard> listFlashcards(@Valid @PathParam("deckId") UUIDParam id) {
         return flashcardDAO.getAllFlashcards(id.get());
     }
 }
