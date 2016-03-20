@@ -4,17 +4,17 @@ import com.google.common.base.Objects;
 
 import java.util.UUID;
 
-public class UserWithoutId extends IdentifiableEntity {
+public class UserWithoutPassword extends IdentifiableEntity {
     private String email;
     private String name;
 
-    public UserWithoutId(String id, String email, String name) {
+    public UserWithoutPassword(String id, String email, String name) {
         super(id);
         this.email = email;
         this.name = name;
     }
 
-    public UserWithoutId(UUID id, String email, String name) {
+    public UserWithoutPassword(UUID id, String email, String name) {
         super(id);
         this.email = email;
         this.name = name;
@@ -32,7 +32,7 @@ public class UserWithoutId extends IdentifiableEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserWithoutId user = (UserWithoutId) o;
+        UserWithoutPassword user = (UserWithoutPassword) o;
         return Objects.equal(getId(), user.getId()) &&
                 Objects.equal(getEmail(), user.getEmail()) &&
                 Objects.equal(getName(), user.getName());
