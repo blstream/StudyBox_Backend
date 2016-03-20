@@ -26,9 +26,9 @@ public class ResultsResource {
     private final FlashcardDAO flashcardDAO;
     private final ResultDAO resultDAO;
 
-    public ResultsResource(FlashcardDAO flashcardDAO, ResultDAO resultDAO) {
-        this.flashcardDAO = flashcardDAO;
+    public ResultsResource(ResultDAO resultDAO, FlashcardDAO flashcardDAO) {
         this.resultDAO = resultDAO;
+        this.flashcardDAO = flashcardDAO;
     }
 
     @POST
