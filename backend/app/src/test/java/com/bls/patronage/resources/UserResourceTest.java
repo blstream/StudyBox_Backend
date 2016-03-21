@@ -58,16 +58,6 @@ public class UserResourceTest {
     }
 
     @Test
-    public void deleteUser() {
-        when(dao.getUserById(user.getId())).thenReturn(user);
-        final Response response = resources.client().target(userURI)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .delete();
-
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.NO_CONTENT);
-    }
-
-    @Test
     public void getUser() {
         when(dao.getUserById(user.getId())).thenReturn(user);
         final User recievedUser = resources.client().target(userURI)

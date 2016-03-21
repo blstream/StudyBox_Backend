@@ -62,12 +62,6 @@ public class UsersDAOTest extends DAOTest {
         assertThat(dao.getUserById(user.getId())).isEqualTo(user);
     }
 
-    @Test(expected = DataAccessException.class)
-    public void deleteUser() {
-        dao.deleteUser(userExample2.getId());
-        dao.getUserById(userExample2.getId());
-    }
-
     @Test
     public void updateUser() {
         final User user = new User(userExample1.getId(), "goos@mail.com", "bazz", "supersecret2");

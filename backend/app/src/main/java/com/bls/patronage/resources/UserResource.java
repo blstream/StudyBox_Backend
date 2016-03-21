@@ -29,13 +29,6 @@ public class UserResource {
             @Valid @PathParam("userId") UUIDParam userId) {
         return userDAO.getUserById(userId.get());
     }
-
-    @DELETE
-    public void deleteUser(
-            @Valid @PathParam("userId") UUIDParam userId) {
-        userDAO.deleteUser(userDAO.getUserById(userId.get()).getId());
-    }
-
     @PUT
     public void updateUser(
             @Valid @PathParam("userId") UUID userId,
