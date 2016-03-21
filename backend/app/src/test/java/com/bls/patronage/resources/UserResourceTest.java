@@ -70,11 +70,11 @@ public class UserResourceTest {
     @Test
     public void getUser() {
         when(dao.getUserById(user.getId())).thenReturn(user);
-        final User recievedFlashcard = resources.client().target(userURI)
+        final User recievedUser = resources.client().target(userURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get(User.class);
 
         verify(dao).getUserById(user.getId());
-        assertThat(recievedFlashcard).isEqualTo(user);
+        assertThat(recievedUser).isEqualTo(user);
     }
 }

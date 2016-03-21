@@ -1,9 +1,8 @@
 package com.bls.patronage.db.dao;
 
 import com.bls.patronage.db.exception.DataAccessException;
-import com.bls.patronage.db.mappers.UserMapper;
-import com.bls.patronage.db.mappers.UserWithoutPasswordMapper;
-import com.bls.patronage.db.model.Flashcard;
+import com.bls.patronage.db.mapper.UserMapper;
+import com.bls.patronage.db.mapper.UserWithoutPasswordMapper;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.db.model.UserWithoutPassword;
 import org.skife.jdbi.v2.sqlobject.Bind;

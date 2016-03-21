@@ -55,7 +55,7 @@ public class UsersResourceTest {
     }
 
     @Test
-    public void createFlashcard() {
+    public void createUser() {
         final Response response = resources.client().target(userURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(userRepresentation, MediaType.APPLICATION_JSON_TYPE));
@@ -69,7 +69,7 @@ public class UsersResourceTest {
     }
 
     @Test
-    public void createFlashcardWithoutQuestionAndAnswer() {
+    public void createUserWithNoDataProvided() {
         final Response response = resources.client().target(userURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(new UserRepresentation("", "", ""), MediaType.APPLICATION_JSON_TYPE));
@@ -78,15 +78,15 @@ public class UsersResourceTest {
     }
 
     @Test
-    public void listFlashcards() {
-        final ImmutableList<UserWithoutPassword> flashcards = ImmutableList.of(userWithoutPassword);
-        when(dao.getAllUsers()).thenReturn(flashcards);
+    public void listUsers() {
+        final ImmutableList<UserWithoutPassword> users = ImmutableList.of(userWithoutPassword);
+        when(dao.getAllUsers()).thenReturn(users);
 
         final List<UserWithoutPassword> response = resources.client().target(userURI)
                 .request().get(new GenericType<List<UserWithoutPassword>>() {
                 });
 
         verify(dao).getAllUsers();
-        assertThat(response).containsAll(flashcards);
+        assertThat(response).containsAll(users);
     }
 }
