@@ -1,6 +1,8 @@
 package com.bls.patronage.db.dao;
 
 import com.bls.patronage.db.exception.DataAccessException;
+import com.bls.patronage.db.mapper.FlashcardIdMapper;
+import com.bls.patronage.db.mapper.FlashcardMapper;
 import com.bls.patronage.db.model.Flashcard;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
@@ -22,6 +24,7 @@ abstract public class FlashcardDAO {
     @SqlQuery("select id,question,answer,deckId from flashcards where deckId = :deckId")
     public abstract List<Flashcard> getAllFlashcards(@Bind("deckId") UUID deckId);
 
+    @RegisterMapper(FlashcardIdMapper.class)
     @SqlQuery("select id from flashcards where deckId = :deckId")
     public abstract List<UUID> getFlashcardsIdFromSelectedDeck(@Bind("deckId") UUID deckId);
 

@@ -34,7 +34,7 @@ public class ResultsResourceTest {
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new ResultsResource(flashcardDAO, resultDAO))
+            .addResource(new ResultsResource(resultDAO, flashcardDAO))
             .build();
     @Captor
     private ArgumentCaptor<Result> resultCaptor;
