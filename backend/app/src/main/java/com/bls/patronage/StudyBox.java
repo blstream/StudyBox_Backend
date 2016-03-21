@@ -10,6 +10,8 @@ import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
+import com.bls.patronage.resources.UserResource;
+import com.bls.patronage.resources.UsersResource;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -63,6 +65,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new DecksResource(jdbi.onDemand(DeckDAO.class)));
         environment.jersey().register(new FlashcardResource(jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new FlashcardsResource(jdbi.onDemand(FlashcardDAO.class)));
+        environment.jersey().register(new UserResource(jdbi.onDemand(UserDAO.class)));
+        environment.jersey().register(new UsersResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
