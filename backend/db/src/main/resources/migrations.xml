@@ -59,21 +59,5 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="3" author="lupi">
-        <createTable tableName="users">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="email" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="password" type="text">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
 </databaseChangeLog>
 
