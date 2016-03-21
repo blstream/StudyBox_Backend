@@ -32,8 +32,4 @@ public class UsersResource {
         return createdUser;
     }
 
-    @GET
-    public List<UserWithoutPassword> listUsers() {
-        return userDAO.getAllUsers();
-    }
 }

@@ -2,6 +2,7 @@ package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.UserDAO;
+import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.db.model.UserWithoutPassword;
@@ -49,14 +50,6 @@ public class UsersDAOTest extends DAOTest {
     }
 
     @Test
-    public void getAllUsers() {
-        final List<UserWithoutPassword> users = dao.getAllUsers();
-        UserWithoutPassword userWithoutPasswordExample1 = new UserWithoutPassword(userExample1.getId(), userExample1.getEmail(), userExample1.getName());
-        UserWithoutPassword userWithoutPasswordExample2 = new UserWithoutPassword(userExample2.getId(), userExample2.getEmail(), userExample2.getName());
-        assertThat(users).containsSequence(userWithoutPasswordExample1, userWithoutPasswordExample2);
-    }
-
-    @Test
     public void getUserById() {
         final User userById = dao.getUserById(userExample1.getId());
         assertThat(userById).isEqualTo(userExample1);
@@ -69,10 +62,10 @@ public class UsersDAOTest extends DAOTest {
         assertThat(dao.getUserById(user.getId())).isEqualTo(user);
     }
 
-    @Test
+    @Test(expected = DataAccessException.class)
     public void deleteUser() {
         dao.deleteUser(userExample2.getId());
-        assertThat(dao.getAllUsers()).doesNotContain(userExample2);
+        dao.getUserById(userExample2.getId());
     }
 
     @Test

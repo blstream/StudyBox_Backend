@@ -76,17 +76,4 @@ public class UsersResourceTest {
 
         assertThat(response.getStatus()).isEqualTo(422);
     }
-
-    @Test
-    public void listUsers() {
-        final ImmutableList<UserWithoutPassword> users = ImmutableList.of(userWithoutPassword);
-        when(dao.getAllUsers()).thenReturn(users);
-
-        final List<UserWithoutPassword> response = resources.client().target(userURI)
-                .request().get(new GenericType<List<UserWithoutPassword>>() {
-                });
-
-        verify(dao).getAllUsers();
-        assertThat(response).containsAll(users);
-    }
 }

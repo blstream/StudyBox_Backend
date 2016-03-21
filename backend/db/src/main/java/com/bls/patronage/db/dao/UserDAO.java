@@ -22,10 +22,6 @@ abstract public class UserDAO {
     @SqlQuery("select id,email,name,password from users where id = :id")
     abstract User get(@Bind("id") UUID id);
 
-    @RegisterMapper(UserWithoutPasswordMapper.class)
-    @SqlQuery("select id,email,name from users")
-    public abstract List<UserWithoutPassword> getAllUsers();
-
     @GetGeneratedKeys
     @SqlUpdate("insert into users values (:id, :email, :name, :password)")
     public abstract UUID createUser(@BindBean User user);
