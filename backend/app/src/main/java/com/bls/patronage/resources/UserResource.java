@@ -34,7 +34,7 @@ public class UserResource {
     @Path("/me")
     @GET
     public UserWithoutPassword logInUser(@Auth User userCredentials) {
-        final Optional<User> user = Optional.of(userDAO.getUserByEmail(userCredentials.getEmail()));
-        return new UserWithoutPassword(user.get().getId(), user.get().getEmail(), user.get().getName());
+        final User user = userDAO.getUserByEmail(userCredentials.getEmail());
+        return new UserWithoutPassword(user.getId(), user.getEmail(), user.getName());
     }
 }
