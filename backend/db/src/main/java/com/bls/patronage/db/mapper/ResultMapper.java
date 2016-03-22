@@ -1,4 +1,4 @@
-package com.bls.patronage.db.dao;
+package com.bls.patronage.db.mapper;
 
 import com.bls.patronage.db.model.Result;
 import org.skife.jdbi.v2.StatementContext;
