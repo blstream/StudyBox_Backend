@@ -20,8 +20,8 @@ public class FlashcardDAOTest extends DAOTest {
     @Override
     public void setUp() throws Exception {
         deckID = UUID.randomUUID();
-        flashcardExample1 = new Flashcard(UUID.randomUUID(),"what are you?", "Just human", deckID);
-        flashcardExample2 = new Flashcard(UUID.randomUUID(),"who are you?", "Proud pole", deckID);
+        flashcardExample1 = new Flashcard(UUID.randomUUID(), "foo", "bar", deckID);
+        flashcardExample2 = new Flashcard(UUID.randomUUID(), "goo", "baz", deckID);
 
         super.setUp();
         dao = dbi.open(FlashcardDAO.class);
@@ -31,19 +31,19 @@ public class FlashcardDAOTest extends DAOTest {
     protected void setUpDatabaseContent(Handle handle) {
         handle.createCall("DROP TABLE flashcards IF EXISTS").invoke();
         handle.createCall(
-                "CREATE TABLE flashcards (id uuid primary key, question varchar(50) not null, answer varchar(50) not null, deckID uuid)")
+                "CREATE TABLE flashcards (id uuid primary key, question varchar(50) not null, answer varchar(50) not null, deckId uuid)")
                 .invoke();
         handle.createStatement("INSERT INTO flashcards VALUES (?, ?, ?, ?)")
                 .bind(0, flashcardExample1.getId())
                 .bind(1, flashcardExample1.getQuestion())
                 .bind(2, flashcardExample1.getAnswer())
-                .bind(3, flashcardExample1.getDeckID())
+                .bind(3, flashcardExample1.getDeckId())
                 .execute();
         handle.createStatement("INSERT INTO flashcards VALUES (?, ?, ?, ?)")
                 .bind(0, flashcardExample2.getId())
                 .bind(1, flashcardExample2.getQuestion())
                 .bind(2, flashcardExample2.getAnswer())
-                .bind(3, flashcardExample1.getDeckID())
+                .bind(3, flashcardExample1.getDeckId())
                 .execute();
     }
 
@@ -61,7 +61,7 @@ public class FlashcardDAOTest extends DAOTest {
 
     @Test
     public void createFlashcard(){
-        final Flashcard flashcard = new Flashcard(UUID.randomUUID(),"Will you test me?", "Yes, I will", UUID.randomUUID());
+        final Flashcard flashcard = new Flashcard(UUID.randomUUID(), "foos", "bars", UUID.randomUUID());
         dao.createFlashcard(flashcard);
         assertThat(dao.getFlashcardById(flashcard.getId())).isEqualTo(flashcard);
     }
@@ -69,12 +69,12 @@ public class FlashcardDAOTest extends DAOTest {
     @Test
     public void deleteFlashcard(){
         dao.deleteFlashcard(flashcardExample2.getId());
-        assertThat(dao.getAllFlashcards(flashcardExample2.getDeckID())).doesNotContain(flashcardExample2);
+        assertThat(dao.getAllFlashcards(flashcardExample2.getDeckId())).doesNotContain(flashcardExample2);
     }
 
     @Test
     public void updateFlashcard(){
-        final Flashcard flashcard = new Flashcard(flashcardExample1.getId(),"Am i modified?", "Surely yes", flashcardExample1.getDeckID());
+        final Flashcard flashcard = new Flashcard(flashcardExample1.getId(), "goos", "bazz", flashcardExample1.getDeckId());
         dao.updateFlashcard(flashcard);
         assertThat(dao.getFlashcardById(flashcardExample1.getId())).isEqualTo(flashcard);
     }

@@ -1,6 +1,8 @@
 package com.bls.patronage.db.dao;
 
 import com.bls.patronage.db.exception.DataAccessException;
+import com.bls.patronage.db.mapper.DeckMapper;
+import com.bls.patronage.db.mapper.DeckWithFlashcardsNumberMapper;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import org.skife.jdbi.v2.sqlobject.Bind;
