@@ -11,9 +11,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by arek on 3/22/16.
- */
 @Path("/decks/{deckId}/flashcards/{flashcardId}/tips")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

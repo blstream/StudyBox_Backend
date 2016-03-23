@@ -9,9 +9,6 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-/**
- * Created by arek on 3/22/16.
- */
 @Path("/decks/{deckId}/flashcards/{flashcardId}/tips/{tipId}")
 @Produces(MediaType.APPLICATION_JSON)
 public class TipResource {

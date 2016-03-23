@@ -4,9 +4,6 @@ package com.bls.patronage.db.model;
 import java.util.UUID;
 import com.google.common.base.Objects;
 
-/**
- * Created by arek on 3/22/16.
- */
 public class Tip extends IdentifiableEntity {
 
     private String essence;

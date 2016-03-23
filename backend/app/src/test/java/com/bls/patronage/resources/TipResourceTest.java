@@ -26,9 +26,6 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-/**
- * Created by arek on 3/22/16.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class TipResourceTest {
     private static final TipDAO dao = mock(TipDAO.class);

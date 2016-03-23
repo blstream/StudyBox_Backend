@@ -7,10 +7,6 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 
-
-/**
- * Created by arek on 3/22/16.
- */
 public class TipRepresentation {
 
     @NotEmpty
@@ -19,7 +15,7 @@ public class TipRepresentation {
 
     @NotNull
     @Range(min=0, max=10)
-    private final int difficult;
+    private final Integer difficult;
 
     public TipRepresentation(@JsonProperty("essence") String essence,
                              @JsonProperty("difficult") int difficult) {

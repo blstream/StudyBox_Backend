@@ -24,10 +24,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-/**
- * Created by arek on 3/22/16.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class TipsResourceTest {
     private static final TipDAO dao = mock(TipDAO.class);

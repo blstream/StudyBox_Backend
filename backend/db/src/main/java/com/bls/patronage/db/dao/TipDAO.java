@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Created by arek on 3/22/16.
- */
 @RegisterMapper(TipMapper.class)
 public abstract class TipDAO {
 

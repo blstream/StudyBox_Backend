@@ -10,9 +10,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by arek on 3/22/16.
- */
 public class TipDAOTest extends DAOTest {
 
     private Tip exampleTip1;
