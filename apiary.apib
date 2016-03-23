@@ -23,6 +23,8 @@ Study Box REST API backend documentation and mock.
  - name of boolean public changed to isPublic
 ## 16/03/2016 toja
  - resources for Test results added
+## 23/03/2016 toja
+ - method to get logged user added
  
 
 # TODO
@@ -178,7 +180,7 @@ By default API return response with HTTP code **4xx** family.
     + Attributes (UserWithoutId)
 
 + Response 200 (application/json)
-    + Attributes (User)
+    + Attributes (UserWithoutPassword)
 
 
 ### Get User by ID [GET /users/{userId}]
@@ -187,12 +189,7 @@ By default API return response with HTTP code **4xx** family.
     + userId: `1233-0000-0000-000000000001` (string, required) - user's UUID
 
 + Response 200 (application/json)
-    + Attributes (User)
-
-### List all users [GET]
-
-+ Response 200 (application/json)
-    + Attributes (UsersWithoutPasswordCollection)
+    + Attributes (UserWithoutPassword)
 
 ### Update User [PUT /users/{userId}]
 
@@ -204,12 +201,17 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 201 (application/json)
 
-### Remove User [DELETE /users/{userId}]
+### Get logged User [GET /users/me]
 
-+ Parameters
-    + userId: `1233-0000-0000-000000000001` (string, required) - user's UUID
++ Request
 
-+ Response 201
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA== 
+        
++ Response 200 (application/json)
+    + Attributes (UserWithoutPassword)
+    
 
 # Group Tip
 
@@ -351,12 +353,14 @@ By default API return response with HTTP code **4xx** family.
 
 ## Single objects
 
-### UserWithoutId
+### UserBase (object)
 + email: `test@mail.com` (string, required) - email of the user
 + name: `Foo Bar` (string, required) - name of the user
+
+### UserWithoutId (UserBase)
 + password: `password` (string, required) - encrypted password
 
-### User (UserWithoutId)
+### UserWithoutPassword (UserBase)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - user's id
 
 ### DeckWithoutId (object)
@@ -387,21 +391,6 @@ By default API return response with HTTP code **4xx** family.
 
 
 ## Objects for Collections
-
-### UserWithoutPassword0 (object)
-+ id: `11111111-9012-3456-7890-123456789012` (string, required) - user's id
-+ email: `first@mail.com` (string, required) - email of the user
-+ name: `Foo Foo` (string, required) - name of the user
-
-### UserWithoutPassword1 (object)
-+ id: `22222222-9012-3456-7890-123456789012` (string, required) - user's id
-+ email: `second@mail.com` (string, required) - email of the user
-+ name: `Bar Bar` (string, required) - name of the user
-
-### UserWithoutPassword2 (object)
-+ id: `33333333-9012-3456-7890-123456789012` (string, required) - user's id
-+ email: `third@mail.com` (string, required) - email of the user
-+ name: `Baz Baz` (string, required) - name of the user
 
 ### Deck0 (object)
 + name: `First name` (string, required) - name attribute for Deck
@@ -479,11 +468,6 @@ By default API return response with HTTP code **4xx** family.
 + isCorrectAnswer: `true` (boolean, required) - Shows whether an answer was correct or not
 
 ## Collections
-
-### UsersWithoutPasswordCollection (array)
-+ 0: (UserWithoutPassword0)
-+ 1: (UserWithoutPassword1)
-+ 2: (UserWithoutPassword2)
 
 ### DeckCollection (array)
 + 0: (Deck0)
