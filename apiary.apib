@@ -23,6 +23,8 @@ Study Box REST API backend documentation and mock.
  - name of boolean public changed to isPublic
 ## 16/03/2016 toja
  - resources for Test results added
+## 23/03/2016 toja
+ - method to get logged user added
  
 
 # TODO
@@ -198,6 +200,18 @@ By default API return response with HTTP code **4xx** family.
     + Attributes (UserWithoutId)
 
 + Response 201 (application/json)
+
+### Get logged User [GET /users/me]
+
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA== 
+        
++ Response 200 (application/json)
+    + Attributes (UserWithoutPassword)
+    
 
 # Group Tip
 
