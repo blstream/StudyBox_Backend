@@ -1,0 +1,6 @@
+id,email,name,password
+b3f3882b-b138-4bc0-a96b-cd25e087ff4e, test1@mail.com, testName1, secretPass1
+99b3b59f-6d13-4dea-b23c-827f1a67f1c3, test2@mail.com, testName2, secretPass2
+1f9ecfec-38c1-4d78-a25f-134f9741447c, test3@mail.com, testName3, secretPass3
+fa4a59e6-f701-4015-a4a1-e86577099ae0, test4@mail.com, testName4, secretPass4
+63e5c54f-0946-4bc2-893d-8be296d333c7, test5@mail.com, testName5, secretPass5
