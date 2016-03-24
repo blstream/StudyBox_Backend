@@ -25,7 +25,6 @@ abstract public class DAOTest {
 
     protected DBI dbi;
     private Handle handle;
-    private Liquibase liquibase;
 
     public void setUp() throws Exception {
         Environment environment = new Environment("test-environment", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
@@ -39,7 +38,7 @@ abstract public class DAOTest {
     }
 
     private void migrateDatabase() throws LiquibaseException {
-        liquibase = new Liquibase("migrations.xml", new ClassLoaderResourceAccessor(), new JdbcConnection(handle.getConnection()));
+        Liquibase liquibase = new Liquibase("migrations.xml", new ClassLoaderResourceAccessor(), new JdbcConnection(handle.getConnection()));
         liquibase.update("");
     }
 
