@@ -1,7 +1,6 @@
 package com.bls.patronage.dao;
 
 import com.codahale.metrics.MetricRegistry;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jdbi.DBIFactory;
@@ -13,7 +12,6 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.Query;
-import org.skife.jdbi.v2.ResultSetMapperFactory;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import java.util.List;
@@ -45,7 +43,7 @@ abstract public class DAOTest {
         liquibase.update("");
     }
 
-    public  <Type> List<Type> getObjectsFromDatabase(Class<Type> typeClass, Class mapperClass, String tableName) throws Exception {
+    public  <E> List<E> getObjectsFromDatabase(Class<E> typeClass, Class mapperClass, String tableName) throws Exception {
         Query<Map<String, Object>> query = handle.createQuery("SELECT * from " + tableName);
         query.registerMapper((ResultSetMapper) mapperClass.newInstance());
         return query.mapTo(typeClass).list();
