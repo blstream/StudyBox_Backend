@@ -59,5 +59,24 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="4" author="arka">
+        <createTable tableName="tips">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="essence" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="difficult" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flashcardId" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deckId" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
 

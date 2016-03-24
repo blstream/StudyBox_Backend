@@ -3,15 +3,11 @@ package com.bls.patronage;
 import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.exception.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
-import com.bls.patronage.resources.DeckResource;
-import com.bls.patronage.resources.DecksResource;
-import com.bls.patronage.resources.FlashcardResource;
-import com.bls.patronage.resources.FlashcardsResource;
-import com.bls.patronage.resources.UserResource;
-import com.bls.patronage.resources.UsersResource;
+import com.bls.patronage.resources.*;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -67,6 +63,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new FlashcardsResource(jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new UserResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new UsersResource(jdbi.onDemand(UserDAO.class)));
+        environment.jersey().register(new TipResource(jdbi.onDemand(TipDAO.class)));
+        environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
