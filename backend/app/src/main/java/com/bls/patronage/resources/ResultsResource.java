@@ -48,7 +48,6 @@ public class ResultsResource {
     @GET
     public List<Result> listResults(@Valid @PathParam("deckId") UUIDParam deckId) {
         List<UUID> ids = flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId.get());
-        List<Result> results = ids.stream().map(resultDAO::getResult).collect(Collectors.toList());
-        return results;
+        return ids.stream().map(resultDAO::getResult).collect(Collectors.toList());
     }
 }

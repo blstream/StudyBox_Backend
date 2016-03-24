@@ -78,5 +78,35 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="5" author="lupi">
+        <loadData tableName="flashcards" file="initialData/flashcards.csv">
+            <column name="id" type="STRING"/>
+            <column name="question" type="STRING"/>
+            <column name="answer" type="STRING"/>
+            <column name="deckId" type="STRING"/>
+        </loadData>
+        <loadData tableName="decks" file="initialData/decks.csv">
+            <column name="id" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="public" type="BOOLEAN"/>
+        </loadData>
+        <loadData tableName="results" file="initialData/results.csv">
+            <column name="flashcardId" type="STRING"/>
+            <column name="correctAnswers" type="NUMERIC"/>
+        </loadData>
+        <loadData tableName="users" file="initialData/users.csv">
+            <column name="id" type="STRING"/>
+            <column name="email" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="password" type="STRING"/>
+        </loadData>
+        <loadData tableName="tips" file="initialData/tips.csv">
+            <column name="id" type="STRING"/>
+            <column name="essence" type="STRING"/>
+            <column name="difficult" type="NUMERIC"/>
+            <column name="flashcardId" type="STRING"/>
+            <column name="deckId" type="STRING"/>
+        </loadData>
+    </changeSet>
 </databaseChangeLog>
 

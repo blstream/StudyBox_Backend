@@ -3,7 +3,6 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.TipRepresentation;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.model.Tip;
-import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
 import org.junit.Before;
@@ -16,12 +15,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;

@@ -3,7 +3,6 @@ package com.bls.patronage.resources;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.db.model.UserWithoutPassword;
-import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
