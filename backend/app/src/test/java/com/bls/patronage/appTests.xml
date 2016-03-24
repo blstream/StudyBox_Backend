@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Application Tests">
+    <test name="Resource Tests" junit="true">
+        <classes>
+            <class name="com.bls.patronage.resources.DeckResourceTest"/>
+            <class name="com.bls.patronage.resources.DecksResourceTest"/>
+            <class name="com.bls.patronage.resources.FlashcardResourceTest"/>
+            <class name="com.bls.patronage.resources.FlashcardsResourceTest"/>
+            <class name="com.bls.patronage.resources.ResultsResourceTest"/>
+            <class name="com.bls.patronage.resources.UserResourceTest"/>
+        </classes>
+    </test>
+    <test name="Other Tests">
+        <classes>
+            <class name="com.bls.patronage.ModelTests"/>
+            <class name="com.bls.patronage.RepresentationTests"/>
+            <class name="com.bls.patronage.api.DeckRepresentationTest"/>
+        </classes>
+    </test>
+</suite>
