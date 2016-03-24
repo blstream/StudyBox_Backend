@@ -100,6 +100,13 @@
             <column name="name" type="STRING"/>
             <column name="password" type="STRING"/>
         </loadData>
+        <loadData tableName="tips" file="initialData/tips.csv">
+            <column name="id" type="STRING"/>
+            <column name="essence" type="STRING"/>
+            <column name="difficult" type="NUMERIC"/>
+            <column name="flashcardId" type="STRING"/>
+            <column name="deckId" type="STRING"/>
+        </loadData>
     </changeSet>
 </databaseChangeLog>
 
