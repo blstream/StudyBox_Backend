@@ -5,14 +5,10 @@ import com.bls.patronage.db.mapper.FlashcardMapper;
 import com.bls.patronage.db.mapper.ResultMapper;
 import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.Result;
-import io.dropwizard.testing.ResourceHelpers;
-import liquibase.util.csv.CSVReader;
-import org.skife.jdbi.v2.Handle;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.FileReader;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -32,10 +28,10 @@ public class ResultDAOTest extends DAOTest {
     }
 
     private List<Result> getResultsFromDatabase() throws Exception{
-        return getObjectsFromDatabase(Result.class, ResultMapper.class, "results");
+        return getAllEntities(Result.class, ResultMapper.class, "results");
     }
     private List<Flashcard> getFlashcardsFromDatabase() throws Exception {
-        return getObjectsFromDatabase(Flashcard.class,  FlashcardMapper.class, "flashcards");
+        return getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards");
     }
 
     @Override

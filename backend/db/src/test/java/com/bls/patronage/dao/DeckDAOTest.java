@@ -25,7 +25,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     private List<Deck> getDecksFromDatabase() throws Exception {
-        return getObjectsFromDatabase(Deck.class, DeckMapper.class, "decks");
+        return getAllEntities(Deck.class, DeckMapper.class, "decks");
     }
 
     @Override

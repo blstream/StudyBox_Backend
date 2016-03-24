@@ -25,7 +25,7 @@ public class TipDAOTest extends DAOTest {
     }
 
     private List<Tip> getTipsFromDatabase() throws Exception {
-        return getObjectsFromDatabase(Tip.class, TipMapper.class, "tips");
+        return getAllEntities(Tip.class, TipMapper.class, "tips");
     }
 
     @Override

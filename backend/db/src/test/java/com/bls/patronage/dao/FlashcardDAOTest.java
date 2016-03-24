@@ -25,7 +25,7 @@ public class FlashcardDAOTest extends DAOTest {
     }
 
     private List<Flashcard> getFlashcardsFromDatabase() throws Exception {
-        return getObjectsFromDatabase(Flashcard.class,  FlashcardMapper.class, "flashcards");
+        return getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards");
     }
 
     @Override

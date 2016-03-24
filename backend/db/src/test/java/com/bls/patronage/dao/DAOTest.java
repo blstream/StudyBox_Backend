@@ -43,7 +43,7 @@ abstract public class DAOTest {
         liquibase.update("");
     }
 
-    public  <E> List<E> getObjectsFromDatabase(Class<E> typeClass, Class mapperClass, String tableName) throws Exception {
+    public  <E> List<E> getAllEntities(Class<E> typeClass, Class mapperClass, String tableName) throws Exception {
         Query<Map<String, Object>> query = handle.createQuery("SELECT * from " + tableName);
         query.registerMapper((ResultSetMapper) mapperClass.newInstance());
         return query.mapTo(typeClass).list();
