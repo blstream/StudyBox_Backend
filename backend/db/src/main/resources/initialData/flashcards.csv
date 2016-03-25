@@ -1,0 +1,6 @@
+id,question,answer,deckId
+6ab90e8c-3f28-46b2-81f3-b668f6908c09, testQuestion1, testAnswer1, c6c4d451-65dd-4ac0-9e53-974397c7bea7
+a2670d1a-b8fe-4884-ba49-24f5d9458a12, testQuestion2, testAnswer2, c6c4d451-65dd-4ac0-9e53-974397c7bea7
+3d55ce90-e2c6-4c0e-b94d-879f1194356c, testQuestion3, testAnswer3, c6c4d451-65dd-4ac0-9e53-974397c7bea7
+3a581ad7-ac65-4a49-9697-9d111b3635a7, testQuestion4, testAnswer4, 3809da97-3fe2-4f13-bbc8-1442ea62d719
+fc6583eb-99be-4f39-8de6-47fff909431e, testQuestion5, testAnswer5, 3809da97-3fe2-4f13-bbc8-1442ea62d719

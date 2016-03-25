@@ -3,7 +3,6 @@ package com.bls.patronage.resources;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.db.model.UserWithoutPassword;
-import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
@@ -34,7 +33,7 @@ public class UserResource {
     @Path("/me")
     @GET
     public UserWithoutPassword logInUser(@Auth User userCredentials) {
-        final Optional<User> user = Optional.of(userDAO.getUserByEmail(userCredentials.getEmail()));
-        return new UserWithoutPassword(user.get().getId(), user.get().getEmail(), user.get().getName());
+        final User user = userDAO.getUserByEmail(userCredentials.getEmail());
+        return new UserWithoutPassword(user.getId(), user.getEmail(), user.getName());
     }
 }
