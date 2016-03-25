@@ -131,8 +131,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         when(deckDao.getAllDecksWithFlashcardsNumber()).thenReturn(decks);
         when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
 
-        Response response = getResponseWithCredentials(decksWithFlashcardNumberURI, encodedCredentials);
-        List<DeckWithFlashcardsNumber> decksInResponse = response
+        final Response response = getResponseWithCredentials(decksWithFlashcardNumberURI, encodedCredentials);
+        final List<DeckWithFlashcardsNumber> decksInResponse = response
                 .readEntity(new GenericType<List<DeckWithFlashcardsNumber>>() {
         });
 

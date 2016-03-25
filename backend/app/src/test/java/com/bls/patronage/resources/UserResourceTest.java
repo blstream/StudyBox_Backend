@@ -56,7 +56,7 @@ public class UserResourceTest extends BasicAuthenticationTest {
     public void logInUser() {
         when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
         final Response response = getResponseWithCredentials(loggingURI, encodedCredentials);
-        UserWithoutPassword receivedUser = response.readEntity(UserWithoutPassword.class);
+        final UserWithoutPassword receivedUser = response.readEntity(UserWithoutPassword.class);
 
         verify(dao, times(2)).getUserByEmail(user.getEmail());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());

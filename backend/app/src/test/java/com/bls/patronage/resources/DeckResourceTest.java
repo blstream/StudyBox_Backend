@@ -100,7 +100,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
         final Response response = getPutResponse(deckURI, deckRepresentation, encodedCredentials);
 
-        Deck updatedDeck = response.readEntity(Deck.class);
+        final Deck updatedDeck = response.readEntity(Deck.class);
         verify(deckDao).getDeckById(deckId);
         verify(deckDao).update(any(Deck.class));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
