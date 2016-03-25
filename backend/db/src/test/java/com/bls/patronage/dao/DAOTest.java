@@ -5,10 +5,17 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
-import org.junit.After;
-import org.junit.Before;
+import liquibase.Liquibase;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.Query;
+import org.skife.jdbi.v2.tweak.ResultSetMapper;
+
+import java.util.List;
+import java.util.Map;
 
 abstract public class DAOTest {
     private static final String JDBC_DRIVER = org.h2.Driver.class.getName();
@@ -19,17 +26,26 @@ abstract public class DAOTest {
     protected DBI dbi;
     private Handle handle;
 
-    @Before
     public void setUp() throws Exception {
         Environment environment = new Environment("test-environment", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
         dbi = new DBIFactory().build(environment, getDataSourceFactory(), "test");
         handle = dbi.open();
-        setUpDatabaseContent(handle);
+        migrateDatabase();
     }
 
-    @After
     public void tearDown() throws Exception {
         handle.close();
+    }
+
+    private void migrateDatabase() throws LiquibaseException {
+        Liquibase liquibase = new Liquibase("migrations.xml", new ClassLoaderResourceAccessor(), new JdbcConnection(handle.getConnection()));
+        liquibase.update("");
+    }
+
+    public  <E> List<E> getAllEntities(Class<E> typeClass, Class mapperClass, String tableName) throws Exception {
+        Query<Map<String, Object>> query = handle.createQuery("SELECT * from " + tableName);
+        query.registerMapper((ResultSetMapper) mapperClass.newInstance());
+        return query.mapTo(typeClass).list();
     }
 
     protected DataSourceFactory getDataSourceFactory() {
@@ -40,6 +56,4 @@ abstract public class DAOTest {
         dataSourceFactory.setPassword(PASSWORD);
         return dataSourceFactory;
     }
-
-    abstract protected void setUpDatabaseContent(Handle handle);
 }
