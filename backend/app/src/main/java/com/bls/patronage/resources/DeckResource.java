@@ -3,6 +3,7 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ public class DeckResource {
 
     @GET
     public Deck getDeck(
+            @Auth
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
         return decksDAO.getDeckById(deckId.get());
@@ -32,6 +34,7 @@ public class DeckResource {
 
     @DELETE
     public void deleteDeck(
+            @Auth
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
         final Deck deck = decksDAO.getDeckById(deckId.get());
@@ -40,6 +43,7 @@ public class DeckResource {
 
     @PUT
     public Deck updateDeck(
+            @Auth
             @Valid
             @PathParam("deckId") UUIDParam deckId,
             @Valid DeckRepresentation deck) {

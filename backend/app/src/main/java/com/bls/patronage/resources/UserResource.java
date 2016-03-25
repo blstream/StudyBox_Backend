@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

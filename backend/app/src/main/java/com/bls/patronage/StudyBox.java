@@ -6,8 +6,6 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.exception.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
-import com.bls.patronage.resources.DeckResource;
-import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import com.bls.patronage.resources.UserResource;
