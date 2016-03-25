@@ -29,6 +29,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
 
+import static com.bls.patronage.StudyBoxConfiguration.isAuthenticationEnabled;
+
 public class StudyBox extends Application<StudyBoxConfiguration> {
 
     private static final String APP_NAME = "backend";
@@ -77,10 +79,13 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
         final CachingAuthenticator cachingAuthenticator = new CachingAuthenticator(environment.metrics(), basicAuthenticator,
                 configuration.getAuthCacheBuilder());
-        environment.jersey().register(new AuthDynamicFeature(
-                new BasicCredentialAuthFilter.Builder<User>()
-                        .setAuthenticator(cachingAuthenticator)
-                        .buildAuthFilter()));
-        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+        if(isAuthenticationEnabled) {
+            environment.jersey().register(new AuthDynamicFeature(
+                    new BasicCredentialAuthFilter.Builder<User>()
+                            .setAuthenticator(cachingAuthenticator)
+                            .buildAuthFilter()));
+
+            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+        }
     }
 }
