@@ -15,7 +15,7 @@
     <test name="Other Tests">
         <classes>
             <class name="com.bls.patronage.ModelTests"/>
-            <class name="com.bls.patronage.RepresentationTests"/>
+            <class name="com.bls.patronage.api.FlashcardRepresentationTests"/>
             <class name="com.bls.patronage.api.DeckRepresentationTest"/>
         </classes>
     </test>
