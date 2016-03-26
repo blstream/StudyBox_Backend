@@ -12,7 +12,7 @@
             <class name="com.bls.patronage.resources.UserResourceTest"/>
         </classes>
     </test>
-    <test name="Other Tests">
+    <test name="Other Tests" junit="true">
         <classes>
             <class name="com.bls.patronage.ModelTests"/>
             <class name="com.bls.patronage.api.FlashcardRepresentationTests"/>
