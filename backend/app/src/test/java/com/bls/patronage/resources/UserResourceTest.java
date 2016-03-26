@@ -23,7 +23,7 @@ public class UserResourceTest extends BasicAuthenticationTest {
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new UserResource(dao))
+            .addResource(new UserResource(userDAO))
             .build();
 
     private String userURI;
@@ -41,12 +41,12 @@ public class UserResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void getUser() {
-        when(dao.getUserById(user.getId())).thenReturn(user);
+        when(userDAO.getUserById(user.getId())).thenReturn(user);
         final UserWithoutPassword receivedUser = resources.client().target(userURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get(UserWithoutPassword.class);
 
-        verify(dao).getUserById(user.getId());
+        verify(userDAO).getUserById(user.getId());
         assertThat(receivedUser.getId()).isEqualTo(user.getId());
         assertThat(receivedUser.getName()).isEqualTo(user.getName());
         assertThat(receivedUser.getEmail()).isEqualTo(user.getEmail());
@@ -54,11 +54,11 @@ public class UserResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void logInUser() {
-        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         final Response response = getResponseWithCredentials(loggingURI, encodedCredentials);
         final UserWithoutPassword receivedUser = response.readEntity(UserWithoutPassword.class);
 
-        verify(dao, times(2)).getUserByEmail(user.getEmail());
+        verify(userDAO, times(2)).getUserByEmail(user.getEmail());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(receivedUser.getId()).isEqualTo(user.getId());
         assertThat(receivedUser.getName()).isEqualTo(user.getName());
@@ -67,20 +67,20 @@ public class UserResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void logInUserWithBadPassword() {
-        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         final Response response = getResponseWithCredentials(loggingURI, badPasswordCredentials);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
-        verify(dao).getUserByEmail(user.getEmail());
+        verify(userDAO).getUserByEmail(user.getEmail());
     }
 
     @Test
     public void logInUserWithBadEmail() {
-        when(dao.getUserByEmail(fakeEmail))
+        when(userDAO.getUserByEmail(fakeEmail))
                 .thenThrow(new DataAccessException(""));
         final Response response = getResponseWithCredentials(loggingURI, badEmailCredentials);
 
-        verify(dao).getUserByEmail(fakeEmail);
+        verify(userDAO).getUserByEmail(fakeEmail);
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 }
