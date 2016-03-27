@@ -52,7 +52,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         decksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("isEnabled", true).build().toString();
         randomDeckURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("shuffle", true).build().toString();
+                .queryParam("random", true).build().toString();
     }
 
     @Test

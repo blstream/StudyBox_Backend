@@ -38,11 +38,11 @@ public class DecksResource {
     @GET
     public Collection<Deck> listDecks(@Auth User user, @QueryParam("name") String name,
                                       @QueryParam("isEnabled") Boolean isEnabled,
-                                      @QueryParam("shuffle") Boolean shuffle) {
+                                      @QueryParam("random") Boolean random) {
 
         if (name == null) {
             if (isEnabled == null || !isEnabled) {
-                if(shuffle==null || !shuffle)
+                if(random==null || !random)
                     return decksDAO.getAllDecks();
                 else{
                     Collection<Deck> decks = new ArrayList<>();
@@ -60,5 +60,4 @@ public class DecksResource {
         }
 
     }
-
 }
