@@ -65,6 +65,9 @@ public class DeckDAOTest extends DAOTest {
         assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
     }
 
+    public void getRandomDeck() throws Exception{
+        assertThat(getDecksFromDatabase()).contains(dao.getRandomDeck());
+    }
 
     public void createDeck() throws Exception {
         final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);

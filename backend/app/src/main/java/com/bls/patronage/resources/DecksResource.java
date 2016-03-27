@@ -37,10 +37,19 @@ public class DecksResource {
 
     @GET
     public Collection<Deck> listDecks(@Auth User user, @QueryParam("name") String name,
-                                      @QueryParam("isEnabled") Boolean isEnabled) {
+                                      @QueryParam("isEnabled") Boolean isEnabled,
+                                      @QueryParam("random") Boolean random) {
+
         if (name == null) {
             if (isEnabled == null || !isEnabled) {
-                return decksDAO.getAllDecks();
+                if(random==null || !random)
+                    return decksDAO.getAllDecks();
+                else{
+                    Collection<Deck> decks = new ArrayList<>();
+                    decks.add(decksDAO.getRandomDeck());
+                    return decks;
+                }
+
             } else {
                 Collection<Deck> decks = new ArrayList<>();
                 decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber());
