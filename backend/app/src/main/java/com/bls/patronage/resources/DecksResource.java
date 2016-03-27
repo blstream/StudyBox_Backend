@@ -3,6 +3,8 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.model.User;
+import io.dropwizard.auth.Auth;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -27,14 +29,14 @@ public class DecksResource {
     }
 
     @POST
-    public Deck createDeck(@Valid DeckRepresentation deck) {
+    public Deck createDeck(@Auth @Valid DeckRepresentation deck) {
         Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
         decksDAO.createDeck(createdDeck);
         return createdDeck;
     }
 
     @GET
-    public Collection<Deck> listDecks(@QueryParam("name") String name,
+    public Collection<Deck> listDecks(@Auth User user, @QueryParam("name") String name,
                                       @QueryParam("isEnabled") Boolean isEnabled) {
         if (name == null) {
             if (isEnabled == null || !isEnabled) {

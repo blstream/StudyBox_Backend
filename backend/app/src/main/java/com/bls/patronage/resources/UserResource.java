@@ -6,6 +6,7 @@ import com.bls.patronage.db.model.UserWithoutPassword;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
