@@ -24,6 +24,9 @@ public abstract class DeckDAO {
     @SqlQuery("select id, name, public from decks where name like :name")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
+    @SqlQuery("select id, name, public from decks order by random()")
+    public abstract Deck getRandomDeck();
+
     @SqlQuery("select id, name, public from decks")
     public abstract Collection<Deck> getAllDecks();
 

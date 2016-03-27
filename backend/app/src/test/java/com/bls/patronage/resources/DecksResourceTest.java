@@ -36,6 +36,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private String decksByBadNameURI;
     private String decksWithFlashcardNumberURI;
     private String decksByEmptyNameURI;
+    private String randomDeckURI;
 
     @Before
     public void setUp() {
@@ -50,6 +51,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 .queryParam("name", "").build().toString();
         decksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("isEnabled", true).build().toString();
+        randomDeckURI = UriBuilder.fromResource(DecksResource.class)
+                .queryParam("shuffle", true).build().toString();
     }
 
     @Test
@@ -159,6 +162,19 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
         verify(dao).getUserByEmail(fakeEmail);
     }
+
+    @Test
+    public void randomDeck(){
+        when(deckDao.getRandomDeck()).thenReturn(deck);
+        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
+
+        final List<Deck> response = getListFromResponse(randomDeckURI, encodedCredentials);
+        final Deck found = response.get(0);
+
+        verify(deckDao).getRandomDeck();
+        assertThat(found).isEqualTo(deck);
+    }
+
 
     @Test
     public void createDeckWithBadPassword() {
