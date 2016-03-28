@@ -13,7 +13,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -29,9 +31,10 @@ public class DecksResource {
     }
 
     @POST
-    public Deck createDeck(@Auth @Valid DeckRepresentation deck) {
+    public Deck createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
         Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
-        decksDAO.createDeck(createdDeck);
+        User userPrincipal = (User) context.getUserPrincipal();
+        decksDAO.createDeck(createdDeck, userPrincipal.getId());
         return createdDeck;
     }
 
