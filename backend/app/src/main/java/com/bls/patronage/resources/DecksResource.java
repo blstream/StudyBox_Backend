@@ -53,7 +53,8 @@ public class DecksResource {
 //            return decksDAO.getDecksByName(name);
 //        }
 //    }
-
+    
+    @Path("/me")
     @GET
     public Collection<Deck> listMyDecks(@Auth User user, @QueryParam("isEnabled") Boolean isEnabled) {
 
