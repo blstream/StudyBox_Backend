@@ -30,6 +30,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
     @Captor
     private ArgumentCaptor<Deck> deckCaptor;
+    @Captor
+    private ArgumentCaptor<UUID> uuidCaptor;
     private Deck deck;
     private String decksURI;
     private String decksByNameURI;
@@ -58,9 +60,10 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         final Response response = postDeck(decksURI, deck.getName(), deck.getIsPublic(), encodedCredentials);
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
-        verify(deckDao).createDeck(deckCaptor.capture());
+        verify(deckDao).createDeck(deckCaptor.capture(), uuidCaptor.capture());
         assertThat(deckCaptor.getValue().getId()).isNotNull();
         assertThat(deckCaptor.getValue().getName()).isEqualTo(deck.getName());
+        assertThat(uuidCaptor.getValue()).isEqualTo(user.getId());
     }
 
     @Test
@@ -78,65 +81,65 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     }
 
     @Test
-    public void listDecks() {
+    public void listUserDecks() {
         final ImmutableList<Deck> decks = ImmutableList.of(deck);
-        when(deckDao.getAllDecks()).thenReturn(decks);
+        when(deckDao.getAllUserDecks(user.getId())).thenReturn(decks);
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
 
         final List<Deck> response = getListFromResponse(decksURI, encodedCredentials);
 
-        verify(deckDao).getAllDecks();
+        verify(deckDao).getAllUserDecks(user.getId());
         assertThat(response).containsAll(decks);
     }
 
-    @Test
-    public void listDecksByNames() {
-        final ImmutableList<Deck> decks = ImmutableList.of(deck);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-        when(deckDao.getDecksByName("something")).thenReturn(decks);
-
-        final List<Deck> response = getListFromResponse(decksByNameURI, encodedCredentials);
-
-        verify(deckDao).getDecksByName("something");
-        assertThat(response).containsAll(decks);
-    }
-
-    @Test
-    public void listDecksByNamesWhenThereIsBadNameTyped() {
-        when(deckDao.getDecksByName("anotherThing")).thenReturn(null);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
-        final List<Deck> response = getListFromResponse(decksByBadNameURI, encodedCredentials);
-
-        verify(deckDao).getDecksByName("anotherThing");
-        assertThat(response).isNull();
-    }
-
-    @Test
-    public void listDecksByNamesWhenThereIsNoNameTyped() {
-        when(deckDao.getDecksByName("")).thenReturn(null);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
-        final List<Deck> response = getListFromResponse(decksByEmptyNameURI, encodedCredentials);
-
-        verify(deckDao).getDecksByName("");
-        assertThat(response).isNull();
-    }
-
+    //    @Test
+//    public void listDecksByNames() {
+//        final ImmutableList<Deck> decks = ImmutableList.of(deck);
+//        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
+//        when(deckDao.getDecksByName("something")).thenReturn(decks);
+//
+//        final List<Deck> response = getListFromResponse(decksByNameURI, encodedCredentials);
+//
+//        verify(deckDao).getDecksByName("something");
+//        assertThat(response).containsAll(decks);
+//    }
+//
+//    @Test
+//    public void listDecksByNamesWhenThereIsBadNameTyped() {
+//        when(deckDao.getDecksByName("anotherThing")).thenReturn(null);
+//        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
+//
+//        final List<Deck> response = getListFromResponse(decksByBadNameURI, encodedCredentials);
+//
+//        verify(deckDao).getDecksByName("anotherThing");
+//        assertThat(response).isNull();
+//    }
+//
+//    @Test
+//    public void listDecksByNamesWhenThereIsNoNameTyped() {
+//        when(deckDao.getDecksByName("")).thenReturn(null);
+//        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
+//
+//        final List<Deck> response = getListFromResponse(decksByEmptyNameURI, encodedCredentials);
+//
+//        verify(deckDao).getDecksByName("");
+//        assertThat(response).isNull();
+//    }
+//
     @Test
     public void listDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(UUID.randomUUID(),
                 "math", true, 3);
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
-        when(deckDao.getAllDecksWithFlashcardsNumber()).thenReturn(decks);
+        when(deckDao.getAllUserDecksWithFlashcardsNumber(user.getId())).thenReturn(decks);
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
 
         final Response response = getResponseWithCredentials(decksWithFlashcardNumberURI, encodedCredentials);
         final List<DeckWithFlashcardsNumber> decksInResponse = response
                 .readEntity(new GenericType<List<DeckWithFlashcardsNumber>>() {
-        });
+                });
 
-        verify(deckDao).getAllDecksWithFlashcardsNumber();
+        verify(deckDao).getAllUserDecksWithFlashcardsNumber(user.getId());
         assertThat(decksInResponse).containsAll(decks);
         assertThat(decksInResponse.get(0).getCount()).isNotNull();
     }

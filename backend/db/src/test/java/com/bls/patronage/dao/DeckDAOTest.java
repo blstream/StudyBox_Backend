@@ -68,7 +68,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void createDeck() throws Exception {
         final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);
-        dao.createDeck(createdDeck);
+        dao.createDeck(createdDeck,UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e"));
         assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
     }
 
