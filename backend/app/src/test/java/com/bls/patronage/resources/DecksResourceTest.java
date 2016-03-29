@@ -37,7 +37,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private String decksByNameURI;
     private String decksByBadNameURI;
     private String decksWithFlashcardNumberURI;
+    private String userDecksWithFlashcardNumberURI;
     private String decksByEmptyNameURI;
+    private String userDecksURI;
 
     @Before
     public void setUp() {
@@ -52,6 +54,11 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 .queryParam("name", "").build().toString();
         decksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("isEnabled", true).build().toString();
+        userDecksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class).build().toString()
+                + UriBuilder.fromMethod(DecksResource.class, "listMyDecks")
+                .queryParam("isEnabled", true).build().toString();
+        userDecksURI = UriBuilder.fromResource(DecksResource.class).build().toString()
+                + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
     }
 
     @Test
@@ -86,55 +93,67 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         when(deckDao.getAllUserDecks(user.getId())).thenReturn(decks);
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
 
-        final List<Deck> response = getListFromResponse(decksURI, encodedCredentials);
+        final List<Deck> response = getListFromResponse(userDecksURI, encodedCredentials);
 
         verify(deckDao).getAllUserDecks(user.getId());
         assertThat(response).containsAll(decks);
     }
 
-    //    @Test
-//    public void listDecksByNames() {
-//        final ImmutableList<Deck> decks = ImmutableList.of(deck);
-//        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
-//        when(deckDao.getDecksByName("something")).thenReturn(decks);
-//
-//        final List<Deck> response = getListFromResponse(decksByNameURI, encodedCredentials);
-//
-//        verify(deckDao).getDecksByName("something");
-//        assertThat(response).containsAll(decks);
-//    }
-//
-//    @Test
-//    public void listDecksByNamesWhenThereIsBadNameTyped() {
-//        when(deckDao.getDecksByName("anotherThing")).thenReturn(null);
-//        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
-//
-//        final List<Deck> response = getListFromResponse(decksByBadNameURI, encodedCredentials);
-//
-//        verify(deckDao).getDecksByName("anotherThing");
-//        assertThat(response).isNull();
-//    }
-//
-//    @Test
-//    public void listDecksByNamesWhenThereIsNoNameTyped() {
-//        when(deckDao.getDecksByName("")).thenReturn(null);
-//        when(dao.getUserByEmail(user.getEmail())).thenReturn(user);
-//
-//        final List<Deck> response = getListFromResponse(decksByEmptyNameURI, encodedCredentials);
-//
-//        verify(deckDao).getDecksByName("");
-//        assertThat(response).isNull();
-//    }
-//
     @Test
-    public void listDecksWithFlashcardsNumber() {
+    public void listDecks() {
+        final ImmutableList<Deck> decks = ImmutableList.of(deck);
+        when(deckDao.getAllDecks()).thenReturn(decks);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+
+        final List<Deck> response = getListFromResponse(decksURI, encodedCredentials);
+
+        verify(deckDao).getAllDecks();
+        assertThat(response).containsAll(decks);
+    }
+
+    @Test
+    public void listDecksByNames() {
+        final ImmutableList<Deck> decks = ImmutableList.of(deck);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+        when(deckDao.getDecksByName("something")).thenReturn(decks);
+
+        final List<Deck> response = getListFromResponse(decksByNameURI, encodedCredentials);
+
+        verify(deckDao).getDecksByName("something");
+        assertThat(response).containsAll(decks);
+    }
+
+    @Test
+    public void listDecksByNamesWhenThereIsBadNameTyped() {
+        when(deckDao.getDecksByName("anotherThing")).thenReturn(null);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+
+        final List<Deck> response = getListFromResponse(decksByBadNameURI, encodedCredentials);
+
+        verify(deckDao).getDecksByName("anotherThing");
+        assertThat(response).isNull();
+    }
+
+    @Test
+    public void listDecksByNamesWhenThereIsNoNameTyped() {
+        when(deckDao.getDecksByName("")).thenReturn(null);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+
+        final List<Deck> response = getListFromResponse(decksByEmptyNameURI, encodedCredentials);
+
+        verify(deckDao).getDecksByName("");
+        assertThat(response).isNull();
+    }
+
+    @Test
+    public void listUserDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(UUID.randomUUID(),
                 "math", true, 3);
         final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
         when(deckDao.getAllUserDecksWithFlashcardsNumber(user.getId())).thenReturn(decks);
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
 
-        final Response response = getResponseWithCredentials(decksWithFlashcardNumberURI, encodedCredentials);
+        final Response response = getResponseWithCredentials(userDecksWithFlashcardNumberURI, encodedCredentials);
         final List<DeckWithFlashcardsNumber> decksInResponse = response
                 .readEntity(new GenericType<List<DeckWithFlashcardsNumber>>() {
                 });
@@ -143,6 +162,25 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         assertThat(decksInResponse).containsAll(decks);
         assertThat(decksInResponse.get(0).getCount()).isNotNull();
     }
+
+    @Test
+    public void listDecksWithFlashcardsNumber() {
+        final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(UUID.randomUUID(),
+                "math", true, 3);
+        final ImmutableList<DeckWithFlashcardsNumber> decks = ImmutableList.of(deckExample);
+        when(deckDao.getAllDecksWithFlashcardsNumber()).thenReturn(decks);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+
+        final Response response = getResponseWithCredentials(decksWithFlashcardNumberURI, encodedCredentials);
+        final List<DeckWithFlashcardsNumber> decksInResponse = response
+                .readEntity(new GenericType<List<DeckWithFlashcardsNumber>>() {
+                });
+
+        verify(deckDao).getAllDecksWithFlashcardsNumber();
+        assertThat(decksInResponse).containsAll(decks);
+        assertThat(decksInResponse.get(0).getCount()).isNotNull();
+    }
+
 
     @Test
     public void listDecksWithBadPassword() {
@@ -196,3 +234,4 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         });
     }
 }
+

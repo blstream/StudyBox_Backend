@@ -38,22 +38,22 @@ public class DecksResource {
         return createdDeck;
     }
 
-//    @GET
-//    public Collection<Deck> listDecks(@Auth User user, @QueryParam("name") String name,
-//                                      @QueryParam("isEnabled") Boolean isEnabled) {
-//        if (name == null) {
-//            if (isEnabled == null || !isEnabled) {
-//                return decksDAO.getAllDecks();
-//            } else {
-//                Collection<Deck> decks = new ArrayList<>();
-//                decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber());
-//                return decks;
-//            }
-//        } else {
-//            return decksDAO.getDecksByName(name);
-//        }
-//    }
-    
+    @GET
+    public Collection<Deck> listDecks(@Auth User user, @QueryParam("name") String name,
+                                      @QueryParam("isEnabled") Boolean isEnabled) {
+        if (name == null) {
+            if (isEnabled == null || !isEnabled) {
+                return decksDAO.getAllDecks();
+            } else {
+                Collection<Deck> decks = new ArrayList<>();
+                decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber());
+                return decks;
+            }
+        } else {
+            return decksDAO.getDecksByName(name);
+        }
+    }
+
     @Path("/me")
     @GET
     public Collection<Deck> listMyDecks(@Auth User user, @QueryParam("isEnabled") Boolean isEnabled) {
