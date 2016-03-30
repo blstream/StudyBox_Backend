@@ -1,4 +1,4 @@
-package com.bls.patronage;
+package com.bls.patronage.api;
 
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import org.junit.Test;
 import static io.dropwizard.testing.FixtureHelpers.fixture;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RepresentationTests {
+public class FlashcardRepresentationTests {
 
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
     private String testQuestion;

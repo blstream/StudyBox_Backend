@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 
 public class BasicAuthenticationTest {
-    protected static final UserDAO dao = mock(UserDAO.class);
+    protected static final UserDAO userDAO = mock(UserDAO.class);
     protected static final DeckDAO deckDao = mock(DeckDAO.class);
 
     @ClassRule
@@ -32,11 +32,11 @@ public class BasicAuthenticationTest {
             .builder()
             .addProvider(new DataAccessExceptionMapper())
             .addProvider(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-                    .setAuthenticator(new BasicAuthenticator(dao))
+                    .setAuthenticator(new BasicAuthenticator(userDAO))
                     .buildAuthFilter()))
             .addProvider(RolesAllowedDynamicFeature.class)
             .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
-            .addResource(new UserResource(dao))
+            .addResource(new UserResource(userDAO))
             .addResource(new DecksResource(deckDao))
             .addResource(new DeckResource(deckDao))
             .build();
@@ -59,7 +59,7 @@ public class BasicAuthenticationTest {
 
     @After
     public void tearDown() {
-        reset(dao);
+        reset(userDAO);
         reset(deckDao);
     }
 
