@@ -68,7 +68,8 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 200 (application/json)
     + Attributes (Deck)
-    
+
+
 ### Get all Decks [GET]
 
 + Response 200 (application/json)
@@ -136,11 +137,6 @@ By default API return response with HTTP code **4xx** family.
 
     This response is returned when flashcard was created.
     
-    + Headers
-
-            Access-Control-Expose-Headers: Location
-            Location: /decks/1111-0000-0000-000000000001/flashcards/1111-0000-0000-000000000002
-
     + Attributes (Flashcard)
 
 ### Get Flashcard by ID [GET /decks/{deckId}/flashcards/{flashcardId}]
@@ -164,11 +160,7 @@ By default API return response with HTTP code **4xx** family.
 
     + Attributes (FlashcardWithoutId)
 
-+ Response 200 (application/json)
-
-    This response is returned when flashcard was updated.
-    
-    + Attributes (Flashcard)
++ Response 204 (application/json)
 
 ### Remove Flashcard [DELETE /decks/{deckId}/flashcards/{flashcardId}]
 
@@ -176,7 +168,7 @@ By default API return response with HTTP code **4xx** family.
     + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
     + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID to delete
 
-+ Response 200
++ Response 204
 
 # Group User
 
@@ -483,9 +475,9 @@ By default API return response with HTTP code **4xx** family.
 + 2: (Deck2)
 
 ### FlashcardCollection (array)
-+ 0: (Flashcard0)
-+ 1: (Flashcard1)
-+ 2: (Flashcard2)
++ (Flashcard0)
++ (Flashcard1)
++ (Flashcard2)
 
 ### DeckWithCountCollection (array)
 + 0: (DeckWithCount0)
