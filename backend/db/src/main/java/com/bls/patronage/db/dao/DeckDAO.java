@@ -27,6 +27,10 @@ public abstract class DeckDAO {
     @SqlQuery("select id, name, public from decks")
     public abstract Collection<Deck> getAllDecks();
 
+    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
+            "where usersDecks.userId = :userId group by decks.id")
+    public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
+
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
             "from decks " +
@@ -35,8 +39,22 @@ public abstract class DeckDAO {
             "group by decks.id")
     public abstract Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
 
+    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
+    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
+            "from decks " +
+            "left join flashcards " +
+            "on decks.id = flashcards.deckid " +
+            "inner join usersDecks on usersDecks.deckId = decks.id " +
+            "where usersDecks.userId = :userId " +
+            "group by decks.id")
+    public abstract Collection<DeckWithFlashcardsNumber> getAllUserDecksWithFlashcardsNumber(
+            @Bind("userId") UUID userId);
+
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
-    public abstract void createDeck(@BindBean Deck deck);
+    abstract void insertDeck(@BindBean Deck deck);
+
+    @SqlUpdate("insert into usersDecks (deckId, userId) values (:id, :userId)")
+    abstract void insertUsersDeck(@BindBean Deck deck, @Bind("userId") UUID userId);
 
     @SqlUpdate("update decks set name = :name, public = :isPublic where id = :id")
     public abstract void update(@BindBean Deck deck);
@@ -44,6 +62,10 @@ public abstract class DeckDAO {
     @SqlUpdate("delete from decks where id = :id")
     public abstract void deleteDeck(@Bind("id") UUID id);
 
+    public void createDeck(Deck deck, UUID userId) {
+        insertDeck(deck);
+        insertUsersDeck(deck, userId);
+    }
 
     public Deck getDeckById(UUID uuid) {
         Deck deck = getDeck(uuid);
@@ -60,5 +82,4 @@ public abstract class DeckDAO {
         }
         return decks;
     }
-
 }
