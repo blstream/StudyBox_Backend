@@ -7,6 +7,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +36,9 @@ public class DeckDAOTest extends DAOTest {
     }
 
     public void getAllDecks() throws Exception {
+        UUID testUUID = UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e");
         List<Deck> decksFromDatabase = getDecksFromDatabase();
-        assertThat(dao.getAllDecks()).containsAll(decksFromDatabase);
+        assertThat(dao.getAllDecks(testUUID)).isSubsetOf(decksFromDatabase);
     }
 
 

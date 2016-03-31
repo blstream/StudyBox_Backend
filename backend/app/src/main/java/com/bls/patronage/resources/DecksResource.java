@@ -43,7 +43,7 @@ public class DecksResource {
                                       @QueryParam("isEnabled") Boolean isEnabled) {
         if (name == null) {
             if (isEnabled == null || !isEnabled) {
-                return decksDAO.getAllDecks();
+                return decksDAO.getAllDecks(user.getId());
             } else {
                 Collection<Deck> decks = new ArrayList<>();
                 decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber());
