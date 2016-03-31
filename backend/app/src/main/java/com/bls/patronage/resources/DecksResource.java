@@ -39,18 +39,39 @@ public class DecksResource {
     }
 
     @GET
-    public Collection<Deck> listDecks(@Auth User user, @QueryParam("name") String name,
-                                      @QueryParam("isEnabled") Boolean isEnabled) {
+    public Collection<Deck> listDecks(@Auth User user,
+                                      @QueryParam("name") String name,
+                                      @QueryParam("isEnabled") Boolean isEnabled,
+                                      @QueryParam("includeOwn") Boolean includeOwn) {
         if (name == null) {
             if (isEnabled == null || !isEnabled) {
-                return decksDAO.getAllDecks();
-            } else {
+                Collection<Deck> decks = decksDAO.getAllDecks(user.getId());
+
+                if(includeOwn == null || !includeOwn) return decks;
+                else {
+                    decks.addAll(decksDAO.getAllUserDecks(user.getId()));
+                    return decks;
+                }
+            }
+            else {
                 Collection<Deck> decks = new ArrayList<>();
-                decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber());
+                decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber(user.getId()));
+
+                if(includeOwn == null || !includeOwn) return decks;
+                else {
+                    decks.addAll(decksDAO.getAllUserDecksWithFlashcardsNumber(user.getId()));
+                    return decks;
+                }
+            }
+        }
+        else {
+            Collection<Deck> decks = decksDAO.getDecksByName(name, user.getId());
+
+            if(includeOwn == null || !includeOwn) return decks;
+            else {
+                decks.addAll(decksDAO.getUserDecksByName(name, user.getId()));
                 return decks;
             }
-        } else {
-            return decksDAO.getDecksByName(name);
         }
     }
 
