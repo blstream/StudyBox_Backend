@@ -118,5 +118,11 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="7" author="lupi">
+        <loadData tableName="usersDecks" file="initialData/usersDecks.csv">
+            <column name="deckId" type="STRING"/>
+            <column name="userId" type="STRING"/>
+        </loadData>
+    </changeSet>
 </databaseChangeLog>
 
