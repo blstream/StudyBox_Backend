@@ -7,8 +7,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +40,9 @@ public class DeckDAOTest extends DAOTest {
 
     public void getAllDecks() throws Exception {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
-        assertThat(dao.getAllDecks(defaultUserUUID)).isSubsetOf(decksFromDatabase);
+        List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
+
+        assertThat(dao.getAllDecks(defaultUserUUID)).isSubsetOf(decks);
     }
 
 

@@ -48,7 +48,7 @@ public abstract class DeckDAO {
     @SqlQuery("select id, name, public from decks where id = :id")
     abstract Deck getDeck(@Bind("id") UUID id);
 
-    @SqlQuery("select id, name, public from decks where name like :name")
+    @SqlQuery("select id, name, public from decks where name like :name and public='true'")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
     @SqlQuery("select id, name, public from decks " +
@@ -56,7 +56,7 @@ public abstract class DeckDAO {
             "where decks.name like :name and usersDecks.userId = :id")
     abstract List<Deck> getUserDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
 
-    @SqlQuery("select id, name, public from decks")
+    @SqlQuery("select id, name, public from decks where public='true'")
     abstract Collection<Deck> getDecks();
 
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
