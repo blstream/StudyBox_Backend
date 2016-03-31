@@ -18,26 +18,9 @@ import java.util.UUID;
 @RegisterMapper(DeckMapper.class)
 public abstract class DeckDAO {
 
-    @SqlQuery("select id, name, public from decks where id = :id")
-    abstract Deck getDeck(@Bind("id") UUID id);
-
-    @SqlQuery("select id, name, public from decks where name like :name")
-    abstract List<Deck> getDecksUsingName(@Bind("name") String name);
-
-    @SqlQuery("select id, name, public from decks")
-    abstract Collection<Deck> getDecks();
-
     @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
-
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "group by decks.id")
-    public abstract Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
 
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
@@ -61,6 +44,23 @@ public abstract class DeckDAO {
 
     @SqlUpdate("delete from decks where id = :id")
     public abstract void deleteDeck(@Bind("id") UUID id);
+
+    @SqlQuery("select id, name, public from decks where id = :id")
+    abstract Deck getDeck(@Bind("id") UUID id);
+
+    @SqlQuery("select id, name, public from decks where name like :name")
+    abstract List<Deck> getDecksUsingName(@Bind("name") String name);
+
+    @SqlQuery("select id, name, public from decks")
+    abstract Collection<Deck> getDecks();
+
+    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
+    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
+            "from decks " +
+            "left join flashcards " +
+            "on decks.id = flashcards.deckid " +
+            "group by decks.id")
+    abstract Collection<DeckWithFlashcardsNumber> getDecksWithFlashcardsNumber();
 
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
@@ -88,4 +88,5 @@ public abstract class DeckDAO {
         decks.removeAll(getAllUserDecks(userId));
         return decks;
     }
+
 }
