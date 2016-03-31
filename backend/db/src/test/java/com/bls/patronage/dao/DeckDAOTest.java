@@ -61,6 +61,11 @@ public class DeckDAOTest extends DAOTest {
         assertThat(dao.getDeckById(deck.getId())).isEqualTo(deck);
     }
 
+    public void getUserDeckByName() throws Exception {
+        Deck deck = getDecksFromDatabase().get(0);
+        assertThat(dao.getUserDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
+    }
+
 
     public void getDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(3);

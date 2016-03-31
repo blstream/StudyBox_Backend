@@ -51,6 +51,11 @@ public abstract class DeckDAO {
     @SqlQuery("select id, name, public from decks where name like :name")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
+    @SqlQuery("select id, name, public from decks " +
+            "inner join usersDecks on decks.id = usersDecks.deckId " +
+            "where decks.name like :name and usersDecks.userId = :id")
+    abstract List<Deck> getUserDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
+
     @SqlQuery("select id, name, public from decks")
     abstract Collection<Deck> getDecks();
 
@@ -84,6 +89,14 @@ public abstract class DeckDAO {
     public Collection<Deck> getDecksByName(String name, UUID userId) {
         List<Deck> decks = getDecksUsingName(name);
         decks.removeAll(getAllUserDecks(userId));
+        if (decks.isEmpty()) {
+            throw new DataAccessException("There are no decks matching this name");
+        }
+        return decks;
+    }
+
+    public Collection<Deck> getUserDecksByName(String name, UUID userId) {
+        List<Deck> decks = getUserDecksUsingName(name, userId);
         if (decks.isEmpty()) {
             throw new DataAccessException("There are no decks matching this name");
         }
