@@ -37,11 +37,12 @@ public class FlashcardResource {
     }
 
     @PUT
-    public void updateFlashcard(
+    public Flashcard updateFlashcard(
             @Valid @PathParam("flashcardId") UUID flashcardId,
             @Valid FlashcardRepresentation flashcard,
             @Valid @PathParam("deckId") UUIDParam deckId) {
         Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(), deckId.get());
         flashcardDAO.updateFlashcard(updatedFlashcard);
+        return updatedFlashcard;
     }
 }
