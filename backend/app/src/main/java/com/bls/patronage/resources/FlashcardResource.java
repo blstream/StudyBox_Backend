@@ -33,7 +33,7 @@ public class FlashcardResource {
     @DELETE
     public void deleteFlashcard(
             @Valid @PathParam("flashcardId") UUIDParam flashcardId) {
-        flashcardDAO.deleteFlashcard(flashcardDAO.getFlashcardById(flashcardId.get()).getId());
+        flashcardDAO.deleteFlashcard(flashcardId.get());
     }
 
     @PUT
