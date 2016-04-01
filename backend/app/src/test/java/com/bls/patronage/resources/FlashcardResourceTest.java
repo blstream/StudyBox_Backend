@@ -54,7 +54,12 @@ public class FlashcardResourceTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(flashcardRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.NO_CONTENT);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        verify(dao).updateFlashcard(flashcardCaptor.capture());
+        assertThat(flashcardCaptor.getValue().getId()).isEqualTo(flashcard.getId());
+        assertThat(flashcardCaptor.getValue().getQuestion()).isEqualTo(flashcardRepresentation.getQuestion());
+        assertThat(flashcardCaptor.getValue().getAnswer()).isEqualTo(flashcardRepresentation.getAnswer());
+        assertThat(flashcardCaptor.getValue().getDeckId()).isEqualTo(flashcard.getDeckId());
     }
 
     @Test
