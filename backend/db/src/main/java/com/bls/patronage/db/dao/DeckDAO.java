@@ -18,29 +18,9 @@ import java.util.UUID;
 @RegisterMapper(DeckMapper.class)
 public abstract class DeckDAO {
 
-    @SqlQuery("select id, name, public from decks where id = :id")
-    abstract Deck getDeck(@Bind("id") UUID id);
-
-    @SqlQuery("select id, name, public from decks where name like :name")
-    abstract List<Deck> getDecksUsingName(@Bind("name") String name);
-
-    @SqlQuery("select id, name, public from decks order by random()")
-    public abstract Deck getRandomDeck();
-
-    @SqlQuery("select id, name, public from decks")
-    public abstract Collection<Deck> getAllDecks();
-
     @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
-
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "group by decks.id")
-    public abstract Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber();
 
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
@@ -65,6 +45,34 @@ public abstract class DeckDAO {
     @SqlUpdate("delete from decks where id = :id")
     public abstract void deleteDeck(@Bind("id") UUID id);
 
+    @SqlQuery("select id, name, public from decks where id = :id")
+    abstract Deck getDeck(@Bind("id") UUID id);
+
+    @SqlQuery("select id, name, public from decks where name like :name and public='true'")
+    abstract List<Deck> getDecksUsingName(@Bind("name") String name);
+
+    @SqlQuery("select id, name, public from decks " +
+            "inner join usersDecks on decks.id = usersDecks.deckId " +
+            "where decks.name like :name and usersDecks.userId = :id")
+    abstract List<Deck> getUserDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
+
+    @SqlQuery("select id, name, public from decks where public='true'")
+    abstract Collection<Deck> getDecks();
+
+    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
+    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
+            "from decks " +
+            "left join flashcards " +
+            "on decks.id = flashcards.deckid " +
+            "group by decks.id")
+    abstract Collection<DeckWithFlashcardsNumber> getDecksWithFlashcardsNumber();
+
+
+    public Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber(UUID userId) {
+        Collection<DeckWithFlashcardsNumber> decksWithFlashcardsNumber = getDecksWithFlashcardsNumber();
+        decksWithFlashcardsNumber.removeAll(getAllUserDecksWithFlashcardsNumber(userId));
+        return decksWithFlashcardsNumber;
+    }
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
         insertUsersDeck(deck, userId);
@@ -78,11 +86,27 @@ public abstract class DeckDAO {
         return deck;
     }
 
-    public Collection<Deck> getDecksByName(String name) {
+    public Collection<Deck> getDecksByName(String name, UUID userId) {
         List<Deck> decks = getDecksUsingName(name);
+        decks.removeAll(getAllUserDecks(userId));
         if (decks.isEmpty()) {
             throw new DataAccessException("There are no decks matching this name");
         }
         return decks;
     }
+
+    public Collection<Deck> getUserDecksByName(String name, UUID userId) {
+        List<Deck> decks = getUserDecksUsingName(name, userId);
+        if (decks.isEmpty()) {
+            throw new DataAccessException("There are no decks matching this name");
+        }
+        return decks;
+    }
+
+    public Collection<Deck> getAllDecks(UUID userId) {
+        Collection<Deck> decks = getDecks();
+        decks.removeAll(getAllUserDecks(userId));
+        return decks;
+    }
+
 }
