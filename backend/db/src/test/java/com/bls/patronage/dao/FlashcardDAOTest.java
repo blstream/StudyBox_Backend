@@ -1,77 +1,113 @@
 package com.bls.patronage.dao;
 
+import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
-import com.bls.patronage.db.mapper.FlashcardMapper;
+import com.bls.patronage.db.model.Amount;
 import com.bls.patronage.db.model.Flashcard;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import com.google.common.collect.ImmutableList;
+import io.dropwizard.testing.junit.ResourceTestRule;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@Test
-public class FlashcardDAOTest extends DAOTest {
+@RunWith(MockitoJUnitRunner.class)
+public class FlashcardsResourceTest {
+    private static final FlashcardDAO dao = mock(FlashcardDAO.class);
 
-    private FlashcardDAO dao;
+    @ClassRule
+    public static final ResourceTestRule resources = ResourceTestRule.builder()
+            .addResource(new FlashcardsResource(dao))
+            .build();
+    @Captor
+    private ArgumentCaptor<Flashcard> flashcardCaptor;
+    private Flashcard flashcard;
+    private FlashcardRepresentation flashcardRepresentation;
+    private String flashcardsURI;
+    private List<String> randomFlashcardsURIs;
 
-    @Override
-    @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
-        dao = dbi.onDemand(FlashcardDAO.class);
+
+    @Before
+    public void setUp() {
+        flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes", "8ad4b503-5bfc-4d8a-a761-0908374892b1");
+        flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok");
+        flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckId()).toString();
+        randomFlashcardsURIs = new ArrayList<>();
+        for (Amount amount : Amount.values()) {
+            randomFlashcardsURIs.add(UriBuilder.fromResource(FlashcardsResource.class)
+                    .queryParam("random", amount.toString().toLowerCase()).build(flashcard.getDeckId()).toString());
+        }
     }
 
-    private List<Flashcard> getFlashcardsFromDatabase() throws Exception {
-        return getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards");
+    @After
+    public void tearDown() {
+        reset(dao);
     }
 
-    @Override
-    @AfterMethod
-    public void tearDown() throws Exception {
-        super.tearDown();
+    @Test
+    public void createFlashcard() {
+        final Response response = resources.client().target(flashcardsURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(flashcardRepresentation, MediaType.APPLICATION_JSON_TYPE));
+
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        verify(dao).createFlashcard(flashcardCaptor.capture());
+        assertThat(flashcardCaptor.getValue().getId()).isNotNull();
+        assertThat(flashcardCaptor.getValue().getQuestion()).isEqualTo(flashcardRepresentation.getQuestion());
+        assertThat(flashcardCaptor.getValue().getAnswer()).isEqualTo(flashcardRepresentation.getAnswer());
     }
 
-    public void getAllFlashcards() throws Exception {
-        List<Flashcard> flashcardList = getFlashcardsFromDatabase().subList(0, 2);
-        final List<Flashcard> flashcards = dao.getAllFlashcards(flashcardList.get(0).getDeckId());
-        assertThat(flashcards).containsAll(flashcardList);
+    @Test
+    public void createFlashcardWithoutQuestionAndAnswer() {
+        final Response response = resources.client().target(flashcardsURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(new FlashcardRepresentation("", ""), MediaType.APPLICATION_JSON_TYPE));
+
+        assertThat(response.getStatus()).isEqualTo(422);
     }
 
-    public void getFlashcardById() throws Exception {
-        Flashcard flashcard = getFlashcardsFromDatabase().get(0);
-        final Flashcard flashcardById = dao.getFlashcardById(flashcard.getId());
-        assertThat(flashcardById).isEqualTo(flashcard);
+    @Test
+    public void listFlashcards() {
+        final ImmutableList<Flashcard> flashcards = ImmutableList.of(flashcard);
+        when(dao.getAllFlashcards(flashcard.getDeckId())).thenReturn(flashcards);
+
+        final List<Flashcard> response = resources.client().target(flashcardsURI)
+                .request().get(new GenericType<List<Flashcard>>() {
+                });
+
+        verify(dao).getAllFlashcards(flashcard.getDeckId());
+        assertThat(response).containsAll(flashcards);
     }
 
-    public void createFlashcard(){
-        final Flashcard flashcard = new Flashcard(UUID.randomUUID(), "foos", "bars", UUID.randomUUID());
-        dao.createFlashcard(flashcard);
-        assertThat(dao.getFlashcardById(flashcard.getId())).isEqualTo(flashcard);
-    }
-
-    public void deleteFlashcard() throws Exception {
-        Flashcard flashcard = getFlashcardsFromDatabase().get(0);
-        dao.deleteFlashcard(flashcard.getId());
-        assertThat(getFlashcardsFromDatabase()).doesNotContain(flashcard);
-    }
-
-    public void updateFlashcard() throws Exception {
-        Flashcard flashcard = getFlashcardsFromDatabase().get(0);
-        Flashcard newFlascard = new Flashcard(flashcard.getId(), "foo", "baz", flashcard.getDeckId());
-        dao.updateFlashcard(newFlascard);
-        assertThat(getFlashcardsFromDatabase()).doesNotContain(flashcard);
-        assertThat(getFlashcardsFromDatabase()).contains(newFlascard);
-    }
-
-    public void getRandomFlashcards() throws Exception {
-        final List<Flashcard> flashcards = getFlashcardsFromDatabase();
-        for (Integer number: new Integer[]{1,5,10,15,20}) {
-            List<Flashcard> randomFlashcards = dao.getRandom(number, flashcards.get(11).getDeckId());
-            assertThat(randomFlashcards).hasSize(number);
-            assertThat(flashcards).containsAll(randomFlashcards);
+    @Test
+    public void getRandomFlashcards() {
+        for (Amount amount : Amount.values()) {
+            final List<Flashcard> flashcards = Collections.nCopies(amount.getValue(), flashcard);
+            when(dao.getRandom(amount.getValue(), flashcard.getDeckId())).thenReturn(flashcards);
+            final List<Flashcard> response = resources.client().target(randomFlashcardsURIs.get(amount.ordinal()))
+                    .request().get(new GenericType<List<Flashcard>>() {
+                    });
+            verify(dao).getRandom(amount.getValue(), flashcard.getDeckId());
+            assertThat(response).hasSize(amount.getValue());
         }
     }
 }
