@@ -33,15 +33,16 @@ public class FlashcardResource {
     @DELETE
     public void deleteFlashcard(
             @Valid @PathParam("flashcardId") UUIDParam flashcardId) {
-        flashcardDAO.deleteFlashcard(flashcardDAO.getFlashcardById(flashcardId.get()).getId());
+        flashcardDAO.deleteFlashcard(flashcardId.get());
     }
 
     @PUT
-    public void updateFlashcard(
+    public Flashcard updateFlashcard(
             @Valid @PathParam("flashcardId") UUID flashcardId,
             @Valid FlashcardRepresentation flashcard,
             @Valid @PathParam("deckId") UUIDParam deckId) {
         Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(), deckId.get());
         flashcardDAO.updateFlashcard(updatedFlashcard);
+        return updatedFlashcard;
     }
 }

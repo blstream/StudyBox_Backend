@@ -69,7 +69,7 @@ public class FlashcardsResourceTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(flashcardRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         verify(dao).createFlashcard(flashcardCaptor.capture());
         assertThat(flashcardCaptor.getValue().getId()).isNotNull();
         assertThat(flashcardCaptor.getValue().getQuestion()).isEqualTo(flashcardRepresentation.getQuestion());
