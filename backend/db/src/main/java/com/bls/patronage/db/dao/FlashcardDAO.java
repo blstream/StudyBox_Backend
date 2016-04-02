@@ -10,8 +10,10 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @RegisterMapper(FlashcardMapper.class)
@@ -36,8 +38,29 @@ abstract public class FlashcardDAO {
     @SqlUpdate("delete from flashcards where id = :id")
     public abstract void deleteFlashcard(@Bind("id") UUID id);
 
+    //  Temporary solution for getting random flashcards
+    @SqlQuery("select id,question,answer,deckId from flashcards where deckId = :deckId limit 1 " +
+            "offset floor(rand(:random)*(:number))")
+    abstract Flashcard getRandomFlashcard(@Bind("random") Integer random, @Bind("number") Integer number, @Bind("deckId") UUID deckId);
+
+    @SqlQuery("select count(*) from flashcards where deckId = :deckId")
+    abstract Integer getCount(@Bind("deckId") UUID deckId);
+
     public Flashcard getFlashcardById(UUID id) {
         Optional<Flashcard> flashcard = Optional.ofNullable(get(id));
         return flashcard.orElseThrow(() -> new DataAccessException("There is no flashcard with specified id"));
+    }
+
+    public List<Flashcard> getRandomFlashcards(Integer number, UUID deckId) {
+        List<Flashcard> flashcards = new ArrayList<>();
+        Integer count = getCount(deckId);
+        while(flashcards.size() < number && flashcards.size() < count) {
+            Random random = new Random();
+            Flashcard flashcard = getRandomFlashcard(random.nextInt(), count, deckId);
+            if(!flashcards.contains(flashcard)) {
+                flashcards.add(flashcard);
+            }
+        }
+        return flashcards;
     }
 }
