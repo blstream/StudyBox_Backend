@@ -43,7 +43,7 @@ public class FlashcardsResource {
         if (amount == null) {
             return flashcardDAO.getAllFlashcards(id.get());
         } else {
-            return flashcardDAO.getRandom(amount.getValue(), id.get());
+            return flashcardDAO.getRandomFlashcards(amount.getValue(), id.get());
         }
     }
 }

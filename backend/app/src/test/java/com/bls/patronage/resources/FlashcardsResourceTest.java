@@ -102,11 +102,11 @@ public class FlashcardsResourceTest {
     public void getRandomFlashcards() {
         for (Amount amount : Amount.values()) {
             final List<Flashcard> flashcards = Collections.nCopies(amount.getValue(), flashcard);
-            when(dao.getRandom(amount.getValue(), flashcard.getDeckId())).thenReturn(flashcards);
+            when(dao.getRandomFlashcards(amount.getValue(), flashcard.getDeckId())).thenReturn(flashcards);
             final List<Flashcard> response = resources.client().target(randomFlashcardsURIs.get(amount.ordinal()))
                     .request().get(new GenericType<List<Flashcard>>() {
                     });
-            verify(dao).getRandom(amount.getValue(), flashcard.getDeckId());
+            verify(dao).getRandomFlashcards(amount.getValue(), flashcard.getDeckId());
             assertThat(response).hasSize(amount.getValue());
         }
     }
