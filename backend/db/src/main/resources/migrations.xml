@@ -111,12 +111,18 @@
     <changeSet id="6" author="toja">
         <createTable tableName="usersDecks">
             <column name="deckId" type="uuid">
-                <constraints primaryKey="true" nullable="false" foreignKeyName="fkDeckId" references="decks(id)"/>
+                <constraints primaryKey="true" nullable="false" foreignKeyName="fkDeckId" references="decks(id)" deleteCascade="true"/>
             </column>
             <column name="userId" type="uuid">
-                <constraints primaryKey="true" nullable="false" foreignKeyName="fkUserId" references="users(id)"/>
+                <constraints primaryKey="true" nullable="false" foreignKeyName="fkUserId" references="users(id)" deleteCascade="true"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet id="7" author="lupi">
+        <loadData tableName="usersDecks" file="initialData/usersDecks.csv">
+            <column name="deckId" type="STRING"/>
+            <column name="userId" type="STRING"/>
+        </loadData>
     </changeSet>
 </databaseChangeLog>
 

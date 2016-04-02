@@ -7,8 +7,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,12 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DeckDAOTest extends DAOTest {
 
     private DeckDAO dao;
+    private UUID defaultUserUUID;
 
     @Override
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
         dao = dbi.onDemand(DeckDAO.class);
+        defaultUserUUID = UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e");
     }
 
     private List<Deck> getDecksFromDatabase() throws Exception {
@@ -36,7 +40,9 @@ public class DeckDAOTest extends DAOTest {
 
     public void getAllDecks() throws Exception {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
-        assertThat(dao.getAllDecks()).containsAll(decksFromDatabase);
+        List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
+
+        assertThat(dao.getAllDecks(defaultUserUUID)).isSubsetOf(decks);
     }
 
 
@@ -59,10 +65,15 @@ public class DeckDAOTest extends DAOTest {
         assertThat(dao.getDeckById(deck.getId())).isEqualTo(deck);
     }
 
+    public void getUserDeckByName() throws Exception {
+        Deck deck = getDecksFromDatabase().get(0);
+        assertThat(dao.getUserDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
+    }
+
 
     public void getDeckByName() throws Exception {
-        Deck deck = getDecksFromDatabase().get(0);
-        assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
+        Deck deck = getDecksFromDatabase().get(3);
+        assertThat(dao.getDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
     }
 /*
     public void getRandomDeck() throws Exception{
@@ -71,7 +82,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void createDeck() throws Exception {
         final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);
-        dao.createDeck(createdDeck,UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e"));
+        dao.createDeck(createdDeck, defaultUserUUID);
         assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
     }
 

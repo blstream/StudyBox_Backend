@@ -25,6 +25,8 @@ Study Box REST API backend documentation and mock.
  - resources for Test results added
 ## 23/03/2016 toja
  - method to get logged user added
+## 30/03/2016 toja
+ - added resources to get user's decks
  
 
 # TODO
@@ -74,6 +76,20 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 200 (application/json)
     + Attributes (DeckCollection)
+    
+### Get all User's Decks [GET /decks/me]
+
++ Response 200 (application/json)
+    + Attributes (DeckCollection)
+    
+### Get all User's decks with Flashcards number [GET /decks/me{?isEnabled}]
+
++ Parameters
+    + isEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
+
++ Response 200 (application/json)
+
+    + Attributes (DeckWithCountCollection)
 
 ### Get all Decks by Name [GET /decks{?name}]
 
@@ -160,7 +176,8 @@ By default API return response with HTTP code **4xx** family.
 
     + Attributes (FlashcardWithoutId)
 
-+ Response 204 (application/json)
++ Response 200 (application/json)
+    + Attributes (Flashcard)
 
 ### Remove Flashcard [DELETE /decks/{deckId}/flashcards/{flashcardId}]
 
@@ -470,9 +487,9 @@ By default API return response with HTTP code **4xx** family.
 ## Collections
 
 ### DeckCollection (array)
-+ 0: (Deck0)
-+ 1: (Deck1)
-+ 2: (Deck2)
++ (Deck0)
++ (Deck1)
++ (Deck2)
 
 ### FlashcardCollection (array)
 + (Flashcard0)
@@ -480,24 +497,24 @@ By default API return response with HTTP code **4xx** family.
 + (Flashcard2)
 
 ### DeckWithCountCollection (array)
-+ 0: (DeckWithCount0)
-+ 1: (DeckWithCount1)
-+ 2: (DeckWithCount2)
++ (DeckWithCount0)
++ (DeckWithCount1)
++ (DeckWithCount2)
 
 ### TipCollection (array)
-+ 0: (Tip0)
-+ 1: (Tip1)
-+ 2: (Tip2)
++ (Tip0)
++ (Tip1)
++ (Tip2)
 
 ### TagCollection (array)
-+ 0: (Tag0)
-+ 1: (Tag1)
-+ 2: (Tag2)
++ (Tag0)
++ (Tag1)
++ (Tag2)
 
 ### FlashcardResultCollection (array)
-+ 0: (FlashcardResult0)
-+ 1: (FlashcardResult1)
-+ 2: (FlashcardResult2)
++ (FlashcardResult0)
++ (FlashcardResult1)
++ (FlashcardResult2)
 
 ## BadRequestResponse (object)
 + code: `E001` (string, required) - TODO sample error code
