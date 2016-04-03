@@ -42,32 +42,41 @@ public class DecksResource {
     public Collection<Deck> listDecks(@Auth User user,
                                       @QueryParam("name") String name,
                                       @QueryParam("isEnabled") Boolean isEnabled,
-                                      @QueryParam("includeOwn") Boolean includeOwn) {
+                                      @QueryParam("includeOwn") Boolean includeOwn,
+                                      @QueryParam("random") Boolean random) {
+
+        Collection<Deck> decks;
+
         if (name == null) {
             if (isEnabled == null || !isEnabled) {
-                Collection<Deck> decks = decksDAO.getAllDecks(user.getId());
 
-                if(includeOwn == null || !includeOwn) return decks;
-                else {
+                decks = decksDAO.getAllDecks(user.getId());
+
+                if (includeOwn == null || !includeOwn) {
+                    if (random == null || !random) {
+                        return decks;
+                    } else {
+                        return decksDAO.getRandomDecks(user.getId());
+                    }
+                } else {
                     decks.addAll(decksDAO.getAllUserDecks(user.getId()));
                     return decks;
                 }
-            }
-            else {
-                Collection<Deck> decks = new ArrayList<>();
+
+            } else {
+                decks = new ArrayList<>();
                 decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber(user.getId()));
 
-                if(includeOwn == null || !includeOwn) return decks;
+                if (includeOwn == null || !includeOwn) return decks;
                 else {
                     decks.addAll(decksDAO.getAllUserDecksWithFlashcardsNumber(user.getId()));
                     return decks;
                 }
             }
-        }
-        else {
-            Collection<Deck> decks = decksDAO.getDecksByName(name, user.getId());
+        } else {
+            decks = decksDAO.getDecksByName(name, user.getId());
 
-            if(includeOwn == null || !includeOwn) return decks;
+            if (includeOwn == null || !includeOwn) return decks;
             else {
                 decks.addAll(decksDAO.getUserDecksByName(name, user.getId()));
                 return decks;

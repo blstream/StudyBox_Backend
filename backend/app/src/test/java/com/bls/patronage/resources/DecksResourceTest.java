@@ -40,12 +40,15 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private String userDecksWithFlashcardNumberURI;
     private String decksByEmptyNameURI;
     private String userDecksURI;
+    private String randomDeckURI;
 
     @Before
     public void setUp() {
         super.setUp();
         deck = new Deck("12345678-9012-3456-7890-123456789012", "math");
         decksURI = UriBuilder.fromResource(DecksResource.class).build().toString();
+        randomDeckURI = UriBuilder.fromResource(DecksResource.class)
+                .queryParam("random", true).build().toString();
         decksByNameURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("name", "something").build().toString();
         decksByBadNameURI = UriBuilder.fromResource(DecksResource.class)
@@ -59,6 +62,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 .queryParam("isEnabled", true).build().toString();
         userDecksURI = UriBuilder.fromResource(DecksResource.class).build().toString()
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
+
     }
 
     @Test
@@ -98,6 +102,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         verify(deckDao).getAllUserDecks(user.getId());
         assertThat(response).containsAll(decks);
     }
+
 
     @Test
     public void listDecks() {
@@ -218,6 +223,19 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
         verify(userDAO).getUserByEmail(fakeEmail);
+    }
+
+    @Test
+    public void getRandomDeck() {
+        final ImmutableList<Deck> decks = ImmutableList.of(deck);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+        when(deckDao.getAllDecks(user.getId())).thenReturn(decks);
+
+        final List<Deck> response = getListFromResponse(randomDeckURI, encodedCredentials);
+
+        verify(deckDao).getRandomDecks(user.getId());
+        assertThat(decks).containsAll(response);
+
     }
 
     static private Response postDeck(String uri, String name, Boolean isPublic, String encodedUserInfo) {
