@@ -13,7 +13,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 @RegisterMapper(FlashcardMapper.class)
@@ -40,8 +39,8 @@ abstract public class FlashcardDAO {
 
     //  Temporary solution for getting random flashcards
     @SqlQuery("select id,question,answer,deckId from flashcards where deckId = :deckId limit 1 " +
-            "offset floor(rand(:random)*(:number))")
-    abstract Flashcard getRandomFlashcard(@Bind("random") Integer random, @Bind("number") Integer number, @Bind("deckId") UUID deckId);
+            "offset floor(:random*:number)")
+    abstract Flashcard getRandomFlashcard(@Bind("random") Double random, @Bind("number") Integer number, @Bind("deckId") UUID deckId);
 
     @SqlQuery("select count(*) from flashcards where deckId = :deckId")
     abstract Integer getCount(@Bind("deckId") UUID deckId);
@@ -55,8 +54,7 @@ abstract public class FlashcardDAO {
         List<Flashcard> flashcards = new ArrayList<>();
         Integer count = getCount(deckId);
         while(flashcards.size() < number && flashcards.size() < count) {
-            Random random = new Random();
-            Flashcard flashcard = getRandomFlashcard(random.nextInt(), count, deckId);
+            Flashcard flashcard = getRandomFlashcard(Math.random(), count, deckId);
             if(!flashcards.contains(flashcard)) {
                 flashcards.add(flashcard);
             }
