@@ -62,7 +62,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 .queryParam("isEnabled", true).build().toString();
         userDecksURI = UriBuilder.fromResource(DecksResource.class).build().toString()
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
-
     }
 
     @Test
@@ -102,7 +101,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         verify(deckDao).getAllUserDecks(user.getId());
         assertThat(response).containsAll(decks);
     }
-
 
     @Test
     public void listDecks() {
@@ -235,7 +233,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getRandomDecks(user.getId());
         assertThat(decks).containsAll(response);
-
     }
 
     static private Response postDeck(String uri, String name, Boolean isPublic, String encodedUserInfo) {

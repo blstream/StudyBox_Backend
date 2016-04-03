@@ -76,7 +76,7 @@ public class DecksResource {
         } else {
             decks = decksDAO.getDecksByName(name, user.getId());
 
-            if (includeOwn == null || !includeOwn) return decks;
+            if(includeOwn == null || !includeOwn) return decks;
             else {
                 decks.addAll(decksDAO.getUserDecksByName(name, user.getId()));
                 return decks;
