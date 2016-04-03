@@ -18,10 +18,6 @@ import java.util.UUID;
 @RegisterMapper(DeckMapper.class)
 public abstract class DeckDAO {
 
-    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId group by decks.id")
-    public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
-
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
             "from decks " +
@@ -88,7 +84,6 @@ public abstract class DeckDAO {
 
     public Collection<Deck> getDecksByName(String name, UUID userId) {
         List<Deck> decks = getDecksUsingName(name);
-        decks.removeAll(getAllUserDecks(userId));
         if (decks.isEmpty()) {
             throw new DataAccessException("There are no decks matching this name");
         }
@@ -105,7 +100,6 @@ public abstract class DeckDAO {
 
     public Collection<Deck> getAllDecks(UUID userId) {
         Collection<Deck> decks = getDecks();
-        decks.removeAll(getAllUserDecks(userId));
         return decks;
     }
 
