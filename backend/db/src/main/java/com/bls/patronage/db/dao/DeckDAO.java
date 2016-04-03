@@ -18,10 +18,6 @@ import java.util.UUID;
 @RegisterMapper(DeckMapper.class)
 public abstract class DeckDAO {
 
-    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId group by decks.id")
-    public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
-
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
             "from decks " +
