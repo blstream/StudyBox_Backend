@@ -27,6 +27,8 @@ Study Box REST API backend documentation and mock.
  - method to get logged user added
 ## 30/03/2016 toja
  - added resources to get user's decks
+## 04/04/2016 toja
+ - added 'Get Random Flashcards' resource
  
 
 # TODO
@@ -186,6 +188,16 @@ By default API return response with HTTP code **4xx** family.
     + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID to delete
 
 + Response 204
+
+### Get Random Flashcards [GET /decks/{deckId}/flashcards{?random}]
+
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    + random: `five` (string, required) - string that represents amount of random flashcards, can be
+    one of the following values: `one`, `five`, `ten`, `fifteen`,  `twenty`
+
++ Response 200 (application/json)
+    + Attributes (FlashcardCollection)
 
 # Group User
 
