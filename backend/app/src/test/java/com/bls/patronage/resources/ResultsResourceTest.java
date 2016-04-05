@@ -65,7 +65,7 @@ public class ResultsResourceTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(resultRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.NO_CONTENT);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         verify(resultDAO).createResult(resultCaptor.capture());
         assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
         assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(result.getCorrectAnswers() + 1);
@@ -80,7 +80,7 @@ public class ResultsResourceTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(resultRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.NO_CONTENT);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         verify(resultDAO).createResult(resultCaptor.capture());
         assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
         assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(0);

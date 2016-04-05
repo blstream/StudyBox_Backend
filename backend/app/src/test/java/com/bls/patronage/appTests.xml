@@ -10,6 +10,8 @@
             <class name="com.bls.patronage.resources.FlashcardsResourceTest"/>
             <class name="com.bls.patronage.resources.ResultsResourceTest"/>
             <class name="com.bls.patronage.resources.UserResourceTest"/>
+            <class name="com.bls.patronage.resources.TipResourceTest"/>
+            <class name="com.bls.patronage.resources.TipsResourceTest"/>
         </classes>
     </test>
     <test name="Other Tests" junit="true">
