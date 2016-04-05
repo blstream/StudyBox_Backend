@@ -56,7 +56,7 @@ public class TipsResourceTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(tipRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         verify(dao).createTip(tipCaptor.capture());
         assertThat(tipCaptor.getValue().getId()).isNotNull();
         assertThat(tipCaptor.getValue().getEssence()).isEqualTo(tipRepresentation.getEssence());
