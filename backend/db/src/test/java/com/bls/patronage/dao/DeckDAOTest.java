@@ -42,7 +42,7 @@ public class DeckDAOTest extends DAOTest {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
         List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
 
-        assertThat(dao.getAllDecks(defaultUserUUID)).isSubsetOf(decks);
+        assertThat(dao.getAllDecks()).isSubsetOf(decks);
     }
 
 
@@ -73,7 +73,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void getDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(3);
-        assertThat(dao.getDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
+        assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
     }
 
 

@@ -68,9 +68,8 @@ public abstract class DeckDAO {
     abstract Collection<DeckWithFlashcardsNumber> getDecksWithFlashcardsNumber();
 
 
-    public Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber(UUID userId) {
+    public Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber() {
         Collection<DeckWithFlashcardsNumber> decksWithFlashcardsNumber = getDecksWithFlashcardsNumber();
-        decksWithFlashcardsNumber.removeAll(getAllUserDecksWithFlashcardsNumber(userId));
         return decksWithFlashcardsNumber;
     }
     public void createDeck(Deck deck, UUID userId) {
@@ -86,7 +85,7 @@ public abstract class DeckDAO {
         return deck;
     }
 
-    public Collection<Deck> getDecksByName(String name, UUID userId) {
+    public Collection<Deck> getDecksByName(String name) {
         List<Deck> decks = getDecksUsingName(name);
         if (decks.isEmpty()) {
             throw new DataAccessException("There are no decks matching this name");
@@ -102,7 +101,7 @@ public abstract class DeckDAO {
         return decks;
     }
 
-    public Collection<Deck> getAllDecks(UUID userId) {
+    public Collection<Deck> getAllDecks() {
         Collection<Deck> decks = getDecks();
         return decks;
     }
