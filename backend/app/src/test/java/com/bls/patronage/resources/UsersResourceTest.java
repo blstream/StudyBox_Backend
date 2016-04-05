@@ -44,7 +44,7 @@ public class UsersResourceTest {
     @Test
     public void createUser() {
         Response response = postUser(usersURI, user.getEmail(), user.getName(), user.getPassword());
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         verify(userDAO).createUser(userCaptor.capture());
         assertThat(userCaptor.getValue().getId()).isNotNull();
         assertThat(userCaptor.getValue().getName()).isEqualTo(user.getName());

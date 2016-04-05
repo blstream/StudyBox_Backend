@@ -11,6 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.UUID;
 
 import static com.bls.patronage.auth.BasicAuthenticator.generateSafeHash;
@@ -26,9 +27,9 @@ public class UsersResource {
     }
 
     @POST
-    public UserWithoutPassword createUser(@Valid UserRepresentation user) {
+    public Response createUser(@Valid UserRepresentation user) {
         User createdUser = new User(UUID.randomUUID(), user.getEmail(), user.getName(), generateSafeHash(user.getPassword()));
         userDAO.createUser(createdUser);
-        return new UserWithoutPassword(createdUser.getId(), createdUser.getEmail(), createdUser.getName());
+        return Response.ok(new UserWithoutPassword(createdUser.getId(), createdUser.getEmail(), createdUser.getName())).status(Response.Status.CREATED).build();
     }
 }

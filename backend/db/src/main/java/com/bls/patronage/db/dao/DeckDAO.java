@@ -88,7 +88,6 @@ public abstract class DeckDAO {
 
     public Collection<Deck> getDecksByName(String name, UUID userId) {
         List<Deck> decks = getDecksUsingName(name);
-        decks.removeAll(getAllUserDecks(userId));
         if (decks.isEmpty()) {
             throw new DataAccessException("There are no decks matching this name");
         }
@@ -105,7 +104,6 @@ public abstract class DeckDAO {
 
     public Collection<Deck> getAllDecks(UUID userId) {
         Collection<Deck> decks = getDecks();
-        decks.removeAll(getAllUserDecks(userId));
         return decks;
     }
 

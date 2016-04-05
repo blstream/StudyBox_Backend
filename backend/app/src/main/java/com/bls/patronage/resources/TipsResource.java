@@ -8,6 +8,7 @@ import io.dropwizard.jersey.params.UUIDParam;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,12 +23,12 @@ public class TipsResource {
     }
 
     @POST
-    public Tip createTip(@Valid TipRepresentation tip,
+    public Response createTip(@Valid TipRepresentation tip,
                          @Valid @PathParam("flashcardId") UUIDParam flashcardId,
                          @Valid @PathParam("deckId") UUIDParam deckId){
         Tip createdTip = new Tip(UUID.randomUUID(), tip.getEssence(), tip.getDifficult(), flashcardId.get(), deckId.get());
         tipDAO.createTip(createdTip);
-        return createdTip;
+        return Response.ok(createdTip).status(Response.Status.CREATED).build();
     }
 
     @GET
