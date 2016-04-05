@@ -52,6 +52,7 @@ public class FlashcardDAOTest extends DAOTest {
         dao.createFlashcard(flashcard);
         assertThat(dao.getFlashcardById(flashcard.getId())).isEqualTo(flashcard);
     }
+    //c6c4d451-65dd-4ac0-9e53-974397c7bea7
 
     public void deleteFlashcard() throws Exception {
         Flashcard flashcard = getFlashcardsFromDatabase().get(0);
@@ -75,5 +76,10 @@ public class FlashcardDAOTest extends DAOTest {
             assertThat(randomFlashcards).hasSize(amount.getValue());
             assertThat(flashcards).containsAll(randomFlashcards);
         }
+    }
+
+    public void getFlashcardsNumber() throws Exception {
+        final Flashcard flashcard = getFlashcardsFromDatabase().get(0);
+        assertThat(dao.getFlashcardsNumber(flashcard.getDeckId())).isEqualTo(3);
     }
 }
