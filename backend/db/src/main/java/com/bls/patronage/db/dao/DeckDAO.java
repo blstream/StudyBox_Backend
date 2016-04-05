@@ -2,9 +2,7 @@ package com.bls.patronage.db.dao;
 
 import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.mapper.DeckMapper;
-import com.bls.patronage.db.mapper.DeckWithFlashcardsNumberMapper;
 import com.bls.patronage.db.model.Deck;
-import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
@@ -22,16 +20,8 @@ public abstract class DeckDAO {
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "inner join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId " +
-            "group by decks.id")
-    public abstract Collection<DeckWithFlashcardsNumber> getAllUserDecksWithFlashcardsNumber(
-            @Bind("userId") UUID userId);
+    @SqlQuery("select count(*) from flashcards where deckId = :deckId")
+    public abstract int getFlashcardsNumber(@Bind("deckId") UUID deckId);
 
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);
@@ -64,20 +54,6 @@ public abstract class DeckDAO {
             "limit 1 offset floor(random()*(select count(*) from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId and decks.public = 'true'))")
     public abstract Collection<Deck> getRandomDecks(@Bind("userId") UUID userId);
-
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "group by decks.id")
-    abstract Collection<DeckWithFlashcardsNumber> getDecksWithFlashcardsNumber();
-
-
-    public Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber() {
-        Collection<DeckWithFlashcardsNumber> decksWithFlashcardsNumber = getDecksWithFlashcardsNumber();
-        return decksWithFlashcardsNumber;
-    }
 
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
@@ -112,4 +88,5 @@ public abstract class DeckDAO {
         Collection<Deck> decks = getDecks();
         return decks;
     }
+
 }
