@@ -2,7 +2,9 @@ package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.mapper.DeckMapper;
+import com.bls.patronage.db.mapper.FlashcardMapper;
 import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.model.Flashcard;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -96,5 +98,10 @@ public class DeckDAOTest extends DAOTest {
 
         assertThat(getDecksFromDatabase()).doesNotContain(deck);
         assertThat(getDecksFromDatabase()).contains(updatedDeck);
+    }
+
+    public void getFlashcardsNumber() throws Exception {
+        final Flashcard flashcard = getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards").get(0);
+        assertThat(dao.getFlashcardsNumber(flashcard.getDeckId())).isEqualTo(3);
     }
 }

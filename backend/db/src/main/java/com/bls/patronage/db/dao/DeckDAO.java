@@ -22,16 +22,8 @@ public abstract class DeckDAO {
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "inner join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId " +
-            "group by decks.id")
-    public abstract Collection<DeckWithFlashcardsNumber> getAllUserDecksWithFlashcardsNumber(
-            @Bind("userId") UUID userId);
+    @SqlQuery("select count(*) from flashcards where deckId = :deckId")
+    public abstract int getFlashcardsNumber(@Bind("deckId") UUID deckId);
 
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);
@@ -59,19 +51,6 @@ public abstract class DeckDAO {
     @SqlQuery("select id, name, public from decks where public='true'")
     abstract Collection<Deck> getDecks();
 
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "group by decks.id")
-    abstract Collection<DeckWithFlashcardsNumber> getDecksWithFlashcardsNumber();
-
-
-    public Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber() {
-        Collection<DeckWithFlashcardsNumber> decksWithFlashcardsNumber = getDecksWithFlashcardsNumber();
-        return decksWithFlashcardsNumber;
-    }
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
         insertUsersDeck(deck, userId);

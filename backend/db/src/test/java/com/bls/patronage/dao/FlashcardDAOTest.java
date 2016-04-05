@@ -75,9 +75,4 @@ public class FlashcardDAOTest extends DAOTest {
             assertThat(flashcards).containsAll(randomFlashcards);
         }
     }
-
-    public void getFlashcardsNumber() throws Exception {
-        final Flashcard flashcard = getFlashcardsFromDatabase().get(0);
-        assertThat(dao.getFlashcardsNumber(flashcard.getDeckId())).isEqualTo(3);
-    }
 }
