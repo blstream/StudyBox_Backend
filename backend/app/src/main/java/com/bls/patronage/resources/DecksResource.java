@@ -49,16 +49,16 @@ public class DecksResource {
 
         if (name == null) {
             if (isEnabled == null || !isEnabled) {
-
-                decks = decksDAO.getAllDecks(user.getId());
-
                 if (includeOwn == null || !includeOwn) {
                     if (random == null || !random) {
+                        decks = decksDAO.getAllDecks(user.getId());
                         return decks;
                     } else {
-                        return decksDAO.getRandomDecks(user.getId());
+                        decks = decksDAO.getRandomDecks(user.getId());
+                        return decks;
                     }
                 } else {
+                    decks = decksDAO.getAllDecks(user.getId());
                     decks.addAll(decksDAO.getAllUserDecks(user.getId()));
                     return decks;
                 }
