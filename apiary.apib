@@ -29,6 +29,8 @@ Study Box REST API backend documentation and mock.
  - added resources to get user's decks
 ## 04/04/2016 toja
  - added 'Get Random Flashcards' resource
+## 06/04/2016 arka
+ - added 'Get random Deck' resource
  
 
 # TODO
@@ -72,7 +74,14 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 200 (application/json)
     + Attributes (Deck)
+    
+### Get random Deck [GET /decks{?random}]
 
++ Parameters
+    + random (required, boolean, `true`) ... An order to get one random deck from available decks
+
++ Response 200 (application/json)
+    + Attributes (Deck)
 
 ### Get all Decks [GET]
 
