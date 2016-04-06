@@ -2,6 +2,7 @@ package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.mapper.FlashcardMapper;
+import com.bls.patronage.db.model.Amount;
 import com.bls.patronage.db.model.Flashcard;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -64,5 +65,15 @@ public class FlashcardDAOTest extends DAOTest {
         dao.updateFlashcard(newFlascard);
         assertThat(getFlashcardsFromDatabase()).doesNotContain(flashcard);
         assertThat(getFlashcardsFromDatabase()).contains(newFlascard);
+    }
+
+    public void getRandomFlashcards() throws Exception {
+        final List<Flashcard> flashcards = getFlashcardsFromDatabase();
+        for (Amount amount: Amount.values()) {
+            List<Flashcard> randomFlashcards = dao.getRandomFlashcards(amount.getValue(),
+                    flashcards.get(11).getDeckId());
+            assertThat(randomFlashcards).hasSize(amount.getValue());
+            assertThat(flashcards).containsAll(randomFlashcards);
+        }
     }
 }

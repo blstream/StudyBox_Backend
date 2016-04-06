@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.model.Amount;
 import com.bls.patronage.db.model.Flashcard;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -19,10 +20,15 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlashcardsResourceTest {
@@ -37,12 +43,19 @@ public class FlashcardsResourceTest {
     private Flashcard flashcard;
     private FlashcardRepresentation flashcardRepresentation;
     private String flashcardsURI;
+    private List<String> randomFlashcardsURIs;
+
 
     @Before
     public void setUp() {
         flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes", "8ad4b503-5bfc-4d8a-a761-0908374892b1");
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok");
         flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckId()).toString();
+        randomFlashcardsURIs = new ArrayList<>();
+        for (Amount amount : Amount.values()) {
+            randomFlashcardsURIs.add(UriBuilder.fromResource(FlashcardsResource.class)
+                    .queryParam("random", amount.toString().toLowerCase()).build(flashcard.getDeckId()).toString());
+        }
     }
 
     @After
@@ -84,4 +97,18 @@ public class FlashcardsResourceTest {
         verify(dao).getAllFlashcards(flashcard.getDeckId());
         assertThat(response).containsAll(flashcards);
     }
+
+    @Test
+    public void getRandomFlashcards() {
+        for (Amount amount : Amount.values()) {
+            final List<Flashcard> flashcards = Collections.nCopies(amount.getValue(), flashcard);
+            when(dao.getRandomFlashcards(amount.getValue(), flashcard.getDeckId())).thenReturn(flashcards);
+            final List<Flashcard> response = resources.client().target(randomFlashcardsURIs.get(amount.ordinal()))
+                    .request().get(new GenericType<List<Flashcard>>() {
+                    });
+            verify(dao).getRandomFlashcards(amount.getValue(), flashcard.getDeckId());
+            assertThat(response).hasSize(amount.getValue());
+        }
+    }
 }
+

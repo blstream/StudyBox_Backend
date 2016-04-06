@@ -69,7 +69,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         final Response response = postDeck(decksURI, deck.getName(), deck.getIsPublic(), encodedCredentials);
 
-        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         verify(deckDao).createDeck(deckCaptor.capture(), uuidCaptor.capture());
         assertThat(deckCaptor.getValue().getId()).isNotNull();
         assertThat(deckCaptor.getValue().getName()).isEqualTo(deck.getName());
