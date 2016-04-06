@@ -104,6 +104,6 @@ public class DeckDAOTest extends DAOTest {
 
     public void getFlashcardsNumber() throws Exception {
         final Flashcard flashcard = getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards").get(0);
-        assertThat(dao.getFlashcardsNumber(flashcard.getDeckId())).isEqualTo(2);
+        assertThat(dao.getFlashcardsNumber(flashcard.getDeckId())).isEqualTo(3);
     }
 }
