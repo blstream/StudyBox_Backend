@@ -7,7 +7,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -64,18 +63,24 @@ public class DeckDAOTest extends DAOTest {
         Deck deck = getDecksFromDatabase().get(0);
         assertThat(dao.getDeckById(deck.getId())).isEqualTo(deck);
     }
-
+    
     public void getUserDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
         assertThat(dao.getUserDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
     }
-
 
     public void getDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(3);
         assertThat(dao.getDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
     }
 
+    public void getRandomDeck() throws Exception {
+        List<Deck> decksFromDatabase = getDecksFromDatabase();
+        List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
+        decks.addAll(dao.getAllDecks(defaultUserUUID));
+
+        assertThat(decks).containsAll(dao.getRandomDecks(defaultUserUUID));
+    }
 
     public void createDeck() throws Exception {
         final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);

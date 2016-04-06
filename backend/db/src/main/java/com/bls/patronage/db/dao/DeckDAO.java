@@ -59,6 +59,12 @@ public abstract class DeckDAO {
     @SqlQuery("select id, name, public from decks where public='true'")
     abstract Collection<Deck> getDecks();
 
+    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
+            "where usersDecks.userId = :userId and decks.public = 'true' " +
+            "limit 1 offset floor(random()*(select count(*) from decks join usersDecks on usersDecks.deckId = decks.id " +
+            "where usersDecks.userId = :userId and decks.public = 'true'))")
+    public abstract Collection<Deck> getRandomDecks(@Bind("userId") UUID userId);
+
     @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
     @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
             "from decks " +
@@ -73,6 +79,7 @@ public abstract class DeckDAO {
         decksWithFlashcardsNumber.removeAll(getAllUserDecksWithFlashcardsNumber(userId));
         return decksWithFlashcardsNumber;
     }
+
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
         insertUsersDeck(deck, userId);
@@ -106,5 +113,4 @@ public abstract class DeckDAO {
         Collection<Deck> decks = getDecks();
         return decks;
     }
-
 }
