@@ -8,20 +8,23 @@ import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
+import org.skife.jdbi.v2.unstable.BindIn;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @RegisterMapper(DeckMapper.class)
+@UseStringTemplate3StatementLocator
 public abstract class DeckDAO {
 
     @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
-    @SqlQuery("select count(*) from flashcards where deckId = :deckId")
-    public abstract int getFlashcardsNumber(@Bind("deckId") UUID deckId);
+    @SqlQuery("select count(flashcards.id) from flashcards where deckId in (<decks>)")
+    public abstract Collection<Integer> getFlashcardsNumber(@BindIn("decks") List<UUID> decks);
 
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);

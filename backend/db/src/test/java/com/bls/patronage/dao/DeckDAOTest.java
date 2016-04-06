@@ -9,6 +9,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -104,6 +105,6 @@ public class DeckDAOTest extends DAOTest {
 
     public void getFlashcardsNumber() throws Exception {
         final Flashcard flashcard = getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards").get(0);
-        assertThat(dao.getFlashcardsNumber(flashcard.getDeckId())).isEqualTo(3);
+        assertThat(dao.getFlashcardsNumber(Collections.singletonList(flashcard.getDeckId()))).isEqualTo(Collections.singletonList(3));
     }
 }

@@ -18,17 +18,14 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,6 +48,20 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private String decksByEmptyNameURI;
     private String userDecksURI;
     private String randomDeckURI;
+
+    static private Response postDeck(String uri, String name, Boolean isPublic, String encodedUserInfo) {
+        return authResources.client().target(uri)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Authorization", "Basic " + encodedUserInfo)
+                .post(Entity.entity(new DeckRepresentation(name, isPublic), MediaType.APPLICATION_JSON_TYPE));
+    }
+
+    static private List<Deck> getListFromResponse(String uri, String encodedUserInfo) {
+
+        final Response response = getResponseWithCredentials(uri, encodedUserInfo);
+        return response.readEntity(new GenericType<List<Deck>>() {
+        });
+    }
 
     @Before
     public void setUp() {
@@ -155,7 +166,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Test
     public void listUserDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(userDeck, 3);
-        when(deckDao.getFlashcardsNumber(deckExample.getId())).thenReturn(deckExample.getCount());
+        when(deckDao.getFlashcardsNumber(Collections.singletonList(deckExample.getId())))
+                .thenReturn(Collections.singletonList(deckExample.getCount()));
 
         final ImmutableList<Deck> decks = ImmutableList.of(deckExample);
         final Response response = getResponseWithCredentials(userDecksWithFlashcardNumberURI, encodedCredentials);
@@ -169,13 +181,11 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllUserDecks(user.getId());
         verify(userDAO).getUserByEmail(user.getEmail());
-        verify(deckDao).getFlashcardsNumber(deckExample.getId());
+        verify(deckDao).getFlashcardsNumber(Collections.singletonList(deckExample.getId()));
 
         assertThat(mappedDecks).containsAll(decks);
         assertThat(decksInResponse.get(0).getCount()).isEqualTo(deckExample.getCount());
     }
-
-
 
     @Test
     public void listDecksWithBadPassword() {
@@ -219,19 +229,5 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getRandomDecks(user.getId());
         assertThat(decks).containsAll(response);
-    }
-
-    static private Response postDeck(String uri, String name, Boolean isPublic, String encodedUserInfo) {
-        return authResources.client().target(uri)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .header("Authorization", "Basic " + encodedUserInfo)
-                .post(Entity.entity(new DeckRepresentation(name, isPublic), MediaType.APPLICATION_JSON_TYPE));
-    }
-
-    static private List<Deck> getListFromResponse(String uri, String encodedUserInfo) {
-
-        final Response response = getResponseWithCredentials(uri, encodedUserInfo);
-        return response.readEntity(new GenericType<List<Deck>>() {
-        });
     }
 }
