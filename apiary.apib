@@ -234,7 +234,7 @@ By default API return response with HTTP code **4xx** family.
 + Request (application/json)
     + Attributes (UserWithoutId)
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
     + Attributes (UserWithoutPassword)
 
 
@@ -323,7 +323,7 @@ By default API return response with HTTP code **4xx** family.
     + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
     + flashcardId: `1233-0000-0000-000000000001` (string, required) - flashcard UUID which contain tip
     + tipId: `1233-0000-0000-000000000001` (string, required) - tip UUID to delete
-+ Response 200
++ Response 204
 
 # Group Tag
 
@@ -380,7 +380,7 @@ By default API return response with HTTP code **4xx** family.
     + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain tag
     + tagId: `1233-0000-0000-000000000001` (string, required) - tag UUID to delete
 
-+ Response 200
++ Response 204
 
 # Group Test Mode
 
