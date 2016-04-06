@@ -49,52 +49,14 @@ public class DecksResource {
     public Collection<Deck> listDecks(@Auth User user,
                                       @QueryParam("name") String name,
                                       @QueryParam("isEnabled") Boolean isEnabled,
-                                      @QueryParam("includeOwn") Boolean includeOwn) {
+                                      @QueryParam("includeOwn") Boolean includeOwn,
+                                      @QueryParam("random") Boolean random) {
         return new DeckCollectionBuilder(user.getId())
                 .includeOwn(Optional.ofNullable(includeOwn))
                 .filterByName(Optional.ofNullable(name))
                 .enableFlashcardsNumber(Optional.ofNullable(isEnabled))
+                .getRandom(Optional.ofNullable(random))
                 .build();
-                                      @QueryParam("includeOwn") Boolean includeOwn,
-                                      @QueryParam("random") Boolean random) {
-
-        Collection<Deck> decks;
-
-        if (name == null) {
-            if (isEnabled == null || !isEnabled) {
-                if (includeOwn == null || !includeOwn) {
-                    if (random == null || !random) {
-                        decks = decksDAO.getAllDecks(user.getId());
-                        return decks;
-                    } else {
-                        decks = decksDAO.getRandomDecks(user.getId());
-                        return decks;
-                    }
-                } else {
-                    decks = decksDAO.getAllDecks(user.getId());
-                    decks.addAll(decksDAO.getAllUserDecks(user.getId()));
-                    return decks;
-                }
-
-            } else {
-                decks = new ArrayList<>();
-                decks.addAll(decksDAO.getAllDecksWithFlashcardsNumber(user.getId()));
-
-                if (includeOwn == null || !includeOwn) return decks;
-                else {
-                    decks.addAll(decksDAO.getAllUserDecksWithFlashcardsNumber(user.getId()));
-                    return decks;
-                }
-            }
-        } else {
-            decks = decksDAO.getDecksByName(name, user.getId());
-
-            if(includeOwn == null || !includeOwn) return decks;
-            else {
-                decks.addAll(decksDAO.getUserDecksByName(name, user.getId()));
-                return decks;
-            }
-        }
     }
 
     @Path("/me")
@@ -116,6 +78,7 @@ public class DecksResource {
         private boolean includeOwn;
         private Optional<String> filteredName;
         private Boolean enableFlashcardsNumber;
+        private Boolean random;
 
         public DeckCollectionBuilder(UUID userId) {
             this.userId = userId;
@@ -137,7 +100,13 @@ public class DecksResource {
             return this;
         }
 
+        public DeckCollectionBuilder getRandom(Optional<Boolean> random) {
+            this.random = random.orElse(false);
+            return this;
+        }
+
         public Collection<Deck> build() {
+            //pre-building deckCollection tasks
             if(filteredName.isPresent()) {
                 deckCollection = decksDAO.getDecksByName(filteredName.get());
                 deckCollection.addAll(
@@ -145,11 +114,18 @@ public class DecksResource {
                 );
             }
 
-            deckCollection = Optional.ofNullable(deckCollection).isPresent() ?  deckCollection : decksDAO.getAllDecks();
+            if (random) {
+                deckCollection = decksDAO.getRandomDecks(userId);
+            }
 
+            //end of building phase. If none of the above worked, collection is created now
+            boolean wasPrebuild = Optional.ofNullable(deckCollection).isPresent();
+            deckCollection = wasPrebuild ?  deckCollection : decksDAO.getAllDecks();
+
+            //now the other tasks are run;
             if (includeOwn) {
                 deckCollection.addAll(
-                        filteredName.isPresent() ? Collections.emptyList() : decksDAO.getAllUserDecks(userId)
+                        wasPrebuild ? Collections.emptyList() : decksDAO.getAllUserDecks(userId)
                 );
             }
             if (enableFlashcardsNumber) {

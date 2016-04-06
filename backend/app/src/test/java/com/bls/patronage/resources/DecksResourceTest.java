@@ -215,10 +215,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void getRandomDeck() {
-        final ImmutableList<Deck> decks = ImmutableList.of(deck);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-        when(deckDao.getAllDecks(user.getId())).thenReturn(decks);
-
         final List<Deck> response = getListFromResponse(randomDeckURI, encodedCredentials);
 
         verify(deckDao).getRandomDecks(user.getId());
