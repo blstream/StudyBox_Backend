@@ -94,7 +94,12 @@ By default API return response with HTTP code **4xx** family.
 + Response 200 (application/json)
     + Attributes (Deck)
 
-### Get all Decks [GET]
+### Get all Decks [GET /decks{?includeOwn}{?isEnabled}{?name}]
+
++ Parameters
+    + includeOwn (optional, boolean, `true`) - include decks created by logged user
+    + name (string, optional) - name of a deck to find
+    + isEnabled (optional, boolean, `true`) - show number of contained flashcards.
 
 + Request
 
@@ -105,7 +110,11 @@ By default API return response with HTTP code **4xx** family.
 + Response 200 (application/json)
     + Attributes (DeckCollection)
     
-### Get all User's Decks [GET /decks/me]
+    
+### Get all User's Decks [GET /decks/me{?isEnabled}]
+
++ Parameters
+    + isEnabled (optional, boolean, `true`) - show number of contained flashcards.
 
 + Request
 
@@ -116,49 +125,6 @@ By default API return response with HTTP code **4xx** family.
 + Response 200 (application/json)
     + Attributes (DeckCollection)
     
-### Get all User's decks with Flashcards number [GET /decks/me{?isEnabled}]
-
-+ Parameters
-    + isEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
-
-+ Request
-
-    + Headers
-
-            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
-
-+ Response 200 (application/json)
-
-    + Attributes (DeckWithCountCollection)
-
-### Get all Decks by Name [GET /decks{?name}]
-
-+ Parameters
-    + name (string, required) - name of a deck to find
-    
-+ Request
-
-    + Headers
-
-            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
-
-+ Response 200 (application/json)
-    + Attributes (DeckCollection)
-
-### Get all decks with Flashcards number [GET /decks{?isEnabled}]
-
-+ Parameters
-    + isEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
-    
-+ Request
-
-    + Headers
-
-            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
-
-+ Response 200 (application/json)
-
-    + Attributes (DeckWithCountCollection)
 
 ### Update Deck [PUT /decks/{deckId}]
 
