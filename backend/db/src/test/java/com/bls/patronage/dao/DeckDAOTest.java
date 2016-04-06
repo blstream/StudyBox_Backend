@@ -78,10 +78,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void getRandomDeck() throws Exception {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
-        List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
-        decks.addAll(dao.getAllDecks(defaultUserUUID));
-
-        assertThat(decks).containsAll(dao.getRandomDecks(defaultUserUUID));
+        assertThat(decksFromDatabase).containsAll(dao.getRandomDecks(defaultUserUUID));
     }
 
     public void createDeck() throws Exception {
