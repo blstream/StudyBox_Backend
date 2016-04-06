@@ -57,20 +57,25 @@ By default API return response with HTTP code **4xx** family.
 
 + Request (application/json)
 
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
+
     + Attributes (DeckWithoutId)
 
 + Response 201 (application/json)
 
     This response is returned when deck was created.
-    
-    + Headers
-
-            Access-Control-Expose-Headers: Location
-            Location: /decks/1111-0000-0000-000000000001
 
     + Attributes (Deck)
 
 ### Get Deck by ID [GET /decks/{deckId}]
+
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
 
 + Response 200 (application/json)
     + Attributes (Deck)
@@ -79,16 +84,34 @@ By default API return response with HTTP code **4xx** family.
 
 + Parameters
     + random (required, boolean, `true`) ... An order to get one random deck from available decks
+    
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==    
 
 + Response 200 (application/json)
     + Attributes (Deck)
 
 ### Get all Decks [GET]
 
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
+
 + Response 200 (application/json)
     + Attributes (DeckCollection)
     
 ### Get all User's Decks [GET /decks/me]
+
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
 
 + Response 200 (application/json)
     + Attributes (DeckCollection)
@@ -98,6 +121,12 @@ By default API return response with HTTP code **4xx** family.
 + Parameters
     + isEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
 
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
+
 + Response 200 (application/json)
 
     + Attributes (DeckWithCountCollection)
@@ -106,6 +135,12 @@ By default API return response with HTTP code **4xx** family.
 
 + Parameters
     + name (string, required) - name of a deck to find
+    
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
 
 + Response 200 (application/json)
     + Attributes (DeckCollection)
@@ -114,6 +149,12 @@ By default API return response with HTTP code **4xx** family.
 
 + Parameters
     + isEnabled (required, boolean, `true`) ... An order to show number of contained flashcards.
+    
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
 
 + Response 200 (application/json)
 
@@ -127,6 +168,10 @@ By default API return response with HTTP code **4xx** family.
 
 + Request (application/json)
 
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
+
     + Attributes (DeckWithoutId)
 
 + Response 200 (application/json)
@@ -139,6 +184,12 @@ By default API return response with HTTP code **4xx** family.
 
 + Parameters
     + deckId: `1212-1212-1212-121212121212` (string, required) - deck UUID to remove
+    
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
 
 + Response 204
 
