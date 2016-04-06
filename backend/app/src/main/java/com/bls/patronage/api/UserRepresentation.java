@@ -2,6 +2,7 @@ package com.bls.patronage.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserRepresentation {
@@ -11,6 +12,7 @@ public class UserRepresentation {
     @NotEmpty
     private final String name;
     @NotEmpty
+    @Length(min = 8)
     private final String password;
 
     public UserRepresentation(@JsonProperty("email") String email, @JsonProperty("name") String name, @JsonProperty("password") String password) {
