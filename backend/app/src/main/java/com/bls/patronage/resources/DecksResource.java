@@ -96,7 +96,6 @@ public class DecksResource {
             return this;
         }
 
-
         public DeckCollectionBuilder enableFlashcardsNumber(Optional<Boolean> isEnabled) {
             this.enableFlashcardsNumber = isEnabled.orElse(false);
             return this;
