@@ -5,8 +5,9 @@ import com.bls.patronage.db.mapper.DeckMapper;
 import com.bls.patronage.db.mapper.FlashcardMapper;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.Flashcard;
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -23,11 +24,17 @@ public class DeckDAOTest extends DAOTest {
     private UUID defaultUserUUID;
 
     @Override
-    @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeTest
+    public void buildDatabase() {
+        super.buildDatabase();
         dao = dbi.onDemand(DeckDAO.class);
         defaultUserUUID = UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e");
+    }
+
+    @Override
+    @BeforeMethod
+    public void loadContent() throws Exception {
+        super.loadContent();
     }
 
     private List<Deck> getDecksFromDatabase() throws Exception {
@@ -35,7 +42,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     @Override
-    @AfterMethod
+    @AfterTest
     public void tearDown() throws Exception {
         super.tearDown();
     }
@@ -104,7 +111,10 @@ public class DeckDAOTest extends DAOTest {
     }
 
     public void getFlashcardsNumber() throws Exception {
-        final Flashcard flashcard = getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards").get(0);
-        assertThat(dao.getFlashcardsNumber(Collections.singletonList(flashcard.getDeckId()))).isEqualTo(Collections.singletonList(3));
+        final List<Flashcard> flashcards = getAllEntities(Flashcard.class, FlashcardMapper.class, "flashcards");
+        UUID deckId = flashcards.get(0).getDeckId();
+        List<Flashcard> flashcardsInOneDeck = flashcards.stream().filter(flashcard -> flashcard.getDeckId().equals(deckId)).collect(Collectors.toList());
+
+        assertThat(dao.getFlashcardsNumber(Collections.singletonList(deckId))).isEqualTo(Collections.singletonList(flashcardsInOneDeck.size()));
     }
 }

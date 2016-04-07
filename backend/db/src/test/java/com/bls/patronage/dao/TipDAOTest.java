@@ -3,8 +3,9 @@ package com.bls.patronage.dao;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.mapper.TipMapper;
 import com.bls.patronage.db.model.Tip;
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -18,10 +19,16 @@ public class TipDAOTest extends DAOTest {
     private TipDAO tipDAO;
 
     @Override
-    @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeTest
+    public void buildDatabase() {
+        super.buildDatabase();
         tipDAO = dbi.onDemand(TipDAO.class);
+    }
+
+    @Override
+    @BeforeMethod
+    public void loadContent() throws Exception {
+        super.loadContent();
     }
 
     private List<Tip> getTipsFromDatabase() throws Exception {
@@ -29,7 +36,7 @@ public class TipDAOTest extends DAOTest {
     }
 
     @Override
-    @AfterMethod
+    @AfterTest
     public void tearDown() throws Exception {
         super.tearDown();
     }

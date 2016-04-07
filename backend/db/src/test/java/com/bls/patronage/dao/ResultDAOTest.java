@@ -5,8 +5,9 @@ import com.bls.patronage.db.mapper.FlashcardMapper;
 import com.bls.patronage.db.mapper.ResultMapper;
 import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.Result;
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -21,10 +22,17 @@ public class ResultDAOTest extends DAOTest {
     private ResultDAO dao;
 
     @Override
+    @BeforeTest
+    public void buildDatabase() {
+        super.buildDatabase();
+        dao = dbi.onDemand(ResultDAO.class);
+    }
+
+
+    @Override
     @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
-        dao = dbi.open(ResultDAO.class);
+    public void loadContent() throws Exception {
+        super.loadContent();
     }
 
     private List<Result> getResultsFromDatabase() throws Exception{
@@ -35,7 +43,7 @@ public class ResultDAOTest extends DAOTest {
     }
 
     @Override
-    @AfterMethod
+    @AfterTest
     public void tearDown() throws Exception {
         super.tearDown();
     }
