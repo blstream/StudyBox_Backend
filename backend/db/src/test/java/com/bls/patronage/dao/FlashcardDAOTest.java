@@ -4,8 +4,9 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.mapper.FlashcardMapper;
 import com.bls.patronage.db.model.Amount;
 import com.bls.patronage.db.model.Flashcard;
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -19,10 +20,16 @@ public class FlashcardDAOTest extends DAOTest {
     private FlashcardDAO dao;
 
     @Override
-    @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeTest
+    public void buildDatabase() {
+        super.buildDatabase();
         dao = dbi.onDemand(FlashcardDAO.class);
+    }
+
+    @Override
+    @BeforeMethod
+    public void loadContent() throws Exception {
+        super.loadContent();
     }
 
     private List<Flashcard> getFlashcardsFromDatabase() throws Exception {
@@ -30,7 +37,7 @@ public class FlashcardDAOTest extends DAOTest {
     }
 
     @Override
-    @AfterMethod
+    @AfterTest
     public void tearDown() throws Exception {
         super.tearDown();
     }

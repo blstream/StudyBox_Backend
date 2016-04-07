@@ -2,36 +2,29 @@ package com.bls.patronage.db.dao;
 
 import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.mapper.DeckMapper;
-import com.bls.patronage.db.mapper.DeckWithFlashcardsNumberMapper;
 import com.bls.patronage.db.model.Deck;
-import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
+import org.skife.jdbi.v2.unstable.BindIn;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @RegisterMapper(DeckMapper.class)
+@UseStringTemplate3StatementLocator
 public abstract class DeckDAO {
 
     @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "inner join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId " +
-            "group by decks.id")
-    public abstract Collection<DeckWithFlashcardsNumber> getAllUserDecksWithFlashcardsNumber(
-            @Bind("userId") UUID userId);
+    @SqlQuery("select count(flashcards.id) from flashcards where deckId in (<decks>)")
+    public abstract Collection<Integer> getFlashcardsNumber(@BindIn("decks") List<UUID> decks);
 
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);
@@ -65,21 +58,6 @@ public abstract class DeckDAO {
             "where usersDecks.userId = :userId and decks.public = 'true'))")
     public abstract Collection<Deck> getRandomDecks(@Bind("userId") UUID userId);
 
-    @RegisterMapper(DeckWithFlashcardsNumberMapper.class)
-    @SqlQuery("select decks.id, decks.name, decks.public, count(flashcards.question) as count " +
-            "from decks " +
-            "left join flashcards " +
-            "on decks.id = flashcards.deckid " +
-            "group by decks.id")
-    abstract Collection<DeckWithFlashcardsNumber> getDecksWithFlashcardsNumber();
-
-
-    public Collection<DeckWithFlashcardsNumber> getAllDecksWithFlashcardsNumber(UUID userId) {
-        Collection<DeckWithFlashcardsNumber> decksWithFlashcardsNumber = getDecksWithFlashcardsNumber();
-        decksWithFlashcardsNumber.removeAll(getAllUserDecksWithFlashcardsNumber(userId));
-        return decksWithFlashcardsNumber;
-    }
-
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
         insertUsersDeck(deck, userId);
@@ -93,7 +71,7 @@ public abstract class DeckDAO {
         return deck;
     }
 
-    public Collection<Deck> getDecksByName(String name, UUID userId) {
+    public Collection<Deck> getDecksByName(String name) {
         List<Deck> decks = getDecksUsingName(name);
         if (decks.isEmpty()) {
             throw new DataAccessException("There are no decks matching this name");
@@ -109,8 +87,9 @@ public abstract class DeckDAO {
         return decks;
     }
 
-    public Collection<Deck> getAllDecks(UUID userId) {
+    public Collection<Deck> getAllDecks() {
         Collection<Deck> decks = getDecks();
         return decks;
     }
+
 }
