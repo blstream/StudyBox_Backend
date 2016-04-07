@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -139,7 +140,7 @@ public class DecksResource {
             Collection<Integer> flashcardsNumbers = decksDAO.getFlashcardsNumber(
                     decks.stream().map(Deck::getId).collect(Collectors.toList())
             );
-            List tempDecks = Collections.emptyList();
+            List tempDecks = new ArrayList<>();
             Iterator<Deck> deckIterator = decks.iterator();
             Iterator<Integer> numberIterator = flashcardsNumbers.iterator();
             while (deckIterator.hasNext() && numberIterator.hasNext()) {
