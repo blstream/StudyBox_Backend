@@ -15,6 +15,11 @@ public class DeckWithFlashcardsNumber extends Deck {
         this.flashcardsNumber = flashcardsNumber;
     }
 
+    public DeckWithFlashcardsNumber(Deck deck, int flashcardsNumber) {
+        super(deck.getId(), deck.getName(), deck.getIsPublic());
+        this.flashcardsNumber = flashcardsNumber;
+    }
+
     public int getCount() {
         return flashcardsNumber;
     }

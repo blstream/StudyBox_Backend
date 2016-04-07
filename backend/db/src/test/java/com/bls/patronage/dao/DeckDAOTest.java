@@ -2,11 +2,15 @@ package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.mapper.DeckMapper;
+import com.bls.patronage.db.mapper.FlashcardMapper;
 import com.bls.patronage.db.model.Deck;
-import org.testng.annotations.AfterMethod;
+import com.bls.patronage.db.model.Flashcard;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,11 +24,17 @@ public class DeckDAOTest extends DAOTest {
     private UUID defaultUserUUID;
 
     @Override
-    @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeTest
+    public void buildDatabase() {
+        super.buildDatabase();
         dao = dbi.onDemand(DeckDAO.class);
         defaultUserUUID = UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e");
+    }
+
+    @Override
+    @BeforeMethod
+    public void loadContent() throws Exception {
+        super.loadContent();
     }
 
     private List<Deck> getDecksFromDatabase() throws Exception {
@@ -32,7 +42,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     @Override
-    @AfterMethod
+    @AfterTest
     public void tearDown() throws Exception {
         super.tearDown();
     }
@@ -41,7 +51,7 @@ public class DeckDAOTest extends DAOTest {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
         List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
 
-        assertThat(dao.getAllDecks(defaultUserUUID)).isSubsetOf(decks);
+        assertThat(dao.getAllDecks()).isSubsetOf(decks);
     }
 
 
@@ -71,15 +81,12 @@ public class DeckDAOTest extends DAOTest {
 
     public void getDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(3);
-        assertThat(dao.getDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
+        assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
     }
 
     public void getRandomDeck() throws Exception {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
-        List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
-        decks.addAll(dao.getAllDecks(defaultUserUUID));
-
-        assertThat(decks).containsAll(dao.getRandomDecks(defaultUserUUID));
+        assertThat(decksFromDatabase).containsAll(dao.getRandomDecks(defaultUserUUID));
     }
 
     public void createDeck() throws Exception {
@@ -101,5 +108,13 @@ public class DeckDAOTest extends DAOTest {
 
         assertThat(getDecksFromDatabase()).doesNotContain(deck);
         assertThat(getDecksFromDatabase()).contains(updatedDeck);
+    }
+
+    public void getFlashcardsNumber() throws Exception {
+        final List<Flashcard> flashcards = getAllEntities(Flashcard.class, FlashcardMapper.class, "flashcards");
+        UUID deckId = flashcards.get(0).getDeckId();
+        List<Flashcard> flashcardsInOneDeck = flashcards.stream().filter(flashcard -> flashcard.getDeckId().equals(deckId)).collect(Collectors.toList());
+
+        assertThat(dao.getFlashcardsNumber(Collections.singletonList(deckId))).isEqualTo(Collections.singletonList(flashcardsInOneDeck.size()));
     }
 }

@@ -26,10 +26,14 @@ abstract public class DAOTest {
     protected DBI dbi;
     private Handle handle;
 
-    public void setUp() throws Exception {
+    public void buildDatabase() {
         Environment environment = new Environment("test-environment", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
         dbi = new DBIFactory().build(environment, getDataSourceFactory(), "test");
         handle = dbi.open();
+
+    }
+
+    public void loadContent() throws Exception {
         migrateDatabase();
     }
 
