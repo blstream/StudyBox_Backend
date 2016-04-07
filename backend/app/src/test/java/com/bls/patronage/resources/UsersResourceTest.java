@@ -35,6 +35,12 @@ public class UsersResourceTest {
     private String usersURI;
     private User user;
 
+    static private Response postUser(String uri, String email, String name, String password) {
+        return resources.client().target(uri)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(new UserRepresentation(email, name, password), MediaType.APPLICATION_JSON_TYPE));
+    }
+
     @Before
     public void setUp() {
         usersURI = UriBuilder.fromResource(UsersResource.class).build().toString();
@@ -63,9 +69,9 @@ public class UsersResourceTest {
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 
-    static private Response postUser(String uri, String email, String name, String password) {
-        return resources.client().target(uri)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(new UserRepresentation(email, name, password), MediaType.APPLICATION_JSON_TYPE));
+    @Test
+    public void createUserWithNoName() {
+        Response response = postUser(usersURI, "zxc", "", user.getPassword());
+        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 }
