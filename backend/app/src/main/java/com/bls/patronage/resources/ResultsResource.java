@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -32,23 +33,24 @@ public class ResultsResource {
     }
 
     @POST
-    public void createResult(@Valid ResultRepresentation result,
+    public Response createResult(@Valid ResultRepresentation result,
                              @Valid @PathParam("deckId") UUIDParam id) {
         Set<UUID> uuids = resultDAO.getAllResults(id.get()).stream().map(Result::getId).collect(Collectors.toSet());
-
+        Result createdResult;
         if (!uuids.contains(result.getFlashcardId())) {
-            resultDAO.createResult(new Result(result.getFlashcardId(), 0));
+            createdResult = new Result(result.getFlashcardId(), 0);
+            resultDAO.createResult(createdResult);
         } else {
             int correctAnswers = resultDAO.getResult(result.getFlashcardId()).getCorrectAnswers() + (result.isCorrectAnswer() ? 1 : 0);
-            Result createdResult = new Result(result.getFlashcardId(), correctAnswers);
+            createdResult = new Result(result.getFlashcardId(), correctAnswers);
             resultDAO.createResult(createdResult);
         }
+        return Response.ok(createdResult).status(Response.Status.CREATED).build();
     }
 
     @GET
     public List<Result> listResults(@Valid @PathParam("deckId") UUIDParam deckId) {
         List<UUID> ids = flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId.get());
-        List<Result> results = ids.stream().map(resultDAO::getResult).collect(Collectors.toList());
-        return results;
+        return ids.stream().map(resultDAO::getResult).collect(Collectors.toList());
     }
 }

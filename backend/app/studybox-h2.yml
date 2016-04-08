@@ -3,3 +3,5 @@ database:
   user: sa
   password: sa
   url: jdbc:h2:./target/studybox.db
+
+isAuthenticationEnabled: true

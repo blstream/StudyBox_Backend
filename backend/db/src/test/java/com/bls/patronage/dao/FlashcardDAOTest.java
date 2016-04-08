@@ -1,81 +1,86 @@
 package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.mapper.FlashcardMapper;
+import com.bls.patronage.db.model.Amount;
 import com.bls.patronage.db.model.Flashcard;
-import org.junit.Test;
-import org.skife.jdbi.v2.Handle;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Test
 public class FlashcardDAOTest extends DAOTest {
 
-    private Flashcard flashcardExample1;
-    private Flashcard flashcardExample2;
-    private UUID deckID;
     private FlashcardDAO dao;
 
     @Override
-    public void setUp() throws Exception {
-        deckID = UUID.randomUUID();
-        flashcardExample1 = new Flashcard(UUID.randomUUID(),"what are you?", "Just human", deckID);
-        flashcardExample2 = new Flashcard(UUID.randomUUID(),"who are you?", "Proud pole", deckID);
-
-        super.setUp();
-        dao = dbi.open(FlashcardDAO.class);
+    @BeforeTest
+    public void buildDatabase() {
+        super.buildDatabase();
+        dao = dbi.onDemand(FlashcardDAO.class);
     }
 
     @Override
-    protected void setUpDatabaseContent(Handle handle) {
-        handle.createCall("DROP TABLE flashcards IF EXISTS").invoke();
-        handle.createCall(
-                "CREATE TABLE flashcards (id uuid primary key, question varchar(50) not null, answer varchar(50) not null, deckID uuid)")
-                .invoke();
-        handle.createStatement("INSERT INTO flashcards VALUES (?, ?, ?, ?)")
-                .bind(0, flashcardExample1.getId())
-                .bind(1, flashcardExample1.getQuestion())
-                .bind(2, flashcardExample1.getAnswer())
-                .bind(3, flashcardExample1.getDeckID())
-                .execute();
-        handle.createStatement("INSERT INTO flashcards VALUES (?, ?, ?, ?)")
-                .bind(0, flashcardExample2.getId())
-                .bind(1, flashcardExample2.getQuestion())
-                .bind(2, flashcardExample2.getAnswer())
-                .bind(3, flashcardExample1.getDeckID())
-                .execute();
+    @BeforeMethod
+    public void loadContent() throws Exception {
+        super.loadContent();
     }
 
-    @Test
-    public void getAllFlashcards(){
-        final List<Flashcard> flashcards = dao.getAllFlashcards(deckID);
-        assertThat(flashcards).containsSequence(flashcardExample1, flashcardExample2);
+    private List<Flashcard> getFlashcardsFromDatabase() throws Exception {
+        return getAllEntities(Flashcard.class,  FlashcardMapper.class, "flashcards");
     }
 
-    @Test
-    public void getFlashcardById(){
-        final Flashcard flashcardById = dao.getFlashcardById(flashcardExample1.getId());
-        assertThat(flashcardById).isEqualTo(flashcardExample1);
+    @Override
+    @AfterTest
+    public void tearDown() throws Exception {
+        super.tearDown();
     }
 
-    @Test
+    public void getAllFlashcards() throws Exception {
+        List<Flashcard> flashcardList = getFlashcardsFromDatabase().subList(0, 2);
+        final List<Flashcard> flashcards = dao.getAllFlashcards(flashcardList.get(0).getDeckId());
+        assertThat(flashcards).containsAll(flashcardList);
+    }
+
+    public void getFlashcardById() throws Exception {
+        Flashcard flashcard = getFlashcardsFromDatabase().get(0);
+        final Flashcard flashcardById = dao.getFlashcardById(flashcard.getId());
+        assertThat(flashcardById).isEqualTo(flashcard);
+    }
+
     public void createFlashcard(){
-        final Flashcard flashcard = new Flashcard(UUID.randomUUID(),"Will you test me?", "Yes, I will", UUID.randomUUID());
+        final Flashcard flashcard = new Flashcard(UUID.randomUUID(), "foos", "bars", UUID.randomUUID());
         dao.createFlashcard(flashcard);
         assertThat(dao.getFlashcardById(flashcard.getId())).isEqualTo(flashcard);
     }
 
-    @Test
-    public void deleteFlashcard(){
-        dao.deleteFlashcard(flashcardExample2.getId());
-        assertThat(dao.getAllFlashcards(flashcardExample2.getDeckID())).doesNotContain(flashcardExample2);
+    public void deleteFlashcard() throws Exception {
+        Flashcard flashcard = getFlashcardsFromDatabase().get(0);
+        dao.deleteFlashcard(flashcard.getId());
+        assertThat(getFlashcardsFromDatabase()).doesNotContain(flashcard);
     }
 
-    @Test
-    public void updateFlashcard(){
-        final Flashcard flashcard = new Flashcard(flashcardExample1.getId(),"Am i modified?", "Surely yes", flashcardExample1.getDeckID());
-        dao.updateFlashcard(flashcard);
-        assertThat(dao.getFlashcardById(flashcardExample1.getId())).isEqualTo(flashcard);
+    public void updateFlashcard() throws Exception {
+        Flashcard flashcard = getFlashcardsFromDatabase().get(0);
+        Flashcard newFlascard = new Flashcard(flashcard.getId(), "foo", "baz", flashcard.getDeckId());
+        dao.updateFlashcard(newFlascard);
+        assertThat(getFlashcardsFromDatabase()).doesNotContain(flashcard);
+        assertThat(getFlashcardsFromDatabase()).contains(newFlascard);
+    }
+
+    public void getRandomFlashcards() throws Exception {
+        final List<Flashcard> flashcards = getFlashcardsFromDatabase();
+        for (Amount amount: Amount.values()) {
+            List<Flashcard> randomFlashcards = dao.getRandomFlashcards(amount.getValue(),
+                    flashcards.get(11).getDeckId());
+            assertThat(randomFlashcards).hasSize(amount.getValue());
+            assertThat(flashcards).containsAll(randomFlashcards);
+        }
     }
 }

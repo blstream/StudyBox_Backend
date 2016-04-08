@@ -22,13 +22,13 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="deckId" type="uuid">
-                <constraints nullable="false"/>
-            </column>
             <column name="question" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
             <column name="answer" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deckId" type="uuid">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -42,6 +42,87 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet id="3" author="lupi">
+        <createTable tableName="users">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="arka">
+        <createTable tableName="tips">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="essence" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="difficult" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flashcardId" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deckId" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="5" author="lupi">
+        <loadData tableName="flashcards" file="initialData/flashcards.csv">
+            <column name="id" type="STRING"/>
+            <column name="question" type="STRING"/>
+            <column name="answer" type="STRING"/>
+            <column name="deckId" type="STRING"/>
+        </loadData>
+        <loadData tableName="decks" file="initialData/decks.csv">
+            <column name="id" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="public" type="BOOLEAN"/>
+        </loadData>
+        <loadData tableName="results" file="initialData/results.csv">
+            <column name="flashcardId" type="STRING"/>
+            <column name="correctAnswers" type="NUMERIC"/>
+        </loadData>
+        <loadData tableName="users" file="initialData/users.csv">
+            <column name="id" type="STRING"/>
+            <column name="email" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="password" type="STRING"/>
+        </loadData>
+        <loadData tableName="tips" file="initialData/tips.csv">
+            <column name="id" type="STRING"/>
+            <column name="essence" type="STRING"/>
+            <column name="difficult" type="NUMERIC"/>
+            <column name="flashcardId" type="STRING"/>
+            <column name="deckId" type="STRING"/>
+        </loadData>
+    </changeSet>
+    <changeSet id="6" author="toja">
+        <createTable tableName="usersDecks">
+            <column name="deckId" type="uuid">
+                <constraints primaryKey="true" nullable="false" foreignKeyName="fkDeckId" references="decks(id)" deleteCascade="true"/>
+            </column>
+            <column name="userId" type="uuid">
+                <constraints primaryKey="true" nullable="false" foreignKeyName="fkUserId" references="users(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="7" author="lupi">
+        <loadData tableName="usersDecks" file="initialData/usersDecks.csv">
+            <column name="deckId" type="STRING"/>
+            <column name="userId" type="STRING"/>
+        </loadData>
     </changeSet>
 </databaseChangeLog>
 
