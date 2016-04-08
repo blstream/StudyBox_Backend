@@ -7,14 +7,14 @@ import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.exception.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
-import com.bls.patronage.resources.FlashcardResource;
-import com.bls.patronage.resources.FlashcardsResource;
-import com.bls.patronage.resources.UserResource;
-import com.bls.patronage.resources.UsersResource;
-import com.bls.patronage.resources.TipResource;
-import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
+import com.bls.patronage.resources.FlashcardResource;
+import com.bls.patronage.resources.FlashcardsResource;
+import com.bls.patronage.resources.TipResource;
+import com.bls.patronage.resources.TipsResource;
+import com.bls.patronage.resources.UserResource;
+import com.bls.patronage.resources.UsersResource;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -28,8 +28,6 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
-
-import static com.bls.patronage.StudyBoxConfiguration.isAuthenticationEnabled;
 
 public class StudyBox extends Application<StudyBoxConfiguration> {
 
@@ -79,7 +77,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
         final CachingAuthenticator cachingAuthenticator = new CachingAuthenticator(environment.metrics(), basicAuthenticator,
                 configuration.getAuthCacheBuilder());
-        if(isAuthenticationEnabled) {
+        if (configuration.getIsAuthenticationEnabled()) {
             environment.jersey().register(new AuthDynamicFeature(
                     new BasicCredentialAuthFilter.Builder<User>()
                             .setAuthenticator(cachingAuthenticator)
