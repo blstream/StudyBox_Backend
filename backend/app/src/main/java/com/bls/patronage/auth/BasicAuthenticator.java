@@ -33,7 +33,7 @@ public class BasicAuthenticator implements Authenticator<BasicCredentials, User>
         String email = basicCredentials.getUsername();
         String plaintextPassword = basicCredentials.getPassword();
 
-        final Optional<User> user = Optional.of(userDao.getUserByEmail(email));
+        final Optional<User> user = Optional.fromNullable(userDao.getUserByEmail(email));
         if (user.isPresent()) {
             final User existingUser = user.get();
             checkState(existingUser.getPassword() != null, "Cannot authenticate: user with id: %s (email: %s) without password",
