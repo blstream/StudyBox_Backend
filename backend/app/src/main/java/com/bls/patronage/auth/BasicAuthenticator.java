@@ -39,7 +39,7 @@ public class BasicAuthenticator implements Authenticator<BasicCredentials, User>
         if (email.equals(PreAuthenticationFilter.defultUserEmail))
             return Optional.of(new User(UUID.randomUUID(), email, "", Base64.encodeAsString(plaintextPassword)));
 
-        final Optional<User> user = Optional.fromNullable(userDao.getUserByEmail(email));
+        final Optional<User> user = Optional.of(userDao.getUserByEmail(email));
         if (user.isPresent()) {
             final User existingUser = user.get();
             checkState(existingUser.getPassword() != null, "Cannot authenticate: user with id: %s (email: %s) without password",

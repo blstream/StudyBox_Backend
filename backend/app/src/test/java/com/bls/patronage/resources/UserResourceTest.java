@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +57,7 @@ public class UserResourceTest extends BasicAuthenticationTest {
         final Response response = getResponseWithCredentials(loggingURI, encodedCredentials);
         final UserWithoutPassword receivedUser = response.readEntity(UserWithoutPassword.class);
 
-        verify(userDAO, times(2)).getUserByEmail(user.getEmail());
+        verify(userDAO).getUserByEmail(user.getEmail());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(receivedUser.getId()).isEqualTo(user.getId());
         assertThat(receivedUser.getName()).isEqualTo(user.getName());
