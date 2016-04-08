@@ -1,7 +1,9 @@
 package com.bls.patronage.resources;
 
 
+import com.bls.patronage.StudyBoxConfiguration;
 import com.bls.patronage.auth.BasicAuthenticator;
+import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.exception.DataAccessExceptionMapper;
@@ -15,6 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,8 +26,10 @@ import java.util.Base64;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class BasicAuthenticationTest {
     protected static final UserDAO userDAO = mock(UserDAO.class);
@@ -39,6 +44,7 @@ public class BasicAuthenticationTest {
                     .buildAuthFilter()))
             .addProvider(RolesAllowedDynamicFeature.class)
             .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
+            .addProvider(PreAuthenticationFilter.class)
             .addResource(new UserResource(userDAO))
             .addResource(new DecksResource(deckDao))
             .addResource(new DeckResource(deckDao))
@@ -75,6 +81,9 @@ public class BasicAuthenticationTest {
 
     @Test
     public void logInAsAnonymousUser() {
+        User defaultUser = new User(UUID.randomUUID(), "anon", "", BCrypt.hashpw("password", BCrypt.gensalt(StudyBoxConfiguration.PW_HASH_SECURITY_LEVEL)));
+        when(userDAO.getUserByEmail(any(String.class))).thenReturn(defaultUser);
+
         String testURI = UriBuilder
                 .fromResource(UserResource.class)
                 .build().toString() + UriBuilder.fromMethod(UserResource.class, "logInUser").build().toString();
@@ -82,6 +91,6 @@ public class BasicAuthenticationTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertThat(response.getStatus()).isEqualTo(Response.Status.OK);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 }
