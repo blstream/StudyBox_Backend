@@ -5,9 +5,3 @@ database:
   url: jdbc:h2:./target/studybox.db
 
 isAuthenticationEnabled: true
-
-defaultUser:
-  id: 11111111-0000-1111-0000-111111111111
-  email: anon@backend.com
-  name: anon
-  password: secret

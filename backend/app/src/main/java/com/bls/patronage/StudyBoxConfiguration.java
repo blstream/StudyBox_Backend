@@ -1,6 +1,5 @@
 package com.bls.patronage;
 
-import com.bls.patronage.db.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.cache.CacheBuilder;
 import io.dropwizard.Configuration;
@@ -17,9 +16,6 @@ public class StudyBoxConfiguration extends Configuration {
     @Valid
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
-    @Valid
-    @NotNull
-    private User defaultUser;
 
     public DataSourceFactory getDatabase() {
         return database;
@@ -39,13 +35,4 @@ public class StudyBoxConfiguration extends Configuration {
         return CacheBuilder.from(DEFAULT_AUTH_CACHE_SPEC);
     }
 
-    @JsonProperty
-    public User getDefaultUser() {
-        return this.defaultUser;
-    }
-
-    @JsonProperty
-    public void setDefaultUser(User defaultUser) {
-        this.defaultUser = defaultUser;
-    }
 }
