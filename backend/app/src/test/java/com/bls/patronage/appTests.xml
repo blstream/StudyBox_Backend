@@ -4,6 +4,7 @@
 <suite name="Application Tests">
     <test name="Resource Tests" junit="true">
         <classes>
+            <class name="com.bls.patronage.resources.BasicAuthenticationTest"/>
             <class name="com.bls.patronage.resources.DeckResourceTest"/>
             <class name="com.bls.patronage.resources.DecksResourceTest"/>
             <class name="com.bls.patronage.resources.FlashcardResourceTest"/>
