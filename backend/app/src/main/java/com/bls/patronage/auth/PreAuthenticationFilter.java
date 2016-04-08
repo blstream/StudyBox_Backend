@@ -11,7 +11,8 @@ import java.io.IOException;
 
 @Priority(Priorities.AUTHENTICATION - 100)
 public class PreAuthenticationFilter implements ContainerRequestFilter {
-
+    public static String defultUserEmail = "anon";
+    public static String defultUserPassword = "password";
     @Override
     public void filter(ContainerRequestContext request) throws IOException {
         boolean hasValidHeader = false;
@@ -22,9 +23,7 @@ public class PreAuthenticationFilter implements ContainerRequestFilter {
             }
         }
         if (!hasValidHeader) {
-            final String defaultUser = "anon2";
-            final String defaultPassword = "password";
-            final String base64 = Base64.encodeAsString(defaultUser + ":" + defaultPassword);
+            final String base64 = Base64.encodeAsString(defultUserEmail + ":" + defultUserPassword);
             request.getHeaders().putSingle(HttpHeaders.AUTHORIZATION, "Basic " + base64);
         }
     }

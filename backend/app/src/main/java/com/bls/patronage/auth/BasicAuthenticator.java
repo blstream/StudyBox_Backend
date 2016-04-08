@@ -6,7 +6,10 @@ import com.google.common.base.Optional;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
+import org.glassfish.jersey.internal.util.Base64;
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.UUID;
 
 import static com.bls.patronage.StudyBoxConfiguration.PW_HASH_SECURITY_LEVEL;
 import static com.google.common.base.Preconditions.checkState;
@@ -32,6 +35,9 @@ public class BasicAuthenticator implements Authenticator<BasicCredentials, User>
 
         String email = basicCredentials.getUsername();
         String plaintextPassword = basicCredentials.getPassword();
+
+        if (email.equals(PreAuthenticationFilter.defultUserEmail))
+            return Optional.of(new User(UUID.randomUUID(), email, "", Base64.encodeAsString(plaintextPassword)));
 
         final Optional<User> user = Optional.fromNullable(userDao.getUserByEmail(email));
         if (user.isPresent()) {
