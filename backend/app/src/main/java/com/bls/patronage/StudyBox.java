@@ -1,6 +1,7 @@
 package com.bls.patronage;
 
 import com.bls.patronage.auth.BasicAuthenticator;
+import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.TipDAO;
@@ -85,5 +86,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
 
             environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         }
+
+        environment.jersey().register(PreAuthenticationFilter.class);
     }
 }
