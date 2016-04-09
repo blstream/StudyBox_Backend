@@ -24,11 +24,18 @@ abstract public class UserDAO {
 
     @GetGeneratedKeys
     @SqlUpdate("insert into users values (:id, :email, :name, :password)")
-    public abstract UUID createUser(@BindBean User user);
+    abstract UUID create(@BindBean User user);
 
     public User getUserById(UUID id) {
         Optional<User> user = Optional.ofNullable(get(id));
         return user.orElseThrow(() -> new DataAccessException("There is no user with specified id"));
+    }
+
+    public UUID createUser(User user) {
+        Optional<User> userOptional = Optional.ofNullable(getByEmail(user.getEmail()));
+        if (userOptional.isPresent()) throw new DataAccessException("There is already user with specified email");
+        return create(user);
+
     }
 
     public User getUserByEmail(String email) {
