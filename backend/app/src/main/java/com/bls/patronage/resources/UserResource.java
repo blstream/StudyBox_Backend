@@ -6,7 +6,6 @@ import com.bls.patronage.db.model.UserWithoutPassword;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
-import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,7 +22,7 @@ public class UserResource {
         this.userDAO = userDAO;
     }
 
-    @Path("/{userId}")
+    @Path("/{userId: [0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}}")
     @GET
     public UserWithoutPassword getUser(
             @Valid @PathParam("userId") UUIDParam userId) {
@@ -33,8 +32,10 @@ public class UserResource {
 
     @Path("/me")
     @GET
-    public UserWithoutPassword logInUser(@Auth User userCredentials) {
-        final User user = userDAO.getUserByEmail(userCredentials.getEmail());
-        return new UserWithoutPassword(user.getId(), user.getEmail(), user.getName());
+    public UserWithoutPassword logInUser(@Auth User user) {
+        return new UserWithoutPassword(
+                user.getId(),
+                user.getEmail(),
+                user.getName());
     }
 }

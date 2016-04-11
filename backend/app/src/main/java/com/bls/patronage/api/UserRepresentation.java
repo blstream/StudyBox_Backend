@@ -9,7 +9,6 @@ public class UserRepresentation {
     @Email
     @NotEmpty
     private final String email;
-    @NotEmpty
     private final String name;
     @NotEmpty
     @Length(min = 8)

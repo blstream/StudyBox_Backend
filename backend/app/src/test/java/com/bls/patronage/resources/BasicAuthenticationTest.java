@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 
 import com.bls.patronage.auth.BasicAuthenticator;
+import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.exception.DataAccessExceptionMapper;
@@ -14,12 +15,15 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.Base64;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 
@@ -36,6 +40,7 @@ public class BasicAuthenticationTest {
                     .buildAuthFilter()))
             .addProvider(RolesAllowedDynamicFeature.class)
             .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
+            .addProvider(PreAuthenticationFilter.class)
             .addResource(new UserResource(userDAO))
             .addResource(new DecksResource(deckDao))
             .addResource(new DeckResource(deckDao))
@@ -46,6 +51,13 @@ public class BasicAuthenticationTest {
     protected String badPasswordCredentials;
     protected String badEmailCredentials;
     protected String fakeEmail;
+
+    static protected Response getResponseWithCredentials(String uri, String encodedUserInfo) {
+        return authResources.client().target(uri)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Authorization", "Basic " + encodedUserInfo)
+                .get();
+    }
 
     @Before
     public void setUp() {
@@ -63,10 +75,15 @@ public class BasicAuthenticationTest {
         reset(deckDao);
     }
 
-    static protected Response getResponseWithCredentials(String uri, String encodedUserInfo) {
-        return authResources.client().target(uri)
+    @Test
+    public void logInAsAnonymousUser() {
+        String testURI = UriBuilder
+                .fromResource(UserResource.class)
+                .build().toString() + UriBuilder.fromMethod(UserResource.class, "logInUser").build().toString();
+        Response response = authResources.client().target(testURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .header("Authorization", "Basic " + encodedUserInfo)
                 .get();
+
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 }
