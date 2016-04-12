@@ -110,7 +110,7 @@ public class DecksResource {
 
         public Collection<Deck> build() {
             //pre-building deckCollection tasks
-            if (filteredName.isPresent()) {
+            if(filteredName.isPresent()) {
                 deckCollection = decksDAO.getDecksByName(filteredName.get());
                 deckCollection.addAll(
                         includeOwn ? decksDAO.getUserDecksByName(filteredName.get(), userId) : Collections.emptyList()

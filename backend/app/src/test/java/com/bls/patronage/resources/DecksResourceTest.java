@@ -175,7 +175,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 .readEntity(new GenericType<List<DeckWithFlashcardsNumber>>() {
                 });
 
-
         List<Deck> mappedDecks = decksInResponse.stream().collect(Collectors.toList());
 
         verify(deckDao).getAllUserDecks(user.getId());

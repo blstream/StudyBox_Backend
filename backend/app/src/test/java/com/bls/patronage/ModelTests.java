@@ -57,7 +57,6 @@ public class ModelTests {
 
         assertThat(deck.getName()).isNull();
         assertThat(deck.getId()).isNull();
-
     }
 
     @Test
