@@ -39,8 +39,9 @@ public class DecksResource {
 
     @POST
     public Response createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
         User userPrincipal = (User) context.getUserPrincipal();
+        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic(), userPrincipal.getEmail());
+
         decksDAO.createDeck(createdDeck, userPrincipal.getId());
         return Response.ok(createdDeck).status(Response.Status.CREATED).build();
     }
@@ -82,6 +83,7 @@ public class DecksResource {
 
         private DeckCollectionBuilder() {
         }
+
         public DeckCollectionBuilder(UUID userId) {
             this.userId = userId;
         }
@@ -108,7 +110,7 @@ public class DecksResource {
 
         public Collection<Deck> build() {
             //pre-building deckCollection tasks
-            if(filteredName.isPresent()) {
+            if (filteredName.isPresent()) {
                 deckCollection = decksDAO.getDecksByName(filteredName.get());
                 deckCollection.addAll(
                         includeOwn ? decksDAO.getUserDecksByName(filteredName.get(), userId) : Collections.emptyList()
@@ -121,7 +123,7 @@ public class DecksResource {
 
             //end of building phase. If none of the above worked, collection is created now
             boolean wasPrebuild = Optional.ofNullable(deckCollection).isPresent();
-            deckCollection = wasPrebuild ?  deckCollection : decksDAO.getAllDecks();
+            deckCollection = wasPrebuild ? deckCollection : decksDAO.getAllDecks();
 
             //now the other tasks are run;
             if (includeOwn) {

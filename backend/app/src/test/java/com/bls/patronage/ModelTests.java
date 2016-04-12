@@ -17,6 +17,7 @@ public class ModelTests {
     private String testQuestion;
     private String testAnswer;
     private String testName;
+    private String testEmail;
 
     @Before
     public void setup() {
@@ -25,6 +26,7 @@ public class ModelTests {
         testQuestion = "Are you ok?";
         testAnswer = "Yes, thank you.";
         testName = "Math";
+        testEmail = "sample@mail.com";
     }
 
     @Test
@@ -55,6 +57,7 @@ public class ModelTests {
 
         assertThat(deck.getName()).isNull();
         assertThat(deck.getId()).isNull();
+
     }
 
     @Test
@@ -75,7 +78,7 @@ public class ModelTests {
 
     @Test
     public void creatingDeckWithBothArguments() {
-        Deck deck = new Deck(UUID.fromString(testUUID), testName);
+        Deck deck = new Deck(UUID.fromString(testUUID), testName, testEmail);
 
         assertThat(deck.getName()).isEqualTo(testName);
         assertThat(deck.getId()).isEqualTo(UUID.fromString(testUUID));
@@ -83,7 +86,7 @@ public class ModelTests {
 
     @Test
     public void creatingDeckWithBothArgumentsString() {
-        Deck deck = new Deck(testUUID, testName);
+        Deck deck = new Deck(testUUID, testName, testEmail);
 
         assertThat(deck.getName()).isEqualTo(testName);
         assertThat(deck.getId()).isEqualTo(UUID.fromString(testUUID));

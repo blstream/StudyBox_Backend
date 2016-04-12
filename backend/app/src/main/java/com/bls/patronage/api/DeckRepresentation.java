@@ -1,8 +1,7 @@
 package com.bls.patronage.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.*;
 
 public class DeckRepresentation {
 
