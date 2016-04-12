@@ -39,7 +39,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         super.setUp();
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
-        deck = new Deck(deckId, "math");
+        deck = new Deck(deckId, "math", "sample@mail.com");
         deckRepresentation = new DeckRepresentation("biology", false);
         deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
