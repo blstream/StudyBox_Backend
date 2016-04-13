@@ -14,17 +14,6 @@ public class Flashcard extends IdentifiableEntity {
         this.deckId = null;
     }
 
-    public Flashcard(String question, String answer, UUID deckId) {
-        this.question = question;
-        this.answer = answer;
-        this.deckId = deckId;
-    }
-
-    public Flashcard(String question, String answer, String deckId) {
-        this.question = question;
-        this.answer = answer;
-        this.deckId = UUID.fromString(deckId);
-    }
 
     public Flashcard(String id, String question, String answer, UUID deckId) {
         super(id);
@@ -51,34 +40,6 @@ public class Flashcard extends IdentifiableEntity {
         super(id);
         this.question = question;
         this.answer = answer;
-        this.deckId = UUID.fromString(deckId);
-    }
-
-    public Flashcard(UUID id, UUID deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
-        this.deckId = deckId;
-    }
-
-    public Flashcard(UUID id, String deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
-        this.deckId = UUID.fromString(deckId);
-    }
-
-    public Flashcard(String id, UUID deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
-        this.deckId = deckId;
-    }
-
-    public Flashcard(String id, String deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
         this.deckId = UUID.fromString(deckId);
     }
 
