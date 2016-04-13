@@ -6,80 +6,46 @@ public class Flashcard extends IdentifiableEntity {
     private final String question;
     private final String answer;
     private final UUID deckId;
+    private final Boolean isHidden;
 
     public Flashcard() {
         super();
         this.question = null;
         this.answer = null;
         this.deckId = null;
+        this.isHidden = null;
     }
 
-    public Flashcard(String question, String answer, UUID deckId) {
-        this.question = question;
-        this.answer = answer;
-        this.deckId = deckId;
-    }
-
-    public Flashcard(String question, String answer, String deckId) {
-        this.question = question;
-        this.answer = answer;
-        this.deckId = UUID.fromString(deckId);
-    }
-
-    public Flashcard(String id, String question, String answer, UUID deckId) {
+    public Flashcard(String id, String question, String answer, UUID deckId, Boolean isHidden) {
         super(id);
         this.question = question;
         this.answer = answer;
         this.deckId = deckId;
+        this.isHidden = isHidden;
     }
 
-    public Flashcard(String id, String question, String answer, String deckId) {
+    public Flashcard(String id, String question, String answer, String deckId, Boolean isHidden) {
         super(id);
         this.question = question;
         this.answer = answer;
         this.deckId = UUID.fromString(deckId);
+        this.isHidden = isHidden;
     }
 
-    public Flashcard(UUID id, String question, String answer, UUID deckId) {
+    public Flashcard(UUID id, String question, String answer, UUID deckId, Boolean isHidden) {
         super(id);
         this.question = question;
         this.answer = answer;
         this.deckId = deckId;
+        this.isHidden = isHidden;
     }
 
-    public Flashcard(UUID id, String question, String answer, String deckId) {
+    public Flashcard(UUID id, String question, String answer, String deckId, Boolean isHidden) {
         super(id);
         this.question = question;
         this.answer = answer;
         this.deckId = UUID.fromString(deckId);
-    }
-
-    public Flashcard(UUID id, UUID deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
-        this.deckId = deckId;
-    }
-
-    public Flashcard(UUID id, String deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
-        this.deckId = UUID.fromString(deckId);
-    }
-
-    public Flashcard(String id, UUID deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
-        this.deckId = deckId;
-    }
-
-    public Flashcard(String id, String deckId) {
-        super(id);
-        this.question = null;
-        this.answer = null;
-        this.deckId = UUID.fromString(deckId);
+        this.isHidden = isHidden;
     }
 
     public String getQuestion() {
@@ -92,6 +58,10 @@ public class Flashcard extends IdentifiableEntity {
 
     public UUID getDeckId() {
         return deckId;
+    }
+
+    public Boolean getIsHidden() {
+        return isHidden;
     }
 
     @Override
@@ -123,6 +93,7 @@ public class Flashcard extends IdentifiableEntity {
                 "question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 ", deckId=" + deckId +
+                ", isHidden=" + isHidden +
                 '}';
     }
 }

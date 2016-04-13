@@ -41,7 +41,8 @@ public class FlashcardResource {
             @Valid @PathParam("flashcardId") UUID flashcardId,
             @Valid FlashcardRepresentation flashcard,
             @Valid @PathParam("deckId") UUIDParam deckId) {
-        Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(), deckId.get());
+        Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(),
+                deckId.get(), flashcard.getIsHidden());
         flashcardDAO.updateFlashcard(updatedFlashcard);
         return updatedFlashcard;
     }

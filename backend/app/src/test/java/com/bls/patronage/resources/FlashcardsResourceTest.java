@@ -48,8 +48,9 @@ public class FlashcardsResourceTest {
 
     @Before
     public void setUp() {
-        flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes", "8ad4b503-5bfc-4d8a-a761-0908374892b1");
-        flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok");
+        flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes",
+                "8ad4b503-5bfc-4d8a-a761-0908374892b1", false);
+        flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok", false);
         flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckId()).toString();
         randomFlashcardsURIs = new ArrayList<>();
         for (Amount amount : Amount.values()) {
@@ -74,13 +75,14 @@ public class FlashcardsResourceTest {
         assertThat(flashcardCaptor.getValue().getId()).isNotNull();
         assertThat(flashcardCaptor.getValue().getQuestion()).isEqualTo(flashcardRepresentation.getQuestion());
         assertThat(flashcardCaptor.getValue().getAnswer()).isEqualTo(flashcardRepresentation.getAnswer());
+        assertThat(flashcardCaptor.getValue().getIsHidden()).isEqualTo(flashcardRepresentation.getIsHidden());
     }
 
     @Test
     public void createFlashcardWithoutQuestionAndAnswer() {
         final Response response = resources.client().target(flashcardsURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(new FlashcardRepresentation("", ""), MediaType.APPLICATION_JSON_TYPE));
+                .post(Entity.entity(new FlashcardRepresentation("", "", false), MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatus()).isEqualTo(422);
     }

@@ -31,6 +31,9 @@
             <column name="deckId" type="uuid">
                 <constraints nullable="false"/>
             </column>
+            <column name="isHidden" type="boolean">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="2" author="lupi">
@@ -84,6 +87,7 @@
             <column name="question" type="STRING"/>
             <column name="answer" type="STRING"/>
             <column name="deckId" type="STRING"/>
+            <column name="isHidden" type="BOOLEAN"/>
         </loadData>
         <loadData tableName="decks" file="initialData/decks.csv">
             <column name="id" type="STRING"/>

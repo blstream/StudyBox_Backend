@@ -20,7 +20,11 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlashcardResourceTest {
@@ -38,9 +42,11 @@ public class FlashcardResourceTest {
 
     @Before
     public void setUp() {
-        flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes", "8ad4b503-5bfc-4d8a-a761-0908374892b1");
-        flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok");
-        flashcardURI = UriBuilder.fromResource(FlashcardResource.class).build(flashcard.getDeckId(), flashcard.getId()).toString();
+        flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes",
+                "8ad4b503-5bfc-4d8a-a761-0908374892b1", false);
+        flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok", true);
+        flashcardURI = UriBuilder.fromResource(FlashcardResource.class).build(flashcard.getDeckId(),
+                flashcard.getId()).toString();
     }
 
     @After
