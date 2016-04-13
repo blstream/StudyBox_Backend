@@ -33,7 +33,8 @@ public class FlashcardsResource {
     @POST
     public Response createFlashcard(@Valid FlashcardRepresentation flashcard,
                                     @Valid @PathParam("deckId") UUIDParam id) {
-        Flashcard createdFlashcard = new Flashcard(UUID.randomUUID(), flashcard.getQuestion(), flashcard.getAnswer(), id.get());
+        Flashcard createdFlashcard = new Flashcard(UUID.randomUUID(), flashcard.getQuestion(), flashcard.getAnswer(),
+                id.get(), flashcard.getIsHidden());
         flashcardDAO.createFlashcard(createdFlashcard);
 
         return Response.ok(createdFlashcard).status(Response.Status.CREATED).build();
