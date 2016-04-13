@@ -1,4 +1,5 @@
 {
   "question": "Are you ok?",
-  "answer": "Yes, thank you."
+  "answer": "Yes, thank you.",
+  "isHidden": false
 }

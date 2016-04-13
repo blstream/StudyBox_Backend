@@ -1,6 +1,5 @@
 package com.bls.patronage.api;
 
-import com.bls.patronage.api.FlashcardRepresentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
 import org.junit.Before;
@@ -23,7 +22,8 @@ public class FlashcardRepresentationTests {
 
     @Test
     public void FlashcardToJSON() throws Exception {
-        final FlashcardRepresentation flashcardRepresentation = new FlashcardRepresentation(testQuestion, testAnswer);
+        final FlashcardRepresentation flashcardRepresentation = new FlashcardRepresentation(testQuestion,
+                testAnswer, false);
 
         final String expected = MAPPER.writeValueAsString(
                 MAPPER.readValue(fixture("fixtures/flashcard.json"), FlashcardRepresentation.class));
@@ -33,7 +33,8 @@ public class FlashcardRepresentationTests {
 
     @Test
     public void FlashcardFromJSON() throws Exception {
-        final FlashcardRepresentation flashcardRepresentation = new FlashcardRepresentation(testQuestion, testAnswer);
+        final FlashcardRepresentation flashcardRepresentation = new FlashcardRepresentation(testQuestion,
+                testAnswer, false);
 
         assertThat(MAPPER.readValue(fixture("fixtures/flashcard.json"), FlashcardRepresentation.class))
                 .isEqualToComparingFieldByField(flashcardRepresentation);
