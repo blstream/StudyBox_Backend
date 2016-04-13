@@ -93,6 +93,7 @@ public class Flashcard extends IdentifiableEntity {
                 "question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 ", deckId=" + deckId +
+                ", isHidden=" + isHidden +
                 '}';
     }
 }
