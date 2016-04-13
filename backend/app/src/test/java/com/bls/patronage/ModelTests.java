@@ -17,6 +17,7 @@ public class ModelTests {
     private String testQuestion;
     private String testAnswer;
     private String testName;
+    private Boolean isHidden;
 
     @Before
     public void setup() {
@@ -25,6 +26,7 @@ public class ModelTests {
         testQuestion = "Are you ok?";
         testAnswer = "Yes, thank you.";
         testName = "Math";
+        isHidden = false;
     }
 
     @Test
@@ -91,7 +93,7 @@ public class ModelTests {
 
     @Test
     public void creatingFlashcardWithAllArgumentsString() {
-        Flashcard flashcard = new Flashcard(testUUID, testQuestion, testAnswer, testDeckUUID);
+        Flashcard flashcard = new Flashcard(testUUID, testQuestion, testAnswer, testDeckUUID, isHidden);
 
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
@@ -101,7 +103,8 @@ public class ModelTests {
 
     @Test
     public void creatingFlashcardWithAllArguments() {
-        Flashcard flashcard = new Flashcard(UUID.fromString(testUUID), testQuestion, testAnswer, testDeckUUID);
+        Flashcard flashcard = new Flashcard(UUID.fromString(testUUID), testQuestion, testAnswer,
+                testDeckUUID, isHidden);
 
         assertThat(flashcard.getAnswer()).isEqualTo(testAnswer);
         assertThat(flashcard.getQuestion()).isEqualTo(testQuestion);
