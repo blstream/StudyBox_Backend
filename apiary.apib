@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 14/04/2016 toja
+ - added parameter to show flashcards visibility
 ## 06/04/2016 toja
  - updated description of decks resources
  - fixes in response codes
@@ -425,6 +427,7 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 ### FlashcardWithoutId (object)
 + question: `Sample question` (string, required) - question attribute for Flashcard
 + answer: `Sample answer` (string, required) - answer attribute for Flashcard
++ isHidden: `false` (boolean, required) - visibility of Flashcard
 
 ### Flashcard (FlashcardWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
@@ -472,16 +475,19 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + id: `00e60c87-1fac-46dc-a7ee-1dd1f3996ccc` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `First question` (string) - question attribute for Flashcard
 + answer: `First answer` (string) - answer attribute for Flashcard
++ isHidden: `false` (boolean, required) - visibility of Flashcard
 
 ### Flashcard1 (object)
 + id: `2c8815e6-4e16-41ce-95bf-d0039c35af2d` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `Second question` (string) - question attribute for Flashcard
 + answer: `Second answer` (string) - answer attribute for Flashcard
++ isHidden: `true` (boolean, required) - visibility of Flashcard
 
 ### Flashcard2 (object)
 + id: `369f0665-c895-41bb-bede-62b443519964` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `Third question` (string) - question attribute for Flashcard
 + answer: `Third answer` (string) - answer attribute for Flashcard
++ isHidden: `false` (boolean, required) - visibility of Flashcard
 
 ### Tip0 (object)
 + id: `51155739-1028-4479-a425-9ebaa501d9fe` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
