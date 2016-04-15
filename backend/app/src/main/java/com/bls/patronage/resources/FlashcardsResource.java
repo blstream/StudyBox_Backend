@@ -3,7 +3,6 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Amount;
-import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
