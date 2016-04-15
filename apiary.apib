@@ -43,7 +43,17 @@ Study Box REST API backend documentation and mock.
 
 Response with HTTP code different then **2xx** family should be treated as a failure response. 
 By default API return response with HTTP code **4xx** family.
-Error response message is empty, with just http code included.
+Any response with HTTP code **500** should be reported ASAP to BE team
+
+### Example HTTP 400 Bad request response:
+```
+{
+    "errors": [
+            "The name of entity may not be empty",
+            "The email field is required"
+            ]
+}
+```
 
 # Anonymous user endpoints availability
 
