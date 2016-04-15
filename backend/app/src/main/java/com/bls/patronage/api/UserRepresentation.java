@@ -36,7 +36,7 @@ public class UserRepresentation implements DbModelRepresentation<User> {
 
     @Override
     public User buildDbModel() {
-        return null;
+        return new User(id, email, name, password);
     }
 
     public String getEmail() {
