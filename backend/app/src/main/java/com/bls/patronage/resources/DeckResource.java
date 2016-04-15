@@ -3,8 +3,8 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
-import io.dropwizard.jersey.params.BooleanParam;
 import io.dropwizard.auth.Auth;
+import io.dropwizard.jersey.params.BooleanParam;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
@@ -52,7 +52,7 @@ public class DeckResource {
 
         Deck deckToUpdate = decksDAO.getDeckById(deckId.get());
         deckToUpdate.setName(deck.getName());
-        deckToUpdate.setIsPublic(deck.getIsPublic());
+        deckToUpdate.setIsPublic(deck.isPublicVisible());
         decksDAO.update(deckToUpdate);
         return deckToUpdate;
     }
