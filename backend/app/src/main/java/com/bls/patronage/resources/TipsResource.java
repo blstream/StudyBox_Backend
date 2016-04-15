@@ -37,7 +37,7 @@ public class TipsResource {
                         .setId(UUID.randomUUID())
                         .setFlashcardId(flashcardId.get())
                         .setDeckId(deckId.get())
-                        .buildDbModel()
+                        .map()
         );
 
 

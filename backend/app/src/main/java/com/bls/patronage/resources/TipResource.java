@@ -44,7 +44,7 @@ public class TipResource {
                 tip.setId(tipId.get())
                         .setFlashcardId(flashcardId.get())
                         .setDeckId(deckId.get())
-                        .buildDbModel()
+                        .map()
         );
 
         return tip;

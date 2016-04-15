@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ResultRepresentation implements DbModelRepresentation<Result> {
+public class ResultRepresentation implements DbMappable<Result> {
     @NotNull
     private UUID flashcardId;
     @NotNull
@@ -31,7 +31,7 @@ public class ResultRepresentation implements DbModelRepresentation<Result> {
     }
 
     @Override
-    public Result buildDbModel() {
+    public Result map() {
         return new Result(flashcardId, correctAnswers);
     }
 

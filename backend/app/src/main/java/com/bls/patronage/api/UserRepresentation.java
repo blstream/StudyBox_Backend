@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.UUID;
 
-public class UserRepresentation implements DbModelRepresentation<User> {
+public class UserRepresentation implements DbMappable<User> {
 
     @Email
     @NotEmpty
@@ -35,7 +35,7 @@ public class UserRepresentation implements DbModelRepresentation<User> {
     }
 
     @Override
-    public User buildDbModel() {
+    public User map() {
         return new User(id, email, name, password);
     }
 

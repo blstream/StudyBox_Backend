@@ -54,7 +54,7 @@ public class DeckResource {
             @Valid DeckRepresentation deck) {
 
         decksDAO.getDeckById(deckId.get());
-        decksDAO.update(deck.setId(deckId.get()).buildDbModel());
+        decksDAO.update(deck.setId(deckId.get()).map());
         return deck;
     }
 
@@ -68,6 +68,6 @@ public class DeckResource {
                 access.get()
         );
 
-        decksDAO.update(deck.buildDbModel());
+        decksDAO.update(deck.map());
     }
 }

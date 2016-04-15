@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-public class TipRepresentation implements DbModelRepresentation<Tip> {
+public class TipRepresentation implements DbMappable<Tip> {
 
     @NotEmpty
     @Length(max=1000)
@@ -38,7 +38,7 @@ public class TipRepresentation implements DbModelRepresentation<Tip> {
     }
 
     @Override
-    public Tip buildDbModel() {
+    public Tip map() {
         return new Tip(id, essence, difficult, flashcardId, deckId);
     }
 

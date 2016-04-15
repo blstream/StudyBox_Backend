@@ -47,7 +47,7 @@ public class FlashcardResource {
 
 
         flashcardDAO.getFlashcardById(flashcardId.get());
-        flashcardDAO.updateFlashcard(flashcard.setId(flashcardId.get()).setDeckId(deckId.get()).buildDbModel());
+        flashcardDAO.updateFlashcard(flashcard.setId(flashcardId.get()).setDeckId(deckId.get()).map());
 
 
         return flashcard;

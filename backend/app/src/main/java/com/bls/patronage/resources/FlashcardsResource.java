@@ -33,7 +33,7 @@ public class FlashcardsResource {
     @POST
     public Response createFlashcard(@Valid FlashcardRepresentation flashcard,
                                     @Valid @PathParam("deckId") UUIDParam id) {
-        flashcardDAO.createFlashcard(flashcard.setId(UUID.randomUUID()).setDeckId(id.get()).buildDbModel());
+        flashcardDAO.createFlashcard(flashcard.setId(UUID.randomUUID()).setDeckId(id.get()).map());
 
         return Response.ok(flashcard).status(Response.Status.CREATED).build();
     }

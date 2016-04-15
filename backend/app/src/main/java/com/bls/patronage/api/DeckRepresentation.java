@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
-public class DeckRepresentation implements DbModelRepresentation<Deck> {
+public class DeckRepresentation implements DbMappable<Deck> {
     @NotEmpty
     @Length(min = 1, max = 50)
     final private String name;
@@ -35,7 +35,7 @@ public class DeckRepresentation implements DbModelRepresentation<Deck> {
         this.publicVisible = deck.getIsPublic();
     }
 
-    public Deck buildDbModel() {
+    public Deck map() {
         return new Deck(id, name, publicVisible);
     }
 

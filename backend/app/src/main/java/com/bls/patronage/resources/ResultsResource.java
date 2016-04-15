@@ -43,7 +43,7 @@ public class ResultsResource {
                     .setCorrectAnswers(result.isCorrectAnswer() ? 1 : 0);
         }
 
-        resultDAO.updateResult(result.buildDbModel());
+        resultDAO.updateResult(result.map());
 
 
         return Response.ok(result).status(Response.Status.CREATED).build();

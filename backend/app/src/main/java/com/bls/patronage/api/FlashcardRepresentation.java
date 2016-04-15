@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-public class FlashcardRepresentation implements DbModelRepresentation<Flashcard> {
+public class FlashcardRepresentation implements DbMappable<Flashcard> {
     @NotEmpty
     @Length(max = 1000)
     private final String question;
@@ -38,7 +38,7 @@ public class FlashcardRepresentation implements DbModelRepresentation<Flashcard>
     }
 
     @Override
-    public Flashcard buildDbModel() {
+    public Flashcard map() {
         return new Flashcard(id, question, answer, deckId, isHidden);
     }
 

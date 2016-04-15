@@ -50,7 +50,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
 
-        when(deckDao.getDeckById(deckId)).thenReturn(deck.buildDbModel());
+        when(deckDao.getDeckById(deckId)).thenReturn(deck.map());
         when(deckDao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
     }
@@ -96,7 +96,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = getPutResponse(deckURI, deck, encodedCredentials);
 
         final DeckRepresentation updatedDeck = response.readEntity(DeckRepresentation.class);
-        verify(deckDao).update(updatedDeck.buildDbModel());
+        verify(deckDao).update(updatedDeck.map());
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(updatedDeck.getId()).isEqualTo(deckId);
         assertThat(updatedDeck.getName()).isEqualTo(deck.getName());

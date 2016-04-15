@@ -30,8 +30,8 @@ public class UsersResource {
                 user
                         .setId(UUID.randomUUID())
                         .setPassword(generateSafeHash(user.getPassword()))
-                        .buildDbModel()
+                        .map()
         );
-        return Response.ok(new UserRepresentation(user.buildDbModel())).status(Response.Status.CREATED).build();
+        return Response.ok(new UserRepresentation(user.map())).status(Response.Status.CREATED).build();
     }
 }
