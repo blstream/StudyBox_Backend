@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Path("/decks/{deckId}/flashcards")
 @Produces(MediaType.APPLICATION_JSON)
@@ -33,21 +34,25 @@ public class FlashcardsResource {
     @POST
     public Response createFlashcard(@Valid FlashcardRepresentation flashcard,
                                     @Valid @PathParam("deckId") UUIDParam id) {
-        Flashcard createdFlashcard = new Flashcard(UUID.randomUUID(), flashcard.getQuestion(), flashcard.getAnswer(),
-                id.get(), flashcard.getIsHidden());
-        flashcardDAO.createFlashcard(createdFlashcard);
+        flashcardDAO.createFlashcard(flashcard.setId(UUID.randomUUID()).setDeckId(id.get()).buildDbModel());
 
-        return Response.ok(createdFlashcard).status(Response.Status.CREATED).build();
+        return Response.ok(flashcard).status(Response.Status.CREATED).build();
     }
 
     @GET
-    public List<Flashcard> listFlashcard(@Valid
+    public List<FlashcardRepresentation> listFlashcard(@Valid
                                          @PathParam("deckId") UUIDParam id,
-                                         @QueryParam("random") Amount amount) {
+                                                       @QueryParam("random") Amount amount) {
         if (amount == null) {
-            return flashcardDAO.getAllFlashcards(id.get());
+            return flashcardDAO.getAllFlashcards(id.get())
+                    .stream()
+                    .map(flashcard -> new FlashcardRepresentation(flashcard))
+                    .collect(Collectors.toList());
         } else {
-            return flashcardDAO.getRandomFlashcards(amount.getValue(), id.get());
+            return flashcardDAO.getRandomFlashcards(amount.getValue(), id.get())
+                    .stream()
+                    .map(flashcard -> new FlashcardRepresentation(flashcard))
+                    .collect(Collectors.toList());
         }
     }
 }

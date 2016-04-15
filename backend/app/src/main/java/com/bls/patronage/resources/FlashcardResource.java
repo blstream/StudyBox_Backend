@@ -2,7 +2,6 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
-import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
@@ -13,7 +12,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.UUID;
 
 @Path("/decks/{deckId}/flashcards/{flashcardId}")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,25 +23,33 @@ public class FlashcardResource {
     }
 
     @GET
-    public Flashcard getFlashcard(
+    public FlashcardRepresentation getFlashcard(
             @Valid @PathParam("flashcardId") UUIDParam flashcardId) {
-        return flashcardDAO.getFlashcardById(flashcardId.get());
+
+        return new FlashcardRepresentation(
+                flashcardDAO.getFlashcardById(flashcardId.get())
+        );
     }
 
     @DELETE
     public void deleteFlashcard(
             @Valid @PathParam("flashcardId") UUIDParam flashcardId) {
+
+        flashcardDAO.getFlashcardById(flashcardId.get());
         flashcardDAO.deleteFlashcard(flashcardId.get());
     }
 
     @PUT
-    public Flashcard updateFlashcard(
-            @Valid @PathParam("flashcardId") UUID flashcardId,
+    public FlashcardRepresentation updateFlashcard(
+            @Valid @PathParam("flashcardId") UUIDParam flashcardId,
             @Valid FlashcardRepresentation flashcard,
             @Valid @PathParam("deckId") UUIDParam deckId) {
-        Flashcard updatedFlashcard = new Flashcard(flashcardId, flashcard.getQuestion(), flashcard.getAnswer(),
-                deckId.get(), flashcard.getIsHidden());
-        flashcardDAO.updateFlashcard(updatedFlashcard);
-        return updatedFlashcard;
+
+
+        flashcardDAO.getFlashcardById(flashcardId.get());
+        flashcardDAO.updateFlashcard(flashcard.setId(flashcardId.get()).setDeckId(deckId.get()).buildDbModel());
+
+
+        return flashcard;
     }
 }
