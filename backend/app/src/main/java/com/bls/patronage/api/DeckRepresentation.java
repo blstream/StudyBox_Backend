@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
-public class DeckRepresentation {
+public class DeckRepresentation implements DbModelRepresentation<Deck> {
     @NotEmpty
     @Length(min = 1, max = 50)
     final private String name;
