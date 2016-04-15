@@ -1,7 +1,7 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.api.UserRepresentation;
 import com.bls.patronage.db.exception.DataAccessException;
-import com.bls.patronage.db.model.UserWithoutPassword;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -41,9 +41,9 @@ public class UserResourceTest extends BasicAuthenticationTest {
     @Test
     public void getUser() {
         when(userDAO.getUserById(user.getId())).thenReturn(user);
-        final UserWithoutPassword receivedUser = resources.client().target(userURI)
+        final UserRepresentation receivedUser = resources.client().target(userURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .get(UserWithoutPassword.class);
+                .get(UserRepresentation.class);
 
         verify(userDAO).getUserById(user.getId());
         assertThat(receivedUser.getId()).isEqualTo(user.getId());
@@ -55,7 +55,7 @@ public class UserResourceTest extends BasicAuthenticationTest {
     public void logInUser() {
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         final Response response = getResponseWithCredentials(loggingURI, encodedCredentials);
-        final UserWithoutPassword receivedUser = response.readEntity(UserWithoutPassword.class);
+        final UserRepresentation receivedUser = response.readEntity(UserRepresentation.class);
 
         verify(userDAO).getUserByEmail(user.getEmail());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());

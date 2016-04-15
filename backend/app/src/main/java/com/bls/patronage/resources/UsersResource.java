@@ -2,8 +2,6 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.UserRepresentation;
 import com.bls.patronage.db.dao.UserDAO;
-import com.bls.patronage.db.model.User;
-import com.bls.patronage.db.model.UserWithoutPassword;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -28,8 +26,12 @@ public class UsersResource {
 
     @POST
     public Response createUser(@Valid UserRepresentation user) {
-        User createdUser = new User(UUID.randomUUID(), user.getEmail(), user.getName(), generateSafeHash(user.getPassword()));
-        userDAO.createUser(createdUser);
-        return Response.ok(new UserWithoutPassword(createdUser.getId(), createdUser.getEmail(), createdUser.getName())).status(Response.Status.CREATED).build();
+        userDAO.createUser(
+                user
+                        .setId(UUID.randomUUID())
+                        .setPassword(generateSafeHash(user.getPassword()))
+                        .buildDbModel()
+        );
+        return Response.ok(new UserRepresentation(user.buildDbModel())).status(Response.Status.CREATED).build();
     }
 }
