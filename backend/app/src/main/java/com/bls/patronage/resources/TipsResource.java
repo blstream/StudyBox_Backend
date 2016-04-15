@@ -2,15 +2,20 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.TipRepresentation;
 import com.bls.patronage.db.dao.TipDAO;
-import com.bls.patronage.db.model.Tip;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Path("/decks/{deckId}/flashcards/{flashcardId}/tips")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,13 +31,25 @@ public class TipsResource {
     public Response createTip(@Valid TipRepresentation tip,
                          @Valid @PathParam("flashcardId") UUIDParam flashcardId,
                          @Valid @PathParam("deckId") UUIDParam deckId){
-        Tip createdTip = new Tip(UUID.randomUUID(), tip.getEssence(), tip.getDifficult(), flashcardId.get(), deckId.get());
-        tipDAO.createTip(createdTip);
-        return Response.ok(createdTip).status(Response.Status.CREATED).build();
+
+        tipDAO.createTip(
+                tip
+                        .setId(UUID.randomUUID())
+                        .setFlashcardId(flashcardId.get())
+                        .setDeckId(deckId.get())
+                        .buildDbModel()
+        );
+
+
+        return Response.ok(tip).status(Response.Status.CREATED).build();
     }
 
     @GET
-    public List<Tip> listTips(@Valid @PathParam("flashcardId") UUIDParam id){
-        return tipDAO.getAllTips(id.get());
+    public List<TipRepresentation> listTips(@Valid @PathParam("flashcardId") UUIDParam id) {
+
+        return tipDAO.getAllTips(id.get())
+                .stream()
+                .map(tip -> new TipRepresentation(tip))
+                .collect(Collectors.toList());
     }
 }
