@@ -2,7 +2,6 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
-import com.bls.patronage.db.model.Deck;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.BooleanParam;
 import io.dropwizard.jersey.params.UUIDParam;
@@ -27,11 +26,14 @@ public class DeckResource {
     }
 
     @GET
-    public Deck getDeck(
+    public DeckRepresentation getDeck(
             @Auth
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
-        return decksDAO.getDeckById(deckId.get());
+
+        return new DeckRepresentation(
+                decksDAO.getDeckById(deckId.get())
+        );
     }
 
     @DELETE
@@ -39,30 +41,33 @@ public class DeckResource {
             @Auth
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
-        final Deck deck = decksDAO.getDeckById(deckId.get());
-        decksDAO.deleteDeck(deck.getId());
+
+        decksDAO.getDeckById(deckId.get());
+        decksDAO.deleteDeck(deckId.get());
     }
 
     @PUT
-    public Deck updateDeck(
+    public DeckRepresentation updateDeck(
             @Auth
             @Valid
             @PathParam("deckId") UUIDParam deckId,
             @Valid DeckRepresentation deck) {
 
-        Deck deckToUpdate = decksDAO.getDeckById(deckId.get());
-        deckToUpdate.setName(deck.getName());
-        deckToUpdate.setIsPublic(deck.isPublicVisible());
-        decksDAO.update(deckToUpdate);
-        return deckToUpdate;
+        decksDAO.getDeckById(deckId.get());
+        decksDAO.update(deck.setId(deckId.get()).buildDbModel());
+        return deck;
     }
 
     @Path("/public/{access}")
     @POST
     public void changeStatus(@Valid @PathParam("deckId") UUIDParam deckId,
                              @Valid @PathParam("access") BooleanParam access) {
-        Deck deck = decksDAO.getDeckById(deckId.get());
-        deck.setIsPublic(access.get());
-        decksDAO.update(deck);
+
+        DeckRepresentation deck = new DeckRepresentation(
+                decksDAO.getDeckById(deckId.get()).getName(),
+                access.get()
+        );
+
+        decksDAO.update(deck.buildDbModel());
     }
 }
