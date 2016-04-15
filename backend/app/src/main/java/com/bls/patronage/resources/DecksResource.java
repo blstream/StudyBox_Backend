@@ -39,7 +39,7 @@ public class DecksResource {
 
     @POST
     public Response createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
+        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.isPublicVisible());
         User userPrincipal = (User) context.getUserPrincipal();
         decksDAO.createDeck(createdDeck, userPrincipal.getId());
         return Response.ok(createdDeck).status(Response.Status.CREATED).build();

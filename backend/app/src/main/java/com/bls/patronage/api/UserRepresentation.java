@@ -9,12 +9,15 @@ public class UserRepresentation {
     @Email
     @NotEmpty
     private final String email;
+    @NotEmpty
     private final String name;
     @NotEmpty
     @Length(min = 8)
     private final String password;
 
-    public UserRepresentation(@JsonProperty("email") String email, @JsonProperty("name") String name, @JsonProperty("password") String password) {
+    public UserRepresentation(@JsonProperty("email") String email,
+                              @JsonProperty("name") String name,
+                              @JsonProperty("password") String password) {
         this.email = email;
         this.name = name;
         this.password = password;
