@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.UUID;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
-public class FlashcardRepresentation {
+public class FlashcardRepresentation implements DbModelRepresentation<Flashcard> {
     @NotEmpty
     @Length(max = 1000)
     private final String question;
@@ -34,11 +34,12 @@ public class FlashcardRepresentation {
         this.question = flashcard.getQuestion();
         this.answer = flashcard.getAnswer();
         this.deckId = flashcard.getDeckId();
+        this.isHidden = flashcard.getIsHidden();
     }
 
     @Override
     public Flashcard buildDbModel() {
-        return new Flashcard(id, question, answer, deckId);
+        return new Flashcard(id, question, answer, deckId, isHidden);
     }
 
     public String getQuestion() {
