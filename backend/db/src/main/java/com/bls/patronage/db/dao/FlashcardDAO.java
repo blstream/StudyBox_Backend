@@ -46,7 +46,7 @@ abstract public class FlashcardDAO {
     abstract Integer getCount(@Bind("deckId") UUID deckId);
 
     @SqlQuery("select count(tips.id) from tips where flashcardId = :flashcardId")
-    public abstract Integer getTipsNumber(@Bind("flashcardId") UUID flashcardId);
+    public abstract Integer getTipsCount(@Bind("flashcardId") UUID flashcardId);
 
     public Flashcard getFlashcardById(UUID id) {
         Optional<Flashcard> flashcard = Optional.ofNullable(get(id));

@@ -17,11 +17,11 @@ public class FlashcardRepresentationTests {
     private final String FIXTURE_ANSWER = "Yes, thank you.";
     private final String FIXTURE_ID = "12345678-1234-1234-1234-123456789012";
     private final String FIXTURE_DECKID = "12345678-0000-1111-2222-123456789012";
-    private final Integer FIXTURE_TIPS_NUMBER = 5;
+    private final Integer FIXTURE_TIPS_COUNT = 5;
     private FlashcardRepresentation flashcard;
     private FlashcardRepresentation flashcardWithId;
     private FlashcardRepresentation flashcardWithIdAndDeckId;
-    private FlashcardRepresentation flashcardWithTipsNumber;
+    private FlashcardRepresentation flashcardWithTipsCount;
 
     @Before
     public void setup() {
@@ -30,9 +30,9 @@ public class FlashcardRepresentationTests {
                 .setId(UUID.fromString(FIXTURE_ID));
         flashcardWithIdAndDeckId = new FlashcardRepresentation(FIXTURE_QUESTION, FIXTURE_ANSWER, false)
                 .setId(UUID.fromString(FIXTURE_ID)).setDeckId(UUID.fromString(FIXTURE_DECKID));
-        flashcardWithTipsNumber = new FlashcardRepresentation(FIXTURE_QUESTION, FIXTURE_ANSWER, false)
+        flashcardWithTipsCount = new FlashcardRepresentation(FIXTURE_QUESTION, FIXTURE_ANSWER, false)
                 .setId(UUID.fromString(FIXTURE_ID)).setDeckId(UUID.fromString(FIXTURE_DECKID))
-                .setTipsNumber(FIXTURE_TIPS_NUMBER);
+                .setTipsCount(FIXTURE_TIPS_COUNT);
     }
 
     @Test
@@ -90,17 +90,17 @@ public class FlashcardRepresentationTests {
     public void FlashcardToJSONWithTipsNumber() throws Exception {
 
         final String expected = MAPPER.writeValueAsString(
-                MAPPER.readValue(fixture("fixtures/flashcardWithTipsNumber.json"), FlashcardRepresentation.class));
+                MAPPER.readValue(fixture("fixtures/flashcardWithTipsCount.json"), FlashcardRepresentation.class));
 
-        assertThat(MAPPER.writeValueAsString(flashcardWithTipsNumber)).isEqualTo(expected);
+        assertThat(MAPPER.writeValueAsString(flashcardWithTipsCount)).isEqualTo(expected);
     }
 
     @Test
     public void FlashcardFromJSONWithTipsNumber() throws Exception {
 
-        final FlashcardRepresentation newFlashcard = MAPPER.readValue(fixture("fixtures/flashcardWithTipsNumber.json"),
+        final FlashcardRepresentation newFlashcard = MAPPER.readValue(fixture("fixtures/flashcardWithTipsCount.json"),
                 FlashcardRepresentation.class);
 
-        assertThat(newFlashcard).isEqualToComparingFieldByField(flashcardWithTipsNumber);
+        assertThat(newFlashcard).isEqualToComparingFieldByField(flashcardWithTipsCount);
     }
 }

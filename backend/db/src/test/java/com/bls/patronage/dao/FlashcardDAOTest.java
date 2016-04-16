@@ -93,6 +93,6 @@ public class FlashcardDAOTest extends DAOTest {
         final List<Tip> tipsInFlashcard = tips.stream().filter(tip -> tip.getFlashcardId().equals(flashcardId))
                 .collect(Collectors.toList());
 
-        assertThat(dao.getTipsNumber(flashcardId)).isEqualTo(tipsInFlashcard.size());
+        assertThat(dao.getTipsCount(flashcardId)).isEqualTo(tipsInFlashcard.size());
     }
 }

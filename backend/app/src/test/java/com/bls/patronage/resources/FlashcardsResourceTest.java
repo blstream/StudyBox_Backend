@@ -54,7 +54,7 @@ public class FlashcardsResourceTest {
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok", false);
         flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckId()).toString();
         flashcardsWithTipsURI = UriBuilder.fromResource(FlashcardsResource.class)
-                .queryParam("countTips", true).build(flashcard.getDeckId()).toString();
+                .queryParam("tipsCount", true).build(flashcard.getDeckId()).toString();
         randomFlashcardsURIs = new ArrayList<>();
         for (Amount amount : Amount.values()) {
             randomFlashcardsURIs.add(UriBuilder.fromResource(FlashcardsResource.class)
@@ -107,15 +107,15 @@ public class FlashcardsResourceTest {
     public void listFlashcardsWithTipsNumber() {
         final ImmutableList<Flashcard> flashcards = ImmutableList.of(flashcard);
         when(dao.getAllFlashcards(flashcard.getDeckId())).thenReturn(flashcards);
-        when(dao.getTipsNumber(flashcard.getId())).thenReturn(5);
+        when(dao.getTipsCount(flashcard.getId())).thenReturn(5);
 
         final List<FlashcardRepresentation> response = resources.client().target(flashcardsWithTipsURI)
                 .request().get(new GenericType<List<FlashcardRepresentation>>() {
                 });
 
         verify(dao).getAllFlashcards(flashcard.getDeckId());
-        verify(dao).getTipsNumber(flashcard.getId());
-        assertThat(response).contains(new FlashcardRepresentation(flashcard).setTipsNumber(5));
+        verify(dao).getTipsCount(flashcard.getId());
+        assertThat(response).contains(new FlashcardRepresentation(flashcard).setTipsCount(5));
     }
 
     @Test
