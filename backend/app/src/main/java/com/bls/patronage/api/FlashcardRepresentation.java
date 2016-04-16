@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.UUID;
 
 public class FlashcardRepresentation implements DbMappable<Flashcard> {
@@ -54,6 +55,7 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return id;
     }
 
+
     public FlashcardRepresentation setId(UUID id) {
         this.id = id;
         return this;
@@ -70,5 +72,22 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
 
     public Boolean getIsHidden() {
         return isHidden;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FlashcardRepresentation that = (FlashcardRepresentation) o;
+        return Objects.equals(question, that.question) &&
+                Objects.equals(answer, that.answer) &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(deckId, that.deckId) &&
+                Objects.equals(isHidden, that.isHidden);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(question, answer, id, deckId, isHidden);
     }
 }
