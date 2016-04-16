@@ -63,7 +63,7 @@ public class ResultsResourceTest {
 
     @Test
     public void createExistingResult() {
-        when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenReturn(result);
+        when(resultDAO.getResult(resultRepresentation.getId())).thenReturn(result);
         when(resultDAO.getAllResults(deckId)).thenReturn(ImmutableList.of(result));
 
         final Response response = resources.client().target(resultsURI)
@@ -72,13 +72,13 @@ public class ResultsResourceTest {
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         verify(resultDAO).updateResult(resultCaptor.capture());
-        assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
+        assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getId());
         assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(result.getCorrectAnswers() + 1);
     }
 
     @Test
     public void createNewResult() {
-        when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenThrow(new DataAccessException(""));
+        when(resultDAO.getResult(resultRepresentation.getId())).thenThrow(new DataAccessException(""));
         when(resultDAO.getAllResults(deckId)).thenReturn(anyListOf(Result.class));
 
         final Response response = resources.client().target(resultsURI)
@@ -103,15 +103,15 @@ public class ResultsResourceTest {
 
     @Test
     public void listResults() {
-        when(flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId)).thenReturn(ImmutableList.of(resultRepresentation.getFlashcardId()));
-        when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenReturn(result);
+        when(flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId)).thenReturn(ImmutableList.of(resultRepresentation.getId()));
+        when(resultDAO.getResult(resultRepresentation.getId())).thenReturn(result);
 
         final List<ResultRepresentation> response = resources.client().target(resultsURI)
                 .request().get(new GenericType<List<ResultRepresentation>>() {
                 });
 
-        verify(resultDAO).getResult(resultRepresentation.getFlashcardId());
+        verify(resultDAO).getResult(resultRepresentation.getId());
         verify(flashcardDAO).getFlashcardsIdFromSelectedDeck(deckId);
-        assertThat(response).contains(new ResultRepresentation().readFromDbModel(result));
+        assertThat(response.get(0)).isEqualToComparingFieldByField(new ResultRepresentation().readFromDbModel(result));
     }
 }

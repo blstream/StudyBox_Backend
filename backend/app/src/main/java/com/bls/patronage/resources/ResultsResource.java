@@ -40,7 +40,7 @@ public class ResultsResource {
         } catch (DataAccessException e) {
             result
                     .setId(UUID.randomUUID())
-                    .setCorrectAnswers(result.isCorrectAnswer() ? 1 : 0);
+                    .setCorrectAnswers(result.getCorrectAnswer() ? 1 : 0);
         }
 
         resultDAO.updateResult(result.map());
@@ -52,12 +52,13 @@ public class ResultsResource {
     @GET
     public List<ResultRepresentation> listResults(@Valid @PathParam("deckId") UUIDParam deckId) {
         List<UUID> ids = flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId.get());
-        return ids
+        List<ResultRepresentation> collect = ids
                 .stream()
                 .map(uuid -> new ResultRepresentation()
                         .readFromDbModel(
                                 resultDAO.getResult(uuid)
                         ))
                 .collect(Collectors.toList());
+        return collect;
     }
 }
