@@ -2,8 +2,10 @@ package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.mapper.FlashcardMapper;
+import com.bls.patronage.db.mapper.TipMapper;
 import com.bls.patronage.db.model.Amount;
 import com.bls.patronage.db.model.Flashcard;
+import com.bls.patronage.db.model.Tip;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
@@ -11,6 +13,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -82,5 +85,14 @@ public class FlashcardDAOTest extends DAOTest {
             assertThat(randomFlashcards).hasSize(amount.getValue());
             assertThat(flashcards).containsAll(randomFlashcards);
         }
+    }
+
+    public void getTipsNumber() throws Exception {
+        final List<Tip> tips = getAllEntities(Tip.class, TipMapper.class, "tips");
+        final UUID flashcardId = tips.get(0).getFlashcardId();
+        final List<Tip> tipsInFlashcard = tips.stream().filter(tip -> tip.getFlashcardId().equals(flashcardId))
+                .collect(Collectors.toList());
+
+        assertThat(dao.getTipsNumber(flashcardId)).isEqualTo(tipsInFlashcard.size());
     }
 }
