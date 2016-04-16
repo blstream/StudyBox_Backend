@@ -40,17 +40,24 @@ public class FlashcardsResource {
 
     @GET
     public List<FlashcardRepresentation> listFlashcard(@Valid
-                                         @PathParam("deckId") UUIDParam id,
-                                                       @QueryParam("random") Amount amount) {
+                                                       @PathParam("deckId") UUIDParam id,
+                                                       @QueryParam("random") Amount amount,
+                                                       @QueryParam("countTips") Boolean countTips) {
         if (amount == null) {
             return flashcardDAO.getAllFlashcards(id.get())
                     .stream()
-                    .map(flashcard -> new FlashcardRepresentation(flashcard))
+                    .map(flashcard -> ((countTips == null || !countTips ) ?
+                            new FlashcardRepresentation(flashcard) :
+                            new FlashcardRepresentation(flashcard).setTipsNumber(
+                                    flashcardDAO.getTipsNumber(flashcard.getId()))))
                     .collect(Collectors.toList());
         } else {
             return flashcardDAO.getRandomFlashcards(amount.getValue(), id.get())
                     .stream()
-                    .map(flashcard -> new FlashcardRepresentation(flashcard))
+                    .map(flashcard -> ((countTips == null || !countTips ) ?
+                            new FlashcardRepresentation(flashcard) :
+                            new FlashcardRepresentation(flashcard).setTipsNumber(
+                                    flashcardDAO.getTipsNumber(flashcard.getId()))))
                     .collect(Collectors.toList());
         }
     }
