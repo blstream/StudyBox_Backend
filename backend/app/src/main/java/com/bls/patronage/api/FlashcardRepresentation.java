@@ -1,6 +1,7 @@
 package com.bls.patronage.api;
 
 import com.bls.patronage.db.model.Flashcard;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FlashcardRepresentation implements DbMappable<Flashcard> {
     @NotEmpty
     @Length(max = 1000)
@@ -21,6 +23,7 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
 
     private UUID id;
     private UUID deckId;
+    private Integer tipsNumber;
 
     public FlashcardRepresentation(@JsonProperty("question") String question,
                                    @JsonProperty("answer") String answer,
@@ -55,6 +58,14 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return id;
     }
 
+    public Integer getTipsNumber() {
+        return tipsNumber;
+    }
+
+    public FlashcardRepresentation setTipsNumber(int tipsNumber) {
+        this.tipsNumber = tipsNumber;
+        return this;
+    }
 
     public FlashcardRepresentation setId(UUID id) {
         this.id = id;
@@ -83,11 +94,12 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
                 Objects.equals(answer, that.answer) &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(deckId, that.deckId) &&
-                Objects.equals(isHidden, that.isHidden);
+                Objects.equals(isHidden, that.isHidden) &&
+                Objects.equals(tipsNumber, that.tipsNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(question, answer, id, deckId, isHidden);
+        return Objects.hash(question, answer, id, deckId, isHidden, tipsNumber);
     }
 }
