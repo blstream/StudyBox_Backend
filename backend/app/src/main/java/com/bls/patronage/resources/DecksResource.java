@@ -39,10 +39,14 @@ public class DecksResource {
 
     @POST
     public Response createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic());
-        User userPrincipal = (User) context.getUserPrincipal();
-        decksDAO.createDeck(createdDeck, userPrincipal.getId());
-        return Response.ok(createdDeck).status(Response.Status.CREATED).build();
+
+        User user = (User) context.getUserPrincipal();
+
+
+        decksDAO.createDeck(deck.setId(UUID.randomUUID()).map(), user.getId());
+
+
+        return Response.ok(deck).status(Response.Status.CREATED).build();
     }
 
     @GET
@@ -51,6 +55,7 @@ public class DecksResource {
                                       @QueryParam("isEnabled") Boolean isEnabled,
                                       @QueryParam("includeOwn") Boolean includeOwn,
                                       @QueryParam("random") Boolean random) {
+
         return new DeckCollectionBuilder(user.getId())
                 .includeOwn(Optional.ofNullable(includeOwn))
                 .filterByName(Optional.ofNullable(name))

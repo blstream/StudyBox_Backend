@@ -12,7 +12,7 @@ public class StudyBoxConfiguration extends Configuration {
     @NotNull
     public static final int PW_HASH_SECURITY_LEVEL = 12;
     private static final String DEFAULT_AUTH_CACHE_SPEC = "maximumSize=1000,expireAfterAccess=1h";
-    public Boolean isAuthenticationEnabled;
+    public Boolean authHeaderRequired;
     @Valid
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
@@ -22,13 +22,13 @@ public class StudyBoxConfiguration extends Configuration {
     }
 
     @JsonProperty
-    public Boolean getIsAuthenticationEnabled() {
-        return this.isAuthenticationEnabled;
+    public Boolean getAuthHeaderRequired() {
+        return this.authHeaderRequired;
     }
 
     @JsonProperty
-    public void setIsAuthenticationEnabled(Boolean isAuthenticationEnabled) {
-        this.isAuthenticationEnabled = isAuthenticationEnabled;
+    public void setAuthHeaderRequired(Boolean authHeaderRequired) {
+        this.authHeaderRequired = authHeaderRequired;
     }
 
     public CacheBuilder<Object, Object> getAuthCacheBuilder() {

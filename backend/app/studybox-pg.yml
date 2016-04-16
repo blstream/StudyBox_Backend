@@ -14,4 +14,4 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 
-isAuthenticationEnabled: true
+authHeaderRequired: true
