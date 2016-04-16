@@ -18,6 +18,7 @@ public class TipRepresentation implements DbMappable<Tip> {
     @NotNull
     @Range(min=0, max=10)
     private final Integer difficult;
+
     private UUID deckId;
     private UUID flashcardId;
     private UUID id;

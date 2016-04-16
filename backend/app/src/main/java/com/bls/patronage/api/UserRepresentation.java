@@ -28,6 +28,11 @@ public class UserRepresentation implements DbMappable<User> {
         this.password = password;
     }
 
+    public UserRepresentation(String email, String name) {
+        this.email = email;
+        this.name = name;
+    }
+
     public UserRepresentation(User user) {
         this.id = user.getId();
         this.email = user.getEmail();

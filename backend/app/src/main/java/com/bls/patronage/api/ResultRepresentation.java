@@ -10,18 +10,22 @@ import java.util.UUID;
 public class ResultRepresentation implements DbMappable<Result> {
     @NotNull
     private UUID flashcardId;
-    @NotNull
-    private boolean isCorrectAnswer;
 
-    private int correctAnswers;
+    private Boolean isCorrectAnswer;
+    private Integer correctAnswers;
 
     public ResultRepresentation() {
     }
 
     public ResultRepresentation(@JsonProperty("flashcardId") UUID flashcardId,
-                                @JsonProperty("isCorrectAnswer") boolean isCorrectAnswer) {
+                                @JsonProperty("isCorrectAnswer") @NotNull Boolean isCorrectAnswer) {
         this.flashcardId = flashcardId;
         this.isCorrectAnswer = isCorrectAnswer;
+    }
+
+    public ResultRepresentation(UUID flashcardId, Integer correctAnswers) {
+        this.flashcardId = flashcardId;
+        this.correctAnswers = correctAnswers;
     }
 
     public ResultRepresentation readFromDbModel(Result result) {
@@ -35,29 +39,30 @@ public class ResultRepresentation implements DbMappable<Result> {
         return new Result(flashcardId, correctAnswers);
     }
 
-    public UUID getFlashcardId() {
-        return flashcardId;
-    }
-
-    @JsonProperty("isCorrectAnswer")
-    public boolean isCorrectAnswer() {
-        return isCorrectAnswer;
-    }
 
     public UUID getId() {
         return flashcardId;
     }
 
-    public ResultRepresentation setId(UUID id) {
-        this.flashcardId = id;
+    public ResultRepresentation setId(UUID flashcardId) {
+        this.flashcardId = flashcardId;
         return this;
     }
 
-    public int getCorrectAnswers() {
+    public Boolean getCorrectAnswer() {
+        return isCorrectAnswer;
+    }
+
+    public ResultRepresentation setCorrectAnswer(Boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
+        return this;
+    }
+
+    public Integer getCorrectAnswers() {
         return correctAnswers;
     }
 
-    public ResultRepresentation setCorrectAnswers(int correctAnswers) {
+    public ResultRepresentation setCorrectAnswers(Integer correctAnswers) {
         this.correctAnswers = correctAnswers;
         return this;
     }

@@ -1,6 +1,7 @@
 package com.bls.patronage.api;
 
 import com.bls.patronage.db.model.Deck;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeckRepresentation implements DbMappable<Deck> {
     @NotEmpty
     @Length(min = 1, max = 50)
@@ -18,7 +20,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
     final private Boolean publicVisible;
 
     private UUID id;
-    private int flashcardsNumber;
+    private Integer flashcardsNumber;
     @Email
     private String creatorEmail;
 
@@ -47,7 +49,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
         return name;
     }
 
-    public int getFlashcardsNumber() {
+    public Integer getFlashcardsNumber() {
         return flashcardsNumber;
     }
 
