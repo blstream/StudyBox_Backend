@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 17/04/2016 toja
+ - added resource to list flashcards with tips count 
 ## 14/04/2016 toja
  - added parameter to show flashcards visibility
 ## 06/04/2016 toja
@@ -206,10 +208,19 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (Flashcard)
 
-### List all Flashcards [GET]
+### List all Flashcards in Deck [GET]
 
 + Response 200 (application/json)
     + Attributes (FlashcardCollection)
+    
+### List Flashcards with Tips Count [GET /decks/{deckId}/flashcards{?tipsCount}]
+
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    + tipsCount: `true` (boolean, optional) - to show amount of tips for each flashcard
+    
++ Response 200 (application/json)
+    + Attributes (FlashcardWithCountCollection)
 
 ### Update Flashcard [PUT /decks/{deckId}/flashcards/{flashcardId}]
 
@@ -507,6 +518,15 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + answer: `Third answer` (string) - answer attribute for Flashcard
 + isHidden: `false` (boolean, required) - visibility of Flashcard
 
+### FlashcardWithCount0 (Flashcard0)
++ tipsCount: `1` (number) - Count of Tips in a Flashcard
+
+### FlashcardWithCount1 (Flashcard1)
++ tipsCount: `4` (number) - Count of Tips in a Flashcard
+
+### FlashcardWithCount2 (Flashcard2)
++ tipsCount: `2` (number) - Count of Tips in a Flashcard
+
 ### Tip0 (object)
 + id: `51155739-1028-4479-a425-9ebaa501d9fe` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
 + prompt: `First prompt` (string) - prompt attribute for Tip
@@ -554,6 +574,11 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + (Flashcard0)
 + (Flashcard1)
 + (Flashcard2)
+
+### FlashcardWithCountCollection (array)
++ (FlashcardWithCount0)
++ (FlashcardWithCount1)
++ (FlashcardWithCount2)
 
 ### DeckWithCountCollection (array)
 + (DeckWithCount0)
