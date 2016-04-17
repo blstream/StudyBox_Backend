@@ -45,6 +45,9 @@ abstract public class FlashcardDAO {
     @SqlQuery("select count(*) from flashcards where deckId = :deckId")
     abstract Integer getCount(@Bind("deckId") UUID deckId);
 
+    @SqlQuery("select count(tips.id) from tips where flashcardId = :flashcardId")
+    public abstract Integer getTipsCount(@Bind("flashcardId") UUID flashcardId);
+
     public Flashcard getFlashcardById(UUID id) {
         Optional<Flashcard> flashcard = Optional.ofNullable(get(id));
         return flashcard.orElseThrow(() -> new DataAccessException("There is no flashcard with specified id"));

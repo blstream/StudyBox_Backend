@@ -81,11 +81,11 @@ public class FlashcardResourceTest {
     @Test
     public void getFlashcard() {
         when(dao.getFlashcardById(any(UUID.class))).thenReturn(flashcard);
-        final Flashcard recievedFlashcard = resources.client().target(flashcardURI)
+        final FlashcardRepresentation receivedFlashcard = resources.client().target(flashcardURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .get(Flashcard.class);
+                .get(FlashcardRepresentation.class);
 
         verify(dao).getFlashcardById(flashcard.getId());
-        assertThat(recievedFlashcard).isEqualTo(flashcard);
+        assertThat(receivedFlashcard).isEqualTo(new FlashcardRepresentation(flashcard));
     }
 }
