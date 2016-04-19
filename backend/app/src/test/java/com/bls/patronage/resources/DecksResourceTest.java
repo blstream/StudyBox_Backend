@@ -66,9 +66,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Before
     public void setUp() {
         super.setUp();
-        deck = new Deck(UUID.randomUUID(), "foo", "sample@com.pl");
+        deck = new Deck(UUID.randomUUID(), "foo");
         decks = Collections.singletonList(deck);
-        userDeck = new Deck(UUID.randomUUID(), "baz", "example@com.pl");
+        userDeck = new Deck(UUID.randomUUID(), "baz");
         userDecks = Collections.singletonList(userDeck);
         decksURI = UriBuilder.fromResource(DecksResource.class).build().toString();
         randomDeckURI = UriBuilder.fromResource(DecksResource.class)
@@ -174,6 +174,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         final List<DeckWithFlashcardsNumber> decksInResponse = response
                 .readEntity(new GenericType<List<DeckWithFlashcardsNumber>>() {
                 });
+
+
 
         List<Deck> mappedDecks = decksInResponse.stream().collect(Collectors.toList());
 

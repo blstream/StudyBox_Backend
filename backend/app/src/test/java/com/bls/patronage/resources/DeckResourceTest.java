@@ -27,40 +27,44 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Captor
     private ArgumentCaptor<Deck> deckCaptor;
-    private Deck deck;
-    private DeckRepresentation deckRepresentation;
+    private DeckRepresentation deck;
     private UUID deckId;
     private UUID fakeId;
     private String deckURI;
     private String fakeURI;
+
+    static private Response getPutResponse(String uri, DeckRepresentation deck, String encodedUserInfo) {
+        return authResources.client()
+                .target(uri)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Authorization", "Basic " + encodedUserInfo)
+                .put(Entity.entity(deck, MediaType.APPLICATION_JSON));
+    }
 
     @Before
     public void setUp() {
         super.setUp();
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
-        deck = new Deck(deckId, "math", "sample@mail.com");
-        deckRepresentation = new DeckRepresentation("biology", false);
+        deck = new DeckRepresentation("biology", false).setId(deckId);
         deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
+
+        when(deckDao.getDeckById(deckId)).thenReturn(deck.map());
+        when(deckDao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
     }
 
     @Test
     public void getDeckSuccess() {
-        when(deckDao.getDeckById(deckId)).thenReturn(deck);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
         final Response response = getResponseWithCredentials(deckURI, encodedCredentials);
-        final Deck found = response.readEntity(Deck.class);
+        final DeckRepresentation found = response.readEntity(DeckRepresentation.class);
 
         assertThat(found).isEqualTo(deck);
     }
 
     @Test
     public void getDeckNotFound() {
-        when(deckDao.getDeckById(fakeId)).thenThrow(DataAccessException.class);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
         final Response response = getResponseWithCredentials(fakeURI, encodedCredentials);
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
@@ -68,9 +72,6 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void deleteDeck() {
-        when(deckDao.getDeckById(deckId)).thenReturn(deck);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
         final Response response = authResources.client()
                 .target(deckURI).request().header("Authorization", "Basic " + encodedCredentials)
                 .delete();
@@ -81,9 +82,6 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void deleteDeckWhenThereIsNoDeck() {
-        when(deckDao.getDeckById(fakeId)).thenThrow(new DataAccessException(""));
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
         final Response response = authResources.client().target(fakeURI)
                 .request().header("Authorization", "Basic " + encodedCredentials)
                 .delete();
@@ -95,25 +93,18 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void updateDeck() {
-        when(deckDao.getDeckById(deckId)).thenReturn(deck);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+        final Response response = getPutResponse(deckURI, deck, encodedCredentials);
 
-        final Response response = getPutResponse(deckURI, deckRepresentation, encodedCredentials);
-
-        final Deck updatedDeck = response.readEntity(Deck.class);
-        verify(deckDao).getDeckById(deckId);
-        verify(deckDao).update(any(Deck.class));
+        final DeckRepresentation updatedDeck = response.readEntity(DeckRepresentation.class);
+        verify(deckDao).update(updatedDeck.map());
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(updatedDeck.getId()).isEqualTo(deckId);
-        assertThat(updatedDeck.getName()).isEqualTo(deckRepresentation.getName());
+        assertThat(updatedDeck.getName()).isEqualTo(deck.getName());
     }
 
     @Test
     public void updateDeckWhenThereIsNoDeck() {
-        when(deckDao.getDeckById(fakeId)).thenThrow(new DataAccessException(""));
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
-        final Response response = getPutResponse(fakeURI, deckRepresentation, encodedCredentials);
+        final Response response = getPutResponse(fakeURI, deck, encodedCredentials);
 
         verify(deckDao).getDeckById(fakeId);
         verify(deckDao, never()).update(any(Deck.class));
@@ -122,27 +113,14 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void updateDeckWithEmptyName() {
-        when(deckDao.getDeckById(deckId)).thenReturn(deck);
-        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
-
         final Response response = getPutResponse(deckURI, new DeckRepresentation("", false), encodedCredentials);
 
-        verify(deckDao, never()).getDeckById(deckId);
         verify(deckDao, never()).update(any(Deck.class));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 
-    static private Response getPutResponse(String uri, DeckRepresentation deck, String encodedUserInfo) {
-        return authResources.client()
-                .target(uri)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .header("Authorization", "Basic " + encodedUserInfo)
-                .put(Entity.entity(deck, MediaType.APPLICATION_JSON));
-    }
-
     @Test
     public void changeDeckAccessToTrue() {
-        when(deckDao.getDeckById(deckId)).thenReturn(deck);
         String accessTrueURI = UriBuilder.fromMethod(DeckResource.class, "changeStatus").build(true).toString();
 
         String testURI = new StringBuilder().append(deckURI).append(accessTrueURI).toString();
@@ -158,7 +136,6 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void changeDeckAccessToFalse() {
-        when(deckDao.getDeckById(deckId)).thenReturn(deck);
         String accessFalseURI = UriBuilder.fromMethod(DeckResource.class, "changeStatus").build(false).toString();
 
         String testURI = new StringBuilder().append(deckURI).append(accessFalseURI).toString();
@@ -174,7 +151,6 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void changeDeckAccessToUndefined() {
-        when(deckDao.getDeckById(deckId)).thenReturn(deck);
         String accessUndefinedURI = UriBuilder.fromMethod(DeckResource.class, "changeStatus").build("foo").toString();
 
         String testURI = new StringBuilder().append(deckURI).append(accessUndefinedURI).toString();
@@ -186,4 +162,3 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 }
-

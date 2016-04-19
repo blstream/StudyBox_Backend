@@ -3,6 +3,7 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.ResultRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
+import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Result;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -25,7 +26,11 @@ import java.util.Random;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyListOf;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResultsResourceTest {
@@ -58,7 +63,7 @@ public class ResultsResourceTest {
 
     @Test
     public void createExistingResult() {
-        when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenReturn(result);
+        when(resultDAO.getResult(resultRepresentation.getId())).thenReturn(result);
         when(resultDAO.getAllResults(deckId)).thenReturn(ImmutableList.of(result));
 
         final Response response = resources.client().target(resultsURI)
@@ -66,14 +71,14 @@ public class ResultsResourceTest {
                 .post(Entity.entity(resultRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
-        verify(resultDAO).createResult(resultCaptor.capture());
-        assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
+        verify(resultDAO).updateResult(resultCaptor.capture());
+        assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getId());
         assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(result.getCorrectAnswers() + 1);
     }
 
     @Test
     public void createNewResult() {
-        when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenReturn(result);
+        when(resultDAO.getResult(resultRepresentation.getId())).thenThrow(new DataAccessException(""));
         when(resultDAO.getAllResults(deckId)).thenReturn(anyListOf(Result.class));
 
         final Response response = resources.client().target(resultsURI)
@@ -81,9 +86,8 @@ public class ResultsResourceTest {
                 .post(Entity.entity(resultRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
-        verify(resultDAO).createResult(resultCaptor.capture());
-        assertThat(resultCaptor.getValue().getId()).isEqualTo(resultRepresentation.getFlashcardId());
-        assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(0);
+        verify(resultDAO).updateResult(resultCaptor.capture());
+        assertThat(resultCaptor.getValue().getCorrectAnswers()).isEqualTo(1);
     }
 
     @Test
@@ -99,15 +103,15 @@ public class ResultsResourceTest {
 
     @Test
     public void listResults() {
-        when(flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId)).thenReturn(ImmutableList.of(resultRepresentation.getFlashcardId()));
-        when(resultDAO.getResult(resultRepresentation.getFlashcardId())).thenReturn(result);
+        when(flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId)).thenReturn(ImmutableList.of(resultRepresentation.getId()));
+        when(resultDAO.getResult(resultRepresentation.getId())).thenReturn(result);
 
-        final List<Result> response = resources.client().target(resultsURI)
-                .request().get(new GenericType<List<Result>>() {
+        final List<ResultRepresentation> response = resources.client().target(resultsURI)
+                .request().get(new GenericType<List<ResultRepresentation>>() {
                 });
 
-        verify(resultDAO).getResult(resultRepresentation.getFlashcardId());
+        verify(resultDAO).getResult(resultRepresentation.getId());
         verify(flashcardDAO).getFlashcardsIdFromSelectedDeck(deckId);
-        assertThat(response).contains(result);
+        assertThat(response.get(0)).isEqualToComparingFieldByField(new ResultRepresentation().readFromDbModel(result));
     }
 }
