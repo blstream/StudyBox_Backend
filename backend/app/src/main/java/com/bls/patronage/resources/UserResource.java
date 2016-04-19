@@ -1,8 +1,8 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.api.UserRepresentation;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
-import com.bls.patronage.db.model.UserWithoutPassword;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
@@ -24,18 +24,15 @@ public class UserResource {
 
     @Path("/{userId: [0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}}")
     @GET
-    public UserWithoutPassword getUser(
+    public UserRepresentation getUser(
             @Valid @PathParam("userId") UUIDParam userId) {
-        User user = userDAO.getUserById(userId.get());
-        return new UserWithoutPassword(user.getId(), user.getEmail(), user.getName());
+
+        return new UserRepresentation(userDAO.getUserById(userId.get()));
     }
 
     @Path("/me")
     @GET
-    public UserWithoutPassword logInUser(@Auth User user) {
-        return new UserWithoutPassword(
-                user.getId(),
-                user.getEmail(),
-                user.getName());
+    public UserRepresentation logInUser(@Auth User user) {
+        return new UserRepresentation(user);
     }
 }

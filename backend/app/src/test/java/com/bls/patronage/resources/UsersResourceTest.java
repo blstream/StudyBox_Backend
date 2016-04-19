@@ -1,6 +1,7 @@
 package com.bls.patronage.resources;
 
 import com.bls.patronage.api.UserRepresentation;
+import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UsersResourceTest {
+public class UsersResourceTest extends BasicAuthenticationTest {
     private static final UserDAO userDAO = mock(UserDAO.class);
 
     @ClassRule
@@ -73,5 +74,19 @@ public class UsersResourceTest {
     public void createUserWithNoName() {
         Response response = postUser(usersURI, "zxc", "", user.getPassword());
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
+    }
+
+    @Test
+    public void logInAsAnonymousUser() throws Exception {
+        String testURI = UriBuilder
+                .fromResource(UserResource.class)
+                .build().toString() + UriBuilder.fromMethod(UserResource.class, "logInUser").build().toString();
+        Response response = authResources.client().target(testURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertThat(response.getStatus()).isEqualTo(
+                PreAuthenticationFilter.isAuthHeaderEnabledInConfig() ? Response.Status.FORBIDDEN.getStatusCode() : Response.Status.OK.getStatusCode()
+        );
     }
 }

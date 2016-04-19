@@ -6,6 +6,10 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 17/04/2016 toja
+ - added resource to list flashcards with tips count 
+## 14/04/2016 toja
+ - added parameter to show flashcards visibility
 ## 06/04/2016 toja
  - updated description of decks resources
  - fixes in response codes
@@ -41,14 +45,30 @@ Study Box REST API backend documentation and mock.
 
 Response with HTTP code different then **2xx** family should be treated as a failure response. 
 By default API return response with HTTP code **4xx** family.
+Any response with HTTP code **500** should be reported ASAP to BE team
 
 ### Example HTTP 400 Bad request response:
 ```
 {
-    "code": "E001",
-    "message": "Id cannot be null"
+    "errors": [
+            "The name of entity may not be empty",
+            "The email field is required"
+            ]
 }
 ```
+
+### Example HTTP 500 Bad request response:
+```
+{
+    "code":500,
+    "message":"There was an error processing your request. It has been logged (ID 4b36a3a3c944026d)."
+}
+```
+
+# Anonymous user endpoints availability
+
+By anonymous user request we are understanding a request with no basic auth header.
+All GET requests on every endpoint are anonymous-acceptable, although no other request type is allowed.
 
 # Group Deck
 
@@ -80,7 +100,7 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 200 (application/json)
     + Attributes (Deck)
-    
+
 ### Get random Deck [GET /decks{?random}]
 
 + Parameters
@@ -110,8 +130,7 @@ By default API return response with HTTP code **4xx** family.
 
 + Response 200 (application/json)
     + Attributes (DeckCollection)
-    
-    
+
 ### Get all User's Decks [GET /decks/me{?isEnabled}]
 
 + Parameters
@@ -189,10 +208,19 @@ By default API return response with HTTP code **4xx** family.
 + Response 200 (application/json)
     + Attributes (Flashcard)
 
-### List all Flashcards [GET]
+### List all Flashcards in Deck [GET]
 
 + Response 200 (application/json)
     + Attributes (FlashcardCollection)
+    
+### List Flashcards with Tips Count [GET /decks/{deckId}/flashcards{?tipsCount}]
+
++ Parameters
+    + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
+    + tipsCount: `true` (boolean, optional) - to show amount of tips for each flashcard
+    
++ Response 200 (application/json)
+    + Attributes (FlashcardWithCountCollection)
 
 ### Update Flashcard [PUT /decks/{deckId}/flashcards/{flashcardId}]
 
@@ -282,11 +310,6 @@ By default API return response with HTTP code **4xx** family.
 + Response 201 (application/json)
 
     This response is returned when tip was created.
-    
-    + Headers
-
-            Access-Control-Expose-Headers: Location
-            Location: /decks/1111-0000-0000-000000000001/flashcards/1111-0000-0000-000000000002/tips/1111-0000-0000-000000000003
 
     + Attributes (Tip)
 
@@ -339,11 +362,6 @@ By default API return response with HTTP code **4xx** family.
 + Response 201 (application/json)
 
     This response is returned when tag was created.
-    
-    + Headers
-
-            Access-Control-Expose-Headers: Location
-            Location: /decks/1111-0000-0000-000000000001/tags/1111-0000-0000-000000000002
 
     + Attributes (Tag)
 
@@ -388,20 +406,29 @@ By default API return response with HTTP code **4xx** family.
 ## Test results [/decks/{deckId}/results]
 
 ### Get Test Results [GET]
-    
+
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA== 
+            
 + Parameters
     + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
     
 + Response 200 (application/json)
     + Attributes (FlashcardResultCollection)
-    
+
 ### Save Test Results [POST]
 
 + Parameters
     + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
-
+            
 + Request (application/json)
     + Attributes (FlashcardResultCollection)
+    + Headers
+    
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA== 
     
 + Response 201 
 
@@ -429,6 +456,7 @@ By default API return response with HTTP code **4xx** family.
 ### FlashcardWithoutId (object)
 + question: `Sample question` (string, required) - question attribute for Flashcard
 + answer: `Sample answer` (string, required) - answer attribute for Flashcard
++ isHidden: `false` (boolean, required) - visibility of Flashcard
 
 ### Flashcard (FlashcardWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
@@ -476,16 +504,28 @@ By default API return response with HTTP code **4xx** family.
 + id: `00e60c87-1fac-46dc-a7ee-1dd1f3996ccc` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `First question` (string) - question attribute for Flashcard
 + answer: `First answer` (string) - answer attribute for Flashcard
++ isHidden: `false` (boolean, required) - visibility of Flashcard
 
 ### Flashcard1 (object)
 + id: `2c8815e6-4e16-41ce-95bf-d0039c35af2d` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `Second question` (string) - question attribute for Flashcard
 + answer: `Second answer` (string) - answer attribute for Flashcard
++ isHidden: `true` (boolean, required) - visibility of Flashcard
 
 ### Flashcard2 (object)
 + id: `369f0665-c895-41bb-bede-62b443519964` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `Third question` (string) - question attribute for Flashcard
 + answer: `Third answer` (string) - answer attribute for Flashcard
++ isHidden: `false` (boolean, required) - visibility of Flashcard
+
+### FlashcardWithCount0 (Flashcard0)
++ tipsCount: `1` (number) - Count of Tips in a Flashcard
+
+### FlashcardWithCount1 (Flashcard1)
++ tipsCount: `4` (number) - Count of Tips in a Flashcard
+
+### FlashcardWithCount2 (Flashcard2)
++ tipsCount: `2` (number) - Count of Tips in a Flashcard
 
 ### Tip0 (object)
 + id: `51155739-1028-4479-a425-9ebaa501d9fe` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
@@ -534,6 +574,11 @@ By default API return response with HTTP code **4xx** family.
 + (Flashcard0)
 + (Flashcard1)
 + (Flashcard2)
+
+### FlashcardWithCountCollection (array)
++ (FlashcardWithCount0)
++ (FlashcardWithCount1)
++ (FlashcardWithCount2)
 
 ### DeckWithCountCollection (array)
 + (DeckWithCount0)

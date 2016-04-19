@@ -3,7 +3,7 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.ResultRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
-import com.bls.patronage.db.model.Result;
+import com.bls.patronage.db.exception.DataAccessException;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
@@ -16,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,24 +32,33 @@ public class ResultsResource {
     }
 
     @POST
-    public Response createResult(@Valid ResultRepresentation result,
-                             @Valid @PathParam("deckId") UUIDParam id) {
-        Set<UUID> uuids = resultDAO.getAllResults(id.get()).stream().map(Result::getId).collect(Collectors.toSet());
-        Result createdResult;
-        if (!uuids.contains(result.getFlashcardId())) {
-            createdResult = new Result(result.getFlashcardId(), 0);
-            resultDAO.createResult(createdResult);
-        } else {
-            int correctAnswers = resultDAO.getResult(result.getFlashcardId()).getCorrectAnswers() + (result.isCorrectAnswer() ? 1 : 0);
-            createdResult = new Result(result.getFlashcardId(), correctAnswers);
-            resultDAO.createResult(createdResult);
+    public Response createResult(@Valid ResultRepresentation result) {
+        try {
+            result
+                    .readFromDbModel(resultDAO.getResult(result.getId()))
+                    .setCorrectAnswers(result.getCorrectAnswers() + 1);
+        } catch (DataAccessException e) {
+            result
+                    .setId(UUID.randomUUID())
+                    .setCorrectAnswers(result.getCorrectAnswer() ? 1 : 0);
         }
-        return Response.ok(createdResult).status(Response.Status.CREATED).build();
+
+        resultDAO.updateResult(result.map());
+
+
+        return Response.ok(result).status(Response.Status.CREATED).build();
     }
 
     @GET
-    public List<Result> listResults(@Valid @PathParam("deckId") UUIDParam deckId) {
+    public List<ResultRepresentation> listResults(@Valid @PathParam("deckId") UUIDParam deckId) {
         List<UUID> ids = flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId.get());
-        return ids.stream().map(resultDAO::getResult).collect(Collectors.toList());
+        List<ResultRepresentation> collect = ids
+                .stream()
+                .map(uuid -> new ResultRepresentation()
+                        .readFromDbModel(
+                                resultDAO.getResult(uuid)
+                        ))
+                .collect(Collectors.toList());
+        return collect;
     }
 }
