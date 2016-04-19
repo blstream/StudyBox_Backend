@@ -90,7 +90,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     public void createDeck() throws Exception {
-        final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true, "sample@com.pl");
+        final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);
         dao.createDeck(createdDeck, defaultUserUUID);
         assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
     }
@@ -103,7 +103,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void updateDeck() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
-        Deck updatedDeck = new Deck(deck.getId(), "foo", true, "sample@com.pl");
+        Deck updatedDeck = new Deck(deck.getId(), "foo", true);
         dao.update(updatedDeck);
 
         assertThat(getDecksFromDatabase()).doesNotContain(deck);

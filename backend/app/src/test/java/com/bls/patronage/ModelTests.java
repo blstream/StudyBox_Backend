@@ -17,11 +17,7 @@ public class ModelTests {
     private String testQuestion;
     private String testAnswer;
     private String testName;
-<<<<<<< HEAD
-    private String testEmail;
-=======
     private Boolean isHidden;
->>>>>>> 9ee954fd6fb5a137e2ebb659db4e60b4b62aaff0
 
     @Before
     public void setup() {
@@ -30,11 +26,7 @@ public class ModelTests {
         testQuestion = "Are you ok?";
         testAnswer = "Yes, thank you.";
         testName = "Math";
-<<<<<<< HEAD
-        testEmail = "sample@mail.com";
-=======
         isHidden = false;
->>>>>>> 9ee954fd6fb5a137e2ebb659db4e60b4b62aaff0
     }
 
     @Test
@@ -85,7 +77,7 @@ public class ModelTests {
 
     @Test
     public void creatingDeckWithBothArguments() {
-        Deck deck = new Deck(UUID.fromString(testUUID), testName, testEmail);
+        Deck deck = new Deck(UUID.fromString(testUUID), testName);
 
         assertThat(deck.getName()).isEqualTo(testName);
         assertThat(deck.getId()).isEqualTo(UUID.fromString(testUUID));
@@ -93,7 +85,7 @@ public class ModelTests {
 
     @Test
     public void creatingDeckWithBothArgumentsString() {
-        Deck deck = new Deck(testUUID, testName, testEmail);
+        Deck deck = new Deck(testUUID, testName);
 
         assertThat(deck.getName()).isEqualTo(testName);
         assertThat(deck.getId()).isEqualTo(UUID.fromString(testUUID));

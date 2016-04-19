@@ -17,9 +17,6 @@
             <column name="public" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="authorEmail" type="text">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
         <createTable tableName="flashcards">
             <column name="id" type="uuid">
@@ -96,7 +93,6 @@
             <column name="id" type="STRING"/>
             <column name="name" type="STRING"/>
             <column name="public" type="BOOLEAN"/>
-            <column name="authorEmail" type="STRING"/>
         </loadData>
         <loadData tableName="results" file="initialData/results.csv">
             <column name="flashcardId" type="STRING"/>

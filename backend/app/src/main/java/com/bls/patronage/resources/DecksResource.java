@@ -39,13 +39,6 @@ public class DecksResource {
 
     @POST
     public Response createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
-<<<<<<< HEAD
-        User userPrincipal = (User) context.getUserPrincipal();
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.getIsPublic(), userPrincipal.getEmail());
-
-        decksDAO.createDeck(createdDeck, userPrincipal.getId());
-        return Response.ok(createdDeck).status(Response.Status.CREATED).build();
-=======
 
         User user = (User) context.getUserPrincipal();
 
@@ -54,7 +47,6 @@ public class DecksResource {
 
 
         return Response.ok(deck).status(Response.Status.CREATED).build();
->>>>>>> 9ee954fd6fb5a137e2ebb659db4e60b4b62aaff0
     }
 
     @GET
@@ -95,7 +87,6 @@ public class DecksResource {
 
         private DeckCollectionBuilder() {
         }
-
         public DeckCollectionBuilder(UUID userId) {
             this.userId = userId;
         }
@@ -135,7 +126,7 @@ public class DecksResource {
 
             //end of building phase. If none of the above worked, collection is created now
             boolean wasPrebuild = Optional.ofNullable(deckCollection).isPresent();
-            deckCollection = wasPrebuild ? deckCollection : decksDAO.getAllDecks();
+            deckCollection = wasPrebuild ?  deckCollection : decksDAO.getAllDecks();
 
             //now the other tasks are run;
             if (includeOwn) {
