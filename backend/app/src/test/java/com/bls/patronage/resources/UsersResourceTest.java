@@ -84,7 +84,7 @@ public class UsersResourceTest extends BasicAuthenticationTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertThat(response.getStatus()).isEqualTo(IS_AUTHENTICATION_REQUIRED ? Response.Status.FORBIDDEN.getStatusCode() : Response.Status.OK.getStatusCode()
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode()
         );
     }
 }

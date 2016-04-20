@@ -11,14 +11,9 @@ import java.io.IOException;
 
 @Priority(Priorities.AUTHENTICATION - 100)
 public class PreAuthenticationFilter implements ContainerRequestFilter {
+
     public static String defultUserEmail = "anon";
     public static String defultUserPassword = "password";
-
-    private final boolean isAuthenticationRequired;
-
-    public PreAuthenticationFilter(final boolean isAuthenticationRequired) {
-        this.isAuthenticationRequired = isAuthenticationRequired;
-    }
 
     @Override
     public void filter(ContainerRequestContext request) throws IOException {
