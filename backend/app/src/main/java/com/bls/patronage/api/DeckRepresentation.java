@@ -13,14 +13,14 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeckRepresentation implements DbMappable<Deck> {
+    private UUID id;
     @NotEmpty
     @Length(min = 1, max = 50)
     final private String name;
     @NotNull
     final private Boolean publicVisible;
-
-    private UUID id;
     private Integer flashcardsNumber;
+
     @Email
     private String creatorEmail;
 
@@ -35,10 +35,11 @@ public class DeckRepresentation implements DbMappable<Deck> {
         this.id = deck.getId();
         this.name = deck.getName();
         this.publicVisible = deck.getIsPublic();
+        this.creatorEmail=deck.getCreatorEmail();
     }
 
     public Deck map() {
-        return new Deck(id, name, publicVisible);
+        return new Deck(id, name, publicVisible, creatorEmail);
     }
 
     public Boolean isPublicVisible() {

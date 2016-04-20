@@ -19,7 +19,7 @@ import java.util.UUID;
 @UseStringTemplate3StatementLocator
 public abstract class DeckDAO {
 
-    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
+    @SqlQuery("select decks.id, decks.name, decks.public, users.email from decks join usersDecks on usersDecks.deckId = decks.id inner join users on users.id = usersDecks.userId " +
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
@@ -38,21 +38,31 @@ public abstract class DeckDAO {
     @SqlUpdate("delete from decks where id = :id")
     public abstract void deleteDeck(@Bind("id") UUID id);
 
-    @SqlQuery("select id, name, public from decks where id = :id")
+    @SqlQuery("select decks.id, decks.name, decks.public, users.email from "+
+            "decks inner join usersDecks on usersDecks.deckId = decks.id inner join users on users.id = usersDecks.userId "+
+            "where decks.id = :id")
     abstract Deck getDeck(@Bind("id") UUID id);
 
-    @SqlQuery("select id, name, public from decks where name like :name and public='true'")
+    @SqlQuery("select decks.id, decks.name, decks.public, users.email from "+
+            "decks inner join usersDecks on usersDecks.deckId = decks.id "+
+            "inner join users on users.id = usersDecks.userId "+
+            "where decks.name like :name and decks.public='true'")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
-    @SqlQuery("select id, name, public from decks " +
+    @SqlQuery("select decks.id, decks.name, decks.public from decks " +
             "inner join usersDecks on decks.id = usersDecks.deckId " +
+            "inner join users on users.id = usersDecks.userId "+
             "where decks.name like :name and usersDecks.userId = :id")
     abstract List<Deck> getUserDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
 
-    @SqlQuery("select id, name, public from decks where public='true'")
+    @SqlQuery("select decks.id, decks.name, decks.public, users.email from "+
+            "decks inner join usersDecks on usersDecks.deckId = decks.id inner join users on users.id = usersDecks.userId "+
+            "where decks.public='true'")
     abstract Collection<Deck> getDecks();
 
-    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
+    @SqlQuery("select decks.id, decks.name, decks.public, users.email "+
+            "from decks inner join usersDecks on usersDecks.deckId = decks.id " +
+            "inner join users on users.id = usersDecks.userId "+
             "where usersDecks.userId = :userId and decks.public = 'true' " +
             "limit 1 offset floor(random()*(select count(*) from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId and decks.public = 'true'))")

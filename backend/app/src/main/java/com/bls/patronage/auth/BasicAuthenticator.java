@@ -36,8 +36,9 @@ public class BasicAuthenticator implements Authenticator<BasicCredentials, User>
         String email = basicCredentials.getUsername();
         String plaintextPassword = basicCredentials.getPassword();
 
-        if (email.equals(PreAuthenticationFilter.defultUserEmail))
+        if (email.equals(PreAuthenticationFilter.defultUserEmail)) {
             return Optional.of(new User(UUID.randomUUID(), email, "", Base64.encodeAsString(plaintextPassword)));
+        }
 
         final Optional<User> user = Optional.of(userDao.getUserByEmail(email));
         if (user.isPresent()) {

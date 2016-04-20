@@ -46,7 +46,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         super.setUp();
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
-        deck = new DeckRepresentation("biology", false).setId(deckId);
+        deck = new DeckRepresentation("biology", false).setId(deckId).setCreatorEmail(user.getEmail());
         deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
 
@@ -95,7 +95,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
     public void updateDeck() {
         final Response response = getPutResponse(deckURI, deck, encodedCredentials);
 
-        final DeckRepresentation updatedDeck = response.readEntity(DeckRepresentation.class);
+        final DeckRepresentation updatedDeck = response.readEntity(DeckRepresentation.class).setCreatorEmail(user.getEmail());
         verify(deckDao).update(updatedDeck.map());
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(updatedDeck.getId()).isEqualTo(deckId);

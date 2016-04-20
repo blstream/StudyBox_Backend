@@ -1,7 +1,6 @@
 package com.bls.patronage.resources;
 
 import com.bls.patronage.api.UserRepresentation;
-import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -85,8 +84,7 @@ public class UsersResourceTest extends BasicAuthenticationTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertThat(response.getStatus()).isEqualTo(
-                PreAuthenticationFilter.isAuthHeaderEnabledInConfig() ? Response.Status.FORBIDDEN.getStatusCode() : Response.Status.OK.getStatusCode()
+        assertThat(response.getStatus()).isEqualTo(IS_AUTHENTICATION_REQUIRED ? Response.Status.FORBIDDEN.getStatusCode() : Response.Status.OK.getStatusCode()
         );
     }
 }
