@@ -1,14 +1,21 @@
 package com.bls.patronage.dao;
 
-import com.bls.patronage.db.dao.*;
-import com.bls.patronage.db.mapper.*;
-import com.bls.patronage.db.model.*;
-import org.testng.annotations.*;
+import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.mapper.DeckMapper;
+import com.bls.patronage.db.mapper.FlashcardMapper;
+import com.bls.patronage.db.model.Deck;
+import com.bls.patronage.db.model.Flashcard;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Test
 public class DeckDAOTest extends DAOTest {
@@ -66,7 +73,7 @@ public class DeckDAOTest extends DAOTest {
         Deck deck = getDecksFromDatabase().get(0);
         assertThat(dao.getDeckById(deck.getId())).isEqualTo(deck);
     }
-    
+
     public void getUserDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
         assertThat(dao.getUserDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
