@@ -127,6 +127,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = authResources.client()
                 .target(testURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Authorization", "Basic " + encodedCredentials)
                 .post(Entity.json(""));
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
@@ -142,6 +143,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = authResources.client()
                 .target(testURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Authorization", "Basic " + encodedCredentials)
                 .post(Entity.json(""));
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
@@ -157,6 +159,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = authResources.client()
                 .target(testURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Authorization", "Basic " + encodedCredentials)
                 .post(Entity.json(""));
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());

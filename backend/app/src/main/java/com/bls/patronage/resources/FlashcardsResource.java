@@ -48,7 +48,7 @@ public class FlashcardsResource {
                     .stream()
                     .map(flashcard -> ((tipsCount == null || !tipsCount ) ?
                             new FlashcardRepresentation(flashcard) :
-                            new FlashcardRepresentation(flashcard).setTipsCount(
+                            new FlashcardRepresentation(flashcard).setTipsNumber(
                                     flashcardDAO.getTipsCount(flashcard.getId()))))
                     .collect(Collectors.toList());
         } else {
@@ -56,7 +56,7 @@ public class FlashcardsResource {
                     .stream()
                     .map(flashcard -> ((tipsCount == null || !tipsCount ) ?
                             new FlashcardRepresentation(flashcard) :
-                            new FlashcardRepresentation(flashcard).setTipsCount(
+                            new FlashcardRepresentation(flashcard).setTipsNumber(
                                     flashcardDAO.getTipsCount(flashcard.getId()))))
                     .collect(Collectors.toList());
         }
