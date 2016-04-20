@@ -140,5 +140,13 @@
             <column name="userId" type="STRING"/>
         </loadUpdateData>
     </changeSet>
+    <changeSet id="10" author="toja">
+        <addNotNullConstraint columnDataType="uuid"
+                              columnName="userId"
+                              tableName="results"/>
+        <dropPrimaryKey tableName="results"/>
+        <addPrimaryKey columnNames="flashcardId, userId"
+                       tableName="results"/>
+    </changeSet>
 </databaseChangeLog>
 
