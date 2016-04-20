@@ -71,7 +71,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void getDeckById() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
-        assertThat(dao.getDeckById(deck.getId())).isEqualTo(deck);
+        assertThat(dao.getDeckById(deck.getId(), defaultUserUUID)).isEqualTo(deck);
     }
     
     public void getUserDeckByName() throws Exception {
@@ -92,7 +92,7 @@ public class DeckDAOTest extends DAOTest {
     public void createDeck() throws Exception {
         final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);
         dao.createDeck(createdDeck, defaultUserUUID);
-        assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
+        assertThat(dao.getDeckById(createdDeck.getId(), defaultUserUUID)).isEqualTo(createdDeck);
     }
 
     public void deleteDeck() throws Exception {
