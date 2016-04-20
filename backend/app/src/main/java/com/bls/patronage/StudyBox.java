@@ -78,15 +78,13 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
         final CachingAuthenticator cachingAuthenticator = new CachingAuthenticator(environment.metrics(), basicAuthenticator,
                 configuration.getAuthCacheBuilder());
-        if (configuration.getAuthHeaderRequired()) {
-            environment.jersey().register(new AuthDynamicFeature(
-                    new BasicCredentialAuthFilter.Builder<User>()
-                            .setAuthenticator(cachingAuthenticator)
-                            .buildAuthFilter()));
 
-            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
-        }
+        environment.jersey().register(new AuthDynamicFeature(
+                new BasicCredentialAuthFilter.Builder<User>()
+                        .setAuthenticator(cachingAuthenticator)
+                        .buildAuthFilter()));
 
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(PreAuthenticationFilter.class);
     }
 }
