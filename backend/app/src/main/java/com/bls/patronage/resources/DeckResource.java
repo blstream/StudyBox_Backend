@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.BooleanParam;
 import io.dropwizard.jersey.params.UUIDParam;
@@ -27,44 +28,45 @@ public class DeckResource {
 
     @GET
     public DeckRepresentation getDeck(
-            @Auth
+            @Auth User user,
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
 
         return new DeckRepresentation(
-                decksDAO.getDeckById(deckId.get())
+                decksDAO.getDeckById(deckId.get(), user.getId())
         );
     }
 
     @DELETE
     public void deleteDeck(
-            @Auth
+            @Auth User user,
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
 
-        decksDAO.getDeckById(deckId.get());
+        decksDAO.getDeckById(deckId.get(), user.getId());
         decksDAO.deleteDeck(deckId.get());
     }
 
     @PUT
     public DeckRepresentation updateDeck(
-            @Auth
+            @Auth User user,
             @Valid
             @PathParam("deckId") UUIDParam deckId,
             @Valid DeckRepresentation deck) {
 
-        decksDAO.getDeckById(deckId.get());
+        decksDAO.getDeckById(deckId.get(), user.getId());
         decksDAO.update(deck.setId(deckId.get()).map());
         return deck;
     }
 
     @Path("/public/{access}")
     @POST
-    public void changeStatus(@Valid @PathParam("deckId") UUIDParam deckId,
+    public void changeStatus(@Auth User user,
+                             @Valid @PathParam("deckId") UUIDParam deckId,
                              @Valid @PathParam("access") BooleanParam access) {
 
         DeckRepresentation deck = new DeckRepresentation(
-                decksDAO.getDeckById(deckId.get()).getName(),
+                decksDAO.getDeckById(deckId.get(), user.getId()).getName(),
                 access.get()
         );
 
