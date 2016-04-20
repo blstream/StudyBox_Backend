@@ -78,6 +78,15 @@ public class DeckResourceTest extends BasicAuthenticationTest {
     }
 
     @Test
+    public void getNonAccessibleDeck() {
+        when(deckDao.getDeckById(deckId, user.getId())).thenThrow(DataAccessException.class);
+
+        final Response response = getResponseWithCredentials(deckURI, encodedCredentials);
+
+        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
     public void deleteDeck() {
         final Response response = authResources.client()
                 .target(deckURI).request().header("Authorization", "Basic " + encodedCredentials)
