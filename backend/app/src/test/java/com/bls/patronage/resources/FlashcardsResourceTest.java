@@ -115,7 +115,7 @@ public class FlashcardsResourceTest {
 
         verify(dao).getAllFlashcards(flashcard.getDeckId());
         verify(dao).getTipsCount(flashcard.getId());
-        assertThat(response).contains(new FlashcardRepresentation(flashcard).setTipsCount(5));
+        assertThat(response).contains(new FlashcardRepresentation(flashcard).setTipsNumber(5));
     }
 
     @Test

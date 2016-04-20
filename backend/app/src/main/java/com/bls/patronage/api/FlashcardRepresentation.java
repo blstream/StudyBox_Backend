@@ -22,7 +22,7 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
     @NotNull
     private final Boolean isHidden;
     private UUID deckId;
-    private Integer tipsCount;
+    private Integer tipsNumber;
 
     public FlashcardRepresentation(@JsonProperty("question") String question,
                                    @JsonProperty("answer") String answer,
@@ -57,12 +57,12 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return id;
     }
 
-    public Integer getTipsCount() {
-        return tipsCount;
+    public Integer getTipsNumber() {
+        return tipsNumber;
     }
 
-    public FlashcardRepresentation setTipsCount(int tipsCount) {
-        this.tipsCount = tipsCount;
+    public FlashcardRepresentation setTipsNumber(int tipsNumber) {
+        this.tipsNumber = tipsNumber;
         return this;
     }
 
@@ -94,11 +94,11 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
                 Objects.equals(id, that.id) &&
                 Objects.equals(deckId, that.deckId) &&
                 Objects.equals(isHidden, that.isHidden) &&
-                Objects.equals(tipsCount, that.tipsCount);
+                Objects.equals(tipsNumber, that.tipsNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(question, answer, id, deckId, isHidden, tipsCount);
+        return Objects.hash(question, answer, id, deckId, isHidden, tipsNumber);
     }
 }

@@ -32,7 +32,7 @@ public class FlashcardRepresentationTests {
                 .setId(UUID.fromString(FIXTURE_ID)).setDeckId(UUID.fromString(FIXTURE_DECKID));
         flashcardWithTipsCount = new FlashcardRepresentation(FIXTURE_QUESTION, FIXTURE_ANSWER, false)
                 .setId(UUID.fromString(FIXTURE_ID)).setDeckId(UUID.fromString(FIXTURE_DECKID))
-                .setTipsCount(FIXTURE_TIPS_COUNT);
+                .setTipsNumber(FIXTURE_TIPS_COUNT);
     }
 
     @Test
