@@ -133,5 +133,12 @@
             <column name="userId" type="uuid"/>
         </addColumn>
     </changeSet>
+    <changeSet id="9" author="toja">
+        <loadUpdateData primaryKey="flashcardId" tableName="results" file="initialData/resultsWithUsers.csv">
+            <column name="flashcardId" type="STRING"/>
+            <column name="correctAnswers" type="NUMERIC"/>
+            <column name="userId" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
 </databaseChangeLog>
 
