@@ -1,9 +1,10 @@
 package com.bls.patronage.resources;
 
-
 import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.exception.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
@@ -23,11 +24,13 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class BasicAuthenticationTest {
     protected static final UserDAO userDAO = mock(UserDAO.class);
     protected static final DeckDAO deckDao = mock(DeckDAO.class);
-    protected static boolean IS_AUTHENTICATION_REQUIRED = false;
+    protected static final ResultDAO resultDAO = mock(ResultDAO.class);
+    protected static final FlashcardDAO flashcardDAO = mock(FlashcardDAO.class);
 
     @ClassRule
     public static final ResourceTestRule authResources = ResourceTestRule
@@ -36,12 +39,13 @@ public class BasicAuthenticationTest {
             .addProvider(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
                     .setAuthenticator(new BasicAuthenticator(userDAO))
                     .buildAuthFilter()))
-            .addProvider(new PreAuthenticationFilter(IS_AUTHENTICATION_REQUIRED))
             .addProvider(RolesAllowedDynamicFeature.class)
             .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
+            .addProvider(PreAuthenticationFilter.class)
             .addResource(new UserResource(userDAO))
             .addResource(new DecksResource(deckDao))
             .addResource(new DeckResource(deckDao))
+            .addResource(new ResultsResource(flashcardDAO, resultDAO))
             .build();
 
     protected User user;
@@ -65,11 +69,14 @@ public class BasicAuthenticationTest {
         badPasswordCredentials = Base64.getEncoder().encodeToString("foo@mail.com:badPass" .getBytes());
         fakeEmail = "asd@mail.com";
         badEmailCredentials = Base64.getEncoder().encodeToString((fakeEmail + ":Secret").getBytes());
+
+        when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
     }
 
     @After
     public void tearDown() {
         reset(userDAO);
         reset(deckDao);
+        reset(resultDAO);
     }
 }

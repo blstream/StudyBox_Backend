@@ -4,6 +4,7 @@ import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.exception.DataAccessExceptionMapper;
@@ -12,6 +13,7 @@ import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
+import com.bls.patronage.resources.ResultsResource;
 import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
@@ -73,6 +75,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new UsersResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new TipResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
+        environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
+                jdbi.onDemand(ResultDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
@@ -85,6 +89,6 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
                         .buildAuthFilter()));
 
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
-        environment.jersey().register(new PreAuthenticationFilter(configuration.getAuthHeaderRequired().booleanValue()));
+        environment.jersey().register(PreAuthenticationFilter.class);
     }
 }

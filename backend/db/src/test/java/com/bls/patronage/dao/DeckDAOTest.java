@@ -1,21 +1,14 @@
 package com.bls.patronage.dao;
 
-import com.bls.patronage.db.dao.DeckDAO;
-import com.bls.patronage.db.mapper.DeckMapper;
-import com.bls.patronage.db.mapper.FlashcardMapper;
-import com.bls.patronage.db.model.Deck;
-import com.bls.patronage.db.model.Flashcard;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import com.bls.patronage.db.dao.*;
+import com.bls.patronage.db.mapper.*;
+import com.bls.patronage.db.model.*;
+import org.testng.annotations.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @Test
 public class DeckDAOTest extends DAOTest {
@@ -38,7 +31,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     private List<Deck> getDecksFromDatabase() throws Exception {
-        return getAllEntities(Deck.class, DeckMapper.class, "decks");
+        return getAllDeckEntitiesWithEmail(Deck.class, DeckMapper.class, "decks");
     }
 
     @Override
@@ -46,7 +39,7 @@ public class DeckDAOTest extends DAOTest {
     public void tearDown() throws Exception {
         super.tearDown();
     }
-/*
+
     public void getAllDecks() throws Exception {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
         List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
@@ -80,7 +73,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     public void getDeckByName() throws Exception {
-        Deck deck = getDecksFromDatabase().get(3);
+        Deck deck = getDecksFromDatabase().get(2);
         assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
     }
 
@@ -90,7 +83,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     public void createDeck() throws Exception {
-        final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true, "sample@com.pl");
+        final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true, " test1@mail.com");
         dao.createDeck(createdDeck, defaultUserUUID);
         assertThat(dao.getDeckById(createdDeck.getId())).isEqualTo(createdDeck);
     }
@@ -103,7 +96,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void updateDeck() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
-        Deck updatedDeck = new Deck(deck.getId(), "foo", true, "sample@com.pl");
+        Deck updatedDeck = new Deck(deck.getId(), "foo", true, " test1@mail.com");
         dao.update(updatedDeck);
 
         assertThat(getDecksFromDatabase()).doesNotContain(deck);
@@ -116,5 +109,5 @@ public class DeckDAOTest extends DAOTest {
         List<Flashcard> flashcardsInOneDeck = flashcards.stream().filter(flashcard -> flashcard.getDeckId().equals(deckId)).collect(Collectors.toList());
 
         assertThat(dao.getFlashcardsNumber(Collections.singletonList(deckId))).isEqualTo(Collections.singletonList(flashcardsInOneDeck.size()));
-    }*/
+    }
 }

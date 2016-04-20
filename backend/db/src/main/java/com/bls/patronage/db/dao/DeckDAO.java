@@ -49,7 +49,7 @@ public abstract class DeckDAO {
             "where decks.name like :name and decks.public='true'")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
-    @SqlQuery("select decks.id, decks.name, decks.public from decks " +
+    @SqlQuery("select decks.id, decks.name, decks.public, users.email from decks " +
             "inner join usersDecks on decks.id = usersDecks.deckId " +
             "inner join users on users.id = usersDecks.userId "+
             "where decks.name like :name and usersDecks.userId = :id")

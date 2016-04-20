@@ -41,7 +41,6 @@ public class DecksResource {
     public Response createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
 
         User user = (User) context.getUserPrincipal();
-        Deck createdDeck = new Deck(UUID.randomUUID(), deck.getName(), deck.isPublicVisible(), user.getEmail());
 
         decksDAO.createDeck(deck.setId(UUID.randomUUID()).map(), user.getId());
 

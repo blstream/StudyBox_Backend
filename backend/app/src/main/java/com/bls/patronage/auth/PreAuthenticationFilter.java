@@ -7,19 +7,13 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Priority(Priorities.AUTHENTICATION - 100)
 public class PreAuthenticationFilter implements ContainerRequestFilter {
+
     public static String defultUserEmail = "anon";
     public static String defultUserPassword = "password";
-
-    private final boolean isAuthenticationRequired;
-
-    public PreAuthenticationFilter(final boolean isAuthenticationRequired) {
-        this.isAuthenticationRequired = isAuthenticationRequired;
-    }
 
     @Override
     public void filter(ContainerRequestContext request) throws IOException {
@@ -31,12 +25,8 @@ public class PreAuthenticationFilter implements ContainerRequestFilter {
             }
         }
         if (!hasValidHeader) {
-            if (isAuthenticationRequired) {
-                request.abortWith(Response.noContent().status(Response.Status.FORBIDDEN).build());
-            } else {
-                final String base64 = Base64.encodeAsString(defultUserEmail + ":" + defultUserPassword);
-                request.getHeaders().putSingle(HttpHeaders.AUTHORIZATION, "Basic " + base64);
-            }
+            final String base64 = Base64.encodeAsString(defultUserEmail + ":" + defultUserPassword);
+            request.getHeaders().putSingle(HttpHeaders.AUTHORIZATION, "Basic " + base64);
         }
     }
 }

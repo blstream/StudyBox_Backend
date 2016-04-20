@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FlashcardRepresentation implements DbMappable<Flashcard> {
-    private UUID id;
     @NotEmpty
     @Length(max = 1000)
     private final String question;
@@ -22,6 +21,7 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
     @NotNull
     private final Boolean isHidden;
 
+    private UUID id;
     private UUID deckId;
     private Integer tipsCount;
 

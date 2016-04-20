@@ -8,9 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.UUID;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRepresentation implements DbMappable<User> {
-    private UUID id;
     @Email
     @NotEmpty
     private final String email;
@@ -19,6 +17,8 @@ public class UserRepresentation implements DbMappable<User> {
     @NotEmpty
     @Length(min = 8)
     private String password;
+
+    private UUID id;
 
     public UserRepresentation(@JsonProperty("email") String email,
                               @JsonProperty("name") String name,

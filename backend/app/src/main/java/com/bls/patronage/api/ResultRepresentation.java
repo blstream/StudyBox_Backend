@@ -1,13 +1,12 @@
 package com.bls.patronage.api;
 
 import com.bls.patronage.db.model.Result;
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResultRepresentation implements DbMappable<Result> {
     @NotNull
     private UUID flashcardId;
