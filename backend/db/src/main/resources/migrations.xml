@@ -128,5 +128,10 @@
             <column name="userId" type="STRING"/>
         </loadData>
     </changeSet>
+    <changeSet id="8" author="toja">
+        <addColumn tableName="results">
+            <column name="userId" type="uuid"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
