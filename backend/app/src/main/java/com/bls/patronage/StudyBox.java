@@ -85,6 +85,6 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
                         .buildAuthFilter()));
 
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
-        environment.jersey().register(new PreAuthenticationFilter(configuration.getAuthHeaderRequired().booleanValue()));
+        environment.jersey().register(PreAuthenticationFilter.class);
     }
 }

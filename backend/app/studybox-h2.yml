@@ -1,16 +1,6 @@
-server:
-  type: simple
-  applicationContextPath: /
-  adminContextPath: /admin
-  connector:
-    type: http
-    port: 2000
-
 database:
   driverClass: org.h2.Driver
   user: sa
   password: sa
   url: jdbc:h2:./studybox
-
-authHeaderRequired: false
 

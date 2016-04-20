@@ -27,7 +27,6 @@ import static org.mockito.Mockito.reset;
 public class BasicAuthenticationTest {
     protected static final UserDAO userDAO = mock(UserDAO.class);
     protected static final DeckDAO deckDao = mock(DeckDAO.class);
-    protected static boolean IS_AUTHENTICATION_REQUIRED = false;
 
     @ClassRule
     public static final ResourceTestRule authResources = ResourceTestRule
@@ -36,7 +35,7 @@ public class BasicAuthenticationTest {
             .addProvider(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
                     .setAuthenticator(new BasicAuthenticator(userDAO))
                     .buildAuthFilter()))
-            .addProvider(new PreAuthenticationFilter(IS_AUTHENTICATION_REQUIRED))
+            .addProvider(PreAuthenticationFilter.class)
             .addProvider(RolesAllowedDynamicFeature.class)
             .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
             .addResource(new UserResource(userDAO))
