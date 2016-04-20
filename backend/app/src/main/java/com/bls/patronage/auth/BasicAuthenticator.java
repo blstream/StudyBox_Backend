@@ -1,18 +1,17 @@
 package com.bls.patronage.auth;
 
-import com.bls.patronage.db.dao.UserDAO;
-import com.bls.patronage.db.model.User;
+import com.bls.patronage.*;
+import com.bls.patronage.db.dao.*;
+import com.bls.patronage.db.model.*;
 import com.google.common.base.Optional;
-import io.dropwizard.auth.AuthenticationException;
-import io.dropwizard.auth.Authenticator;
-import io.dropwizard.auth.basic.BasicCredentials;
+import io.dropwizard.auth.*;
+import io.dropwizard.auth.basic.*;
 import org.glassfish.jersey.internal.util.Base64;
-import org.mindrot.jbcrypt.BCrypt;
+import org.mindrot.jbcrypt.*;
 
-import java.util.UUID;
+import java.util.*;
 
-import static com.bls.patronage.StudyBoxConfiguration.PW_HASH_SECURITY_LEVEL;
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 
 public class BasicAuthenticator implements Authenticator<BasicCredentials, User> {
 
@@ -23,7 +22,7 @@ public class BasicAuthenticator implements Authenticator<BasicCredentials, User>
     }
 
     public static String generateSafeHash(final String plaintextPassword) {
-        return BCrypt.hashpw(plaintextPassword, BCrypt.gensalt(PW_HASH_SECURITY_LEVEL));
+        return BCrypt.hashpw(plaintextPassword, BCrypt.gensalt(StudyBoxConfiguration.PW_HASH_SECURITY_LEVEL));
     }
 
     private static boolean isMatched(final String plaintextPassword, final String hashed) {
