@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-5level [%date{ISO8601}] [%thread] T:${mdc.tenant} U:${mdc.userId} %X{mdc} %c{40}:%method:%line %replace(%m){'Authorization : Bearer ([\w\.\-]+)','[***]'}%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.bls" level="debug"/>
+
+    <root level="error">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

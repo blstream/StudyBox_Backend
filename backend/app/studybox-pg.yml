@@ -14,4 +14,10 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 
-authHeaderRequired: true
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 2000
