@@ -13,13 +13,12 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeckRepresentation implements DbMappable<Deck> {
+    private UUID id;
     @NotEmpty
     @Length(min = 1, max = 50)
     final private String name;
     @NotNull
     final private Boolean publicVisible;
-
-    private UUID id;
     private Integer flashcardsNumber;
     @Email
     private String creatorEmail;

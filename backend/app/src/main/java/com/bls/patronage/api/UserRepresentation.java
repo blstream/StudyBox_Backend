@@ -1,6 +1,7 @@
 package com.bls.patronage.api;
 
 import com.bls.patronage.db.model.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -8,14 +9,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRepresentation implements DbMappable<User> {
-
+    private UUID id;
     @Email
     @NotEmpty
     private final String email;
     @NotEmpty
     private final String name;
-    private UUID id;
     @NotEmpty
     @Length(min = 8)
     private String password;
