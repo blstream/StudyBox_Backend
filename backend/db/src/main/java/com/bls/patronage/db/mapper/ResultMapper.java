@@ -11,6 +11,6 @@ import java.util.UUID;
 public class ResultMapper implements ResultSetMapper<Result> {
 
     public Result map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        return new Result((UUID) r.getObject("flashcardId"), r.getInt("correctAnswers"));
+        return new Result((UUID) r.getObject("flashcardId"), r.getInt("correctAnswers"), (UUID) r.getObject("userId"));
     }
 }

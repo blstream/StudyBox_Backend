@@ -128,5 +128,25 @@
             <column name="userId" type="STRING"/>
         </loadData>
     </changeSet>
+    <changeSet id="8" author="toja">
+        <addColumn tableName="results">
+            <column name="userId" type="uuid"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="9" author="toja">
+        <loadUpdateData primaryKey="flashcardId" tableName="results" file="initialData/resultsWithUsers.csv">
+            <column name="flashcardId" type="STRING"/>
+            <column name="correctAnswers" type="NUMERIC"/>
+            <column name="userId" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
+    <changeSet id="10" author="toja">
+        <addNotNullConstraint columnDataType="uuid"
+                              columnName="userId"
+                              tableName="results"/>
+        <dropPrimaryKey tableName="results"/>
+        <addPrimaryKey columnNames="flashcardId, userId"
+                       tableName="results"/>
+    </changeSet>
 </databaseChangeLog>
 

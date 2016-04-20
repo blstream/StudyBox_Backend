@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public class Result extends IdentifiableEntity {
     private int correctAnswers;
+    private UUID userId;
 
     public Result() {
     }
@@ -18,18 +19,24 @@ public class Result extends IdentifiableEntity {
         super(id);
     }
 
-    public Result(UUID id, int correctAnswers) {
+    public Result(UUID id, int correctAnswers, UUID userId) {
         super(id);
         this.correctAnswers = correctAnswers;
+        this.userId = userId;
     }
 
-    public Result(String id, int correctAnswers) {
+    public Result(String id, int correctAnswers, UUID userId) {
         super(id);
         this.correctAnswers = correctAnswers;
+        this.userId = userId;
     }
 
     public int getCorrectAnswers() {
         return correctAnswers;
+    }
+
+    public UUID getUserId() {
+        return userId;
     }
 
     @Override
@@ -37,12 +44,14 @@ public class Result extends IdentifiableEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Result result = (Result) o;
-        return getId().equals(result.getId()) && getCorrectAnswers() == result.getCorrectAnswers();
+        return getId().equals(result.getId()) &&
+                getCorrectAnswers() == result.getCorrectAnswers() &&
+                getUserId().equals(result.getUserId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getCorrectAnswers());
+        return Objects.hashCode(getId(), getCorrectAnswers(), getUserId());
     }
 
     @Override

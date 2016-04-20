@@ -12,6 +12,7 @@ import java.util.UUID;
 public class ResultRepresentation implements DbMappable<Result> {
     @NotNull
     private UUID flashcardId;
+    private UUID userId;
 
     private Boolean isCorrectAnswer;
     private Integer correctAnswers;
@@ -33,20 +34,29 @@ public class ResultRepresentation implements DbMappable<Result> {
     public ResultRepresentation readFromDbModel(Result result) {
         this.flashcardId = result.getId();
         this.correctAnswers = result.getCorrectAnswers();
+        this.userId = result.getUserId();
         return this;
     }
 
     @Override
     public Result map() {
-        return new Result(flashcardId, correctAnswers);
+        return new Result(flashcardId, correctAnswers, userId);
     }
 
-
-    public UUID getId() {
+    public UUID getFlashcardId() {
         return flashcardId;
     }
 
-    public ResultRepresentation setId(UUID flashcardId) {
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public ResultRepresentation setUserId(UUID userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public ResultRepresentation setFlashcardId(UUID flashcardId) {
         this.flashcardId = flashcardId;
         return this;
     }
@@ -76,11 +86,12 @@ public class ResultRepresentation implements DbMappable<Result> {
         ResultRepresentation that = (ResultRepresentation) o;
         return isCorrectAnswer == that.isCorrectAnswer &&
                 correctAnswers == that.correctAnswers &&
-                Objects.equals(flashcardId, that.flashcardId);
+                Objects.equals(flashcardId, that.flashcardId) &&
+                Objects.equals(userId, that.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flashcardId, isCorrectAnswer, correctAnswers);
+        return Objects.hash(flashcardId, isCorrectAnswer, correctAnswers, userId);
     }
 }

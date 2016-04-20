@@ -3,7 +3,10 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.ResultRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
-import com.bls.patronage.db.exception.DataAccessException;
+import com.bls.patronage.db.model.Result;
+import com.bls.patronage.db.model.User;
+
+import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
@@ -15,7 +18,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -32,33 +37,37 @@ public class ResultsResource {
     }
 
     @POST
-    public Response createResult(@Valid ResultRepresentation result) {
-        try {
-            result
-                    .readFromDbModel(resultDAO.getResult(result.getId()))
-                    .setCorrectAnswers(result.getCorrectAnswers() + 1);
-        } catch (DataAccessException e) {
-            result
-                    .setId(UUID.randomUUID())
-                    .setCorrectAnswers(result.getCorrectAnswer() ? 1 : 0);
+    public Response createResult(@Auth User user, @Valid List<ResultRepresentation> results) {
+        Optional resultFromDb;
+
+        for(ResultRepresentation result : results) {
+            if((resultFromDb = resultDAO.getResult(result.getFlashcardId(), user.getId())).isPresent()) {
+                result.readFromDbModel((Result) resultFromDb.get())
+                        .setCorrectAnswers(result.getCorrectAnswers() + (result.getCorrectAnswer() ? 1 : 0));
+                resultDAO.updateResult(result.map());
+            } else {
+                result.setCorrectAnswers(result.getCorrectAnswer() ? 1 : 0)
+                        .setUserId(user.getId());
+                resultDAO.createResult(result.map());
+            }
         }
 
-        resultDAO.updateResult(result.map());
-
-
-        return Response.ok(result).status(Response.Status.CREATED).build();
+        return Response.ok(results).status(Response.Status.CREATED).build();
     }
 
     @GET
-    public List<ResultRepresentation> listResults(@Valid @PathParam("deckId") UUIDParam deckId) {
-        List<UUID> ids = flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId.get());
-        List<ResultRepresentation> collect = ids
-                .stream()
-                .map(uuid -> new ResultRepresentation()
-                        .readFromDbModel(
-                                resultDAO.getResult(uuid)
-                        ))
-                .collect(Collectors.toList());
-        return collect;
+    public List<ResultRepresentation> listResults(@Auth User user, @Valid @PathParam("deckId") UUIDParam deckId) {
+        List<String> ids = flashcardDAO.getFlashcardsIdFromSelectedDeck(deckId.get());
+        List<UUID> flashcardsUUIDs = ids.stream().map(UUID::fromString).collect(Collectors.toList());
+        List<ResultRepresentation> results = new ArrayList<>();
+        Optional result;
+
+        for(UUID uuid : flashcardsUUIDs) {
+            if((result = resultDAO.getResult(uuid, user.getId())).isPresent()) {
+                results.add(new ResultRepresentation().readFromDbModel((Result) result.get()));
+            }
+        }
+
+        return results;
     }
 }

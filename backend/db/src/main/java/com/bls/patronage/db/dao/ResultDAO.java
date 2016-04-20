@@ -1,6 +1,5 @@
 package com.bls.patronage.db.dao;
 
-import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.mapper.ResultMapper;
 import com.bls.patronage.db.model.Result;
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -16,24 +15,27 @@ import java.util.UUID;
 @RegisterMapper(ResultMapper.class)
 abstract public class ResultDAO {
 
-    @SqlQuery("select flashcardId, correctAnswers from results where flashcardId = :id")
-    abstract Result get(@Bind("id") UUID id);
+    @SqlQuery("select flashcardId, correctAnswers, userId from results " +
+            "where flashcardId = :flashcardId and userId = :userId")
+    abstract Result get(@Bind("flashcardId") UUID flashcardId, @Bind("userId") UUID userId);
 
-    @SqlUpdate("insert into results values (:id, :correctAnswers)")
+    @SqlUpdate("insert into results (flashcardId, correctAnswers, userId) " +
+            "values (:id, :correctAnswers, :userId)")
     public abstract void createResult(@BindBean Result result);
 
-    @SqlQuery("select results.flashcardId, results.correctAnswers from results left join flashcards on results.flashcardId = flashcards.id where flashcards.deckId = :deckId")
+    @SqlQuery("select results.flashcardId, results.correctAnswers, results.userId " +
+            "from results left join flashcards on results.flashcardId = flashcards.id " +
+            "where flashcards.deckId = :deckId")
     public abstract List<Result> getAllResults(@Bind("deckId") UUID deckId);
 
 
-    @SqlUpdate("update results set correctAnswers = :correctAnswers where flashcardId = :id")
+    @SqlUpdate("update results set correctAnswers = :correctAnswers where flashcardId = :id and userId = :userId")
     public abstract void updateResult(@BindBean Result result);
 
     @SqlUpdate("delete from results where flashcardId = :id")
     public abstract void deleteResult(@Bind("id") UUID id);
 
-    public Result getResult(UUID id) {
-        Optional<Result> result = Optional.ofNullable(get(id));
-        return result.orElseThrow(() -> new DataAccessException("There is no result with specified id"));
+    public Optional getResult(UUID flashcardId, UUID userId) {
+        return Optional.ofNullable(get(flashcardId, userId));
     }
 }

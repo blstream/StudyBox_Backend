@@ -55,11 +55,11 @@ public class ResultDAOTest extends DAOTest {
 
     public void getResultById() throws Exception {
         final Result result = getResultsFromDatabase().get(0);
-        assertThat(dao.getResult(result.getId())).isEqualTo(result);
+        assertThat(dao.getResult(result.getId(), result.getUserId()).get()).isEqualTo(result);
     }
 
     public void createResult() throws Exception {
-        final Result result = new Result(UUID.randomUUID(), new Random().nextInt());
+        final Result result = new Result(UUID.randomUUID(), new Random().nextInt(), UUID.randomUUID());
         dao.createResult(result);
         assertThat(getResultsFromDatabase()).contains(result);
     }
@@ -72,7 +72,7 @@ public class ResultDAOTest extends DAOTest {
 
     public void updateResult() throws Exception {
         final Result result = getResultsFromDatabase().get(0);
-        final Result newResult = new Result(result.getId(), new Random().nextInt());
+        final Result newResult = new Result(result.getId(), new Random().nextInt(), result.getUserId());
         dao.updateResult(newResult);
         assertThat(getResultsFromDatabase()).doesNotContain(result);
         assertThat(getResultsFromDatabase()).contains(newResult);

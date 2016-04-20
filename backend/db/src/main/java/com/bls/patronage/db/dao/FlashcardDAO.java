@@ -25,7 +25,7 @@ abstract public class FlashcardDAO {
     public abstract List<Flashcard> getAllFlashcards(@Bind("deckId") UUID deckId);
 
     @SqlQuery("select id from flashcards where deckId = :deckId")
-    public abstract List<UUID> getFlashcardsIdFromSelectedDeck(@Bind("deckId") UUID deckId);
+    public abstract List<String> getFlashcardsIdFromSelectedDeck(@Bind("deckId") UUID deckId);
 
     @GetGeneratedKeys
     @SqlUpdate("insert into flashcards values (:id, :question, :answer, :deckId, :isHidden)")
