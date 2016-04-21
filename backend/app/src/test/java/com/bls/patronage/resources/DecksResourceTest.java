@@ -89,8 +89,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         when(deckDao.getAllDecks()).thenReturn(decks);
         when(deckDao.getAllUserDecks(user.getId())).thenReturn(userDecks);
-        when(deckDao.getDeckById(deck.getId())).thenReturn(deck);
-        when(deckDao.getDeckById(userDeck.getId())).thenReturn(userDeck);
+        when(deckDao.getDeckById(deck.getId(), user.getId())).thenReturn(deck);
+        when(deckDao.getDeckById(userDeck.getId(), user.getId())).thenReturn(userDeck);
         when(deckDao.getUserDecksByName(any(String.class), eq(userDeck.getId()))).thenReturn(userDecks);
         when(deckDao.getDecksByName(deck.getName())).thenReturn(decks);
 

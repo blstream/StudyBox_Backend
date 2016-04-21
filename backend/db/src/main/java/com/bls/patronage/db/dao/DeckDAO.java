@@ -11,6 +11,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 import org.skife.jdbi.v2.unstable.BindIn;
 
+import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +42,9 @@ public abstract class DeckDAO {
     @SqlQuery("select id, name, public from decks where id = :id")
     abstract Deck getDeck(@Bind("id") UUID id);
 
+    @SqlQuery("select userId from usersDecks where deckId = :id")
+    abstract String getDeckUserId(@Bind("id") UUID id);
+
     @SqlQuery("select id, name, public from decks where name like :name and public='true'")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
@@ -63,10 +67,13 @@ public abstract class DeckDAO {
         insertUsersDeck(deck, userId);
     }
 
-    public Deck getDeckById(UUID uuid) {
-        Deck deck = getDeck(uuid);
+    public Deck getDeckById(UUID deckId, UUID userId) {
+        Deck deck = getDeck(deckId);
         if (deck == null) {
             throw new DataAccessException("There is no deck with specified ID");
+        }
+        if (!(getDeckUserId(deckId).equals(userId.toString()) || deck.getIsPublic())) {
+            throw new DataAccessException("You have no permission.", Response.Status.FORBIDDEN.getStatusCode());
         }
         return deck;
     }
