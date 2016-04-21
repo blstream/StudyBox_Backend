@@ -38,7 +38,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     private List<Deck> getDecksFromDatabase() throws Exception {
-        return getAllEntities(Deck.class, DeckMapper.class, "decks");
+        return getAllDeckEntitiesWithEmail(Deck.class, DeckMapper.class, "decks");
     }
 
     @Override
@@ -73,14 +73,14 @@ public class DeckDAOTest extends DAOTest {
         Deck deck = getDecksFromDatabase().get(0);
         assertThat(dao.getDeckById(deck.getId(), defaultUserUUID)).isEqualTo(deck);
     }
-    
+
     public void getUserDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
         assertThat(dao.getUserDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
     }
 
     public void getDeckByName() throws Exception {
-        Deck deck = getDecksFromDatabase().get(3);
+        Deck deck = getDecksFromDatabase().get(2);
         assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
     }
 
@@ -90,7 +90,7 @@ public class DeckDAOTest extends DAOTest {
     }
 
     public void createDeck() throws Exception {
-        final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);
+        final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true, " test1@mail.com");
         dao.createDeck(createdDeck, defaultUserUUID);
         assertThat(dao.getDeckById(createdDeck.getId(), defaultUserUUID)).isEqualTo(createdDeck);
     }
@@ -103,7 +103,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void updateDeck() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
-        Deck updatedDeck = new Deck(deck.getId(), "foo", true);
+        Deck updatedDeck = new Deck(deck.getId(), "foo", true, " test1@mail.com");
         dao.update(updatedDeck);
 
         assertThat(getDecksFromDatabase()).doesNotContain(deck);

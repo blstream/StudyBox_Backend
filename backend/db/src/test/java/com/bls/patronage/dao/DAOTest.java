@@ -52,6 +52,14 @@ abstract public class DAOTest {
         return query.mapTo(typeClass).list();
     }
 
+    public  <E> List<E> getAllDeckEntitiesWithEmail(Class<E> typeClass, Class mapperClass, String tableName) throws Exception {
+        Query<Map<String, Object>> query = handle.createQuery("select decks.id, decks.name, decks.public, users.email from "+
+                "decks inner join usersDecks on usersDecks.deckId = decks.id inner join users on users.id = usersDecks.userId "+
+                "where decks.public='true'");
+        query.registerMapper((ResultSetMapper) mapperClass.newInstance());
+        return query.mapTo(typeClass).list();
+    }
+
     protected DataSourceFactory getDataSourceFactory() {
         DataSourceFactory dataSourceFactory = new DataSourceFactory();
         dataSourceFactory.setDriverClass(JDBC_DRIVER);

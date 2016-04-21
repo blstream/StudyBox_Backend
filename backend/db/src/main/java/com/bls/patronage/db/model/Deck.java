@@ -5,32 +5,37 @@ import java.util.UUID;
 public class Deck extends IdentifiableEntity {
     private String name;
     private Boolean isPublic;
+    private String creatorEmail;
 
     public Deck() {
     }
 
-    public Deck(UUID id, String name) {
+    public Deck(UUID id, String name, String creatorEmail) {
         super(id);
         this.name = name;
         this.isPublic = false;
+        this.creatorEmail=creatorEmail;
     }
 
-    public Deck(String id, String name) {
+    public Deck(String id, String name, String creatorEmail) {
         super(id);
         this.name = name;
         this.isPublic = false;
+        this.creatorEmail=creatorEmail;
     }
 
-    public Deck(UUID id, String name, Boolean isPublic) {
+    public Deck(UUID id, String name, Boolean isPublic, String creatorEmail) {
         super(id);
         this.name = name;
         this.isPublic = isPublic;
+        this.creatorEmail=creatorEmail;
     }
 
-    public Deck(String id, String name, Boolean isPublic) {
+    public Deck(String id, String name, Boolean isPublic, String creatorEmail) {
         super(id);
         this.name = name;
         this.isPublic = isPublic;
+        this.creatorEmail=creatorEmail;
     }
 
     public Deck(String name) {
@@ -53,6 +58,10 @@ public class Deck extends IdentifiableEntity {
         this.isPublic = isPublic;
     }
 
+    public String getCreatorEmail(){ return creatorEmail;}
+
+    public void setCreatorEmail(String creatorEmail){this.creatorEmail=creatorEmail;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,6 +71,7 @@ public class Deck extends IdentifiableEntity {
 
         if (!getId().equals(deck.getId())) return false;
         if (getIsPublic() != deck.getIsPublic()) return false;
+        if(!getCreatorEmail().equals(deck.getCreatorEmail())) return false;
         return getName().equals(deck.getName());
 
     }
@@ -69,6 +79,7 @@ public class Deck extends IdentifiableEntity {
     @Override
     public int hashCode() {
         int result = getName().hashCode();
+        result = result*31 + getCreatorEmail().hashCode();
         return 31 * result + getId().hashCode();
     }
 
@@ -77,7 +88,8 @@ public class Deck extends IdentifiableEntity {
         return "Deck{" +
                 "UUID=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", public=" + getIsPublic() +
+                ", public=" + getIsPublic() + '\'' +
+                ", creatorEmail=" + getCreatorEmail() +
                 '}';
     }
 }
