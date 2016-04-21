@@ -1,0 +1,57 @@
+From 0224bca4806ee1a63c1dc46fc965923a580ff498 Mon Sep 17 00:00:00 2001
+From: Arek <arek314arek@gmail.com>
+Date: Wed, 20 Apr 2016 20:48:18 +0200
+Subject: [PATCH] 	modified:  
+ backend/db/src/test/java/com/bls/patronage/dao/DeckDAOTest.java
+
+---
+ .../java/com/bls/patronage/dao/DeckDAOTest.java    | 27 ++++++++++++++--------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/backend/db/src/test/java/com/bls/patronage/dao/DeckDAOTest.java b/backend/db/src/test/java/com/bls/patronage/dao/DeckDAOTest.java
+index e77b221..37f93a1 100644
+--- a/backend/db/src/test/java/com/bls/patronage/dao/DeckDAOTest.java
++++ b/backend/db/src/test/java/com/bls/patronage/dao/DeckDAOTest.java
+@@ -1,14 +1,21 @@
+ package com.bls.patronage.dao;
+ 
+-import com.bls.patronage.db.dao.*;
+-import com.bls.patronage.db.mapper.*;
+-import com.bls.patronage.db.model.*;
+-import org.testng.annotations.*;
+-
+-import java.util.*;
+-import java.util.stream.*;
+-
+-import static org.assertj.core.api.Assertions.*;
++import com.bls.patronage.db.dao.DeckDAO;
++import com.bls.patronage.db.mapper.DeckMapper;
++import com.bls.patronage.db.mapper.FlashcardMapper;
++import com.bls.patronage.db.model.Deck;
++import com.bls.patronage.db.model.Flashcard;
++import org.testng.annotations.AfterTest;
++import org.testng.annotations.BeforeMethod;
++import org.testng.annotations.BeforeTest;
++import org.testng.annotations.Test;
++
++import java.util.Collections;
++import java.util.List;
++import java.util.UUID;
++import java.util.stream.Collectors;
++
++import static org.assertj.core.api.Assertions.assertThat;
+ 
+ @Test
+ public class DeckDAOTest extends DAOTest {
+@@ -66,7 +73,7 @@ public class DeckDAOTest extends DAOTest {
+         Deck deck = getDecksFromDatabase().get(0);
+         assertThat(dao.getDeckById(deck.getId())).isEqualTo(deck);
+     }
+-    
++
+     public void getUserDeckByName() throws Exception {
+         Deck deck = getDecksFromDatabase().get(0);
+         assertThat(dao.getUserDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
+-- 
+1.9.1
+
