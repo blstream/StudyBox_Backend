@@ -7,7 +7,7 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
-import com.bls.patronage.db.exception.DataAccessExceptionMapper;
+import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;

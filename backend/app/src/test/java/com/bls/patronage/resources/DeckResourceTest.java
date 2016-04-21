@@ -58,7 +58,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
 
         when(deckDao.getDeckById(deckId, user.getId())).thenReturn(deck.map());
-        when(deckDao.getDeckById(fakeId, user.getId())).thenThrow(DataAccessException.class);
+        when(deckDao.getDeckById(fakeId, user.getId())).thenThrow(new DataAccessException(""));
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
     }
 
@@ -79,11 +79,12 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void getNonAccessibleDeck() {
-        when(deckDao.getDeckById(deckId, user.getId())).thenThrow(DataAccessException.class);
+        when(deckDao.getDeckById(deckId, user.getId()))
+                .thenThrow(new DataAccessException("",Response.Status.FORBIDDEN.getStatusCode()));
 
         final Response response = getResponseWithCredentials(deckURI, encodedCredentials);
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
+        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
     }
 
     @Test

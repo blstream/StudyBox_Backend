@@ -11,6 +11,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 import org.skife.jdbi.v2.unstable.BindIn;
 
+import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -68,8 +69,11 @@ public abstract class DeckDAO {
 
     public Deck getDeckById(UUID deckId, UUID userId) {
         Deck deck = getDeck(deckId);
-        if (deck == null || !(getDeckUserId(deckId).equals(userId.toString()) || deck.getIsPublic())) {
+        if (deck == null) {
             throw new DataAccessException("There is no deck with specified ID");
+        }
+        if (!(getDeckUserId(deckId).equals(userId.toString()) || deck.getIsPublic())) {
+            throw new DataAccessException("You have no permission.", Response.Status.FORBIDDEN.getStatusCode());
         }
         return deck;
     }
