@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.UserRepresentation;
 import com.bls.patronage.db.dao.UserDAO;
+import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.Before;
@@ -16,6 +17,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -34,6 +36,8 @@ public class UsersResourceTest extends BasicAuthenticationTest {
     private ArgumentCaptor<User> userCaptor;
     private String usersURI;
     private User user;
+    private String decksURI;
+    private String deckURI;
 
     static private Response postUser(String uri, String email, String name, String password) {
         return resources.client().target(uri)
@@ -45,6 +49,8 @@ public class UsersResourceTest extends BasicAuthenticationTest {
     public void setUp() {
         usersURI = UriBuilder.fromResource(UsersResource.class).build().toString();
         user = new User("12345678-9012-3456-7890-123456789012", "asd@mail.com", "asd", "12345678");
+        decksURI = UriBuilder.fromResource(DecksResource.class).toString();
+        deckURI = UriBuilder.fromResource(DeckResource.class).build(UUID.randomUUID()).toString();
     }
 
     @Test
@@ -85,6 +91,46 @@ public class UsersResourceTest extends BasicAuthenticationTest {
                 .get();
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode()
+        );
+    }
+
+    @Test
+    public void AnonymousUserCanGet() throws Exception {
+        Response response = authResources.client().target(decksURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void AnonymousUserCantPost() throws Exception {
+        Response response = authResources.client().target(decksURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new UserRepresentation("test@foo.baz", "bar")));
+
+        assertThat(response.getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode()
+        );
+    }
+
+    @Test
+    public void AnonymousUserCantDelete() throws Exception {
+
+        Response response = authResources.client().target(deckURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .delete();
+
+        assertThat(response.getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode()
+        );
+    }
+
+    @Test
+    public void AnonymousUserCantUpdate() throws Exception {
+        Response response = authResources.client().target(decksURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new Deck(UUID.randomUUID(), "foo")));
+
+        assertThat(response.getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode()
         );
     }
 }
