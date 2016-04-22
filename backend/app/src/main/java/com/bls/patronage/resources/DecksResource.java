@@ -51,10 +51,10 @@ public class DecksResource {
 
     @GET
     public Collection<DeckRepresentation> listDecks(@Auth User user,
-                                      @QueryParam("name") String name,
-                                      @QueryParam("isEnabled") Boolean isEnabled,
-                                      @QueryParam("includeOwn") Boolean includeOwn,
-                                      @QueryParam("random") Boolean random) {
+                                                    @QueryParam("name") String name,
+                                                    @QueryParam("isEnabled") Boolean isEnabled,
+                                                    @QueryParam("includeOwn") Boolean includeOwn,
+                                                    @QueryParam("random") Boolean random) {
 
         return new DeckCollectionBuilder(user.getId())
                 .includeOwn(Optional.ofNullable(includeOwn))
@@ -87,6 +87,7 @@ public class DecksResource {
 
         private DeckCollectionBuilder() {
         }
+
         public DeckCollectionBuilder(UUID userId) {
             this.userId = userId;
         }
@@ -113,7 +114,7 @@ public class DecksResource {
 
         public Collection<DeckRepresentation> build() {
             //pre-building deckCollection tasks
-            if(filteredName.isPresent()) {
+            if (filteredName.isPresent()) {
                 deckCollection = decksDAO.getDecksByName(filteredName.get());
                 deckCollection.addAll(
                         includeOwn ? decksDAO.getUserDecksByName(filteredName.get(), userId) : Collections.emptyList()
@@ -126,7 +127,7 @@ public class DecksResource {
 
             //end of building phase. If none of the above worked, collection is created now
             boolean wasPrebuild = Optional.ofNullable(deckCollection).isPresent();
-            deckCollection = wasPrebuild ?  deckCollection : decksDAO.getAllDecks();
+            deckCollection = wasPrebuild ? deckCollection : decksDAO.getAllDecks();
 
             //now the other tasks are run;
             if (includeOwn) {
@@ -145,9 +146,9 @@ public class DecksResource {
         private Collection<Deck> addFlashcardsNumbersToDeck(Collection<Deck> decks) {
             Collection<Integer> flashcardsNumbers =
                     decksDAO.getFlashcardsNumber(
-                        decks.stream()
-                                .map(Deck::getId)
-                                .collect(Collectors.toList()));
+                            decks.stream()
+                                    .map(Deck::getId)
+                                    .collect(Collectors.toList()));
             List tempDecks = new ArrayList<>();
             Iterator<Deck> deckIterator = decks.iterator();
             Iterator<Integer> numberIterator = flashcardsNumbers.iterator();
@@ -165,11 +166,10 @@ public class DecksResource {
         final List deckRepresentations = new ArrayList<>();
         Deck deck;
 
-        for (Iterator<Deck> i =deckCollection.iterator(); i.hasNext(); ){
-            deck=i.next();
-            deckRepresentations.add(new DeckRepresentation(deck).setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId())));}
-        deckRepresentationCollection=deckRepresentations;
-
-        return deckRepresentationCollection;
+        for (Iterator<Deck> i = deckCollection.iterator(); i.hasNext(); ) {
+            deck = i.next();
+            deckRepresentations.add(new DeckRepresentation(deck).setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId())));
+        }
+        return deckRepresentations;
     }
 }
