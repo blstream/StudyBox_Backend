@@ -6,8 +6,6 @@ import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.BooleanParam;
 import io.dropwizard.jersey.params.UUIDParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.ws.rs.DELETE;
