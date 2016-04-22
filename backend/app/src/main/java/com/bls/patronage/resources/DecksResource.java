@@ -161,8 +161,8 @@ public class DecksResource {
     }
 
     private Collection<DeckRepresentation> deckCollectionToDeckRespresentationCollection(Collection<Deck> deckCollection) {
-        Collection<DeckRepresentation> deckRepresentationCollection;
-        List deckRepresentations = new ArrayList<>();
+        final Collection<DeckRepresentation> deckRepresentationCollection;
+        final List deckRepresentations = new ArrayList<>();
         Deck deck;
 
         for (Iterator<Deck> i =deckCollection.iterator(); i.hasNext(); ){
