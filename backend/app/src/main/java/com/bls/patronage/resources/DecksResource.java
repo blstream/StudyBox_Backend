@@ -163,10 +163,9 @@ public class DecksResource {
 
     private Collection<DeckRepresentation> deckCollectionToDeckRespresentationCollection(Collection<Deck> deckCollection) {
         final List deckRepresentations = new ArrayList<>();
-        Deck deck;
 
         for (Iterator<Deck> i = deckCollection.iterator(); i.hasNext(); ) {
-            deck = i.next();
+            Deck deck = i.next();
             deckRepresentations.add(new DeckRepresentation(deck).setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId())));
         }
         return deckRepresentations;
