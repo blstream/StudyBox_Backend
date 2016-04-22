@@ -30,7 +30,7 @@ public class DeckRepresentationTest {
         deckWithCreatorEmail = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC).setCreatorEmail(FIXTURE_CREATOR_EMAIL);
         deckWithFlashcardNumberAndCreatorEmail = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC)
                 .setCreatorEmail(FIXTURE_CREATOR_EMAIL).setFlashcardsNumber(FIXTURE_FLASHCARD_NUMBER);
-        dbModel = new Deck(FIXTURE_DECK_ID, FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC);
+        dbModel = new Deck(FIXTURE_DECK_ID, FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC, FIXTURE_CREATOR_EMAIL);
         deckFromDbModel = new DeckRepresentation(dbModel);
     }
 

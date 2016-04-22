@@ -66,9 +66,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Before
     public void setUp() {
         super.setUp();
-        deck = new Deck(UUID.randomUUID(), "foo");
+        deck = new Deck(UUID.randomUUID(), "foo", "sample@mail.com");
         decks = Collections.singletonList(deck);
-        userDeck = new Deck(UUID.randomUUID(), "baz");
+        userDeck = new Deck(UUID.randomUUID(), "baz", "example@mail.com");
         userDecks = Collections.singletonList(userDeck);
         decksURI = UriBuilder.fromResource(DecksResource.class).build().toString();
         randomDeckURI = UriBuilder.fromResource(DecksResource.class)

@@ -42,9 +42,7 @@ public class DecksResource {
 
         User user = (User) context.getUserPrincipal();
 
-
         decksDAO.createDeck(deck.setId(UUID.randomUUID()).map(), user.getId());
-
 
         return Response.ok(deck).status(Response.Status.CREATED).build();
     }
@@ -87,6 +85,7 @@ public class DecksResource {
 
         private DeckCollectionBuilder() {
         }
+
         public DeckCollectionBuilder(UUID userId) {
             this.userId = userId;
         }
