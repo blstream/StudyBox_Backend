@@ -44,6 +44,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
         return publicVisible;
     }
 
+
     public String getName() {
         return name;
     }
