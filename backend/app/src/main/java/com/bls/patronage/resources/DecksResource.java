@@ -50,7 +50,7 @@ public class DecksResource {
     }
 
     @GET
-    public Collection<Deck> listDecks(@Auth User user,
+    public Collection<DeckRepresentation> listDecks(@Auth User user,
                                       @QueryParam("name") String name,
                                       @QueryParam("isEnabled") Boolean isEnabled,
                                       @QueryParam("includeOwn") Boolean includeOwn,
@@ -111,7 +111,7 @@ public class DecksResource {
             return this;
         }
 
-        public Collection<Deck> build() {
+        public Collection<DeckRepresentation> build() {
             //pre-building deckCollection tasks
             if(filteredName.isPresent()) {
                 deckCollection = decksDAO.getDecksByName(filteredName.get());
@@ -137,13 +137,17 @@ public class DecksResource {
             if (enableFlashcardsNumber) {
                 deckCollection = addFlashcardsNumbersToDeck(deckCollection);
             }
-            return deckCollection;
+
+
+            return deckCollectionToDeckRespresentationCollection(deckCollection);
         }
 
         private Collection<Deck> addFlashcardsNumbersToDeck(Collection<Deck> decks) {
-            Collection<Integer> flashcardsNumbers = decksDAO.getFlashcardsNumber(
-                    decks.stream().map(Deck::getId).collect(Collectors.toList())
-            );
+            Collection<Integer> flashcardsNumbers =
+                    decksDAO.getFlashcardsNumber(
+                        decks.stream()
+                                .map(Deck::getId)
+                                .collect(Collectors.toList()));
             List tempDecks = new ArrayList<>();
             Iterator<Deck> deckIterator = decks.iterator();
             Iterator<Integer> numberIterator = flashcardsNumbers.iterator();
@@ -154,5 +158,18 @@ public class DecksResource {
             decks = tempDecks;
             return decks;
         }
+    }
+
+    private Collection<DeckRepresentation> deckCollectionToDeckRespresentationCollection(Collection<Deck> deckCollection) {
+        Collection<DeckRepresentation> deckRepresentationCollection;
+        List deckRepresentations = new ArrayList<>();
+        Deck deck;
+
+        for (Iterator<Deck> i =deckCollection.iterator(); i.hasNext(); ){
+            deck=i.next();
+            deckRepresentations.add(new DeckRepresentation(deck).setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId())));}
+        deckRepresentationCollection=deckRepresentations;
+
+        return deckRepresentationCollection;
     }
 }

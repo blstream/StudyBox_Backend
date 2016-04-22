@@ -32,9 +32,8 @@ public class DeckResource {
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
 
-        return new DeckRepresentation(
-                decksDAO.getDeckById(deckId.get(), user.getId())
-        );
+        return new DeckRepresentation(decksDAO.getDeckById(deckId.get(), user.getId())).setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deckId.get()));
+
     }
 
     @DELETE
@@ -65,9 +64,11 @@ public class DeckResource {
                              @Valid @PathParam("deckId") UUIDParam deckId,
                              @Valid @PathParam("access") BooleanParam access) {
 
-        decksDAO.update(
-                decksDAO.getDeckById(deckId.get(), user.getId())
-                        .setIsPublic(access.get())
+        DeckRepresentation deck = new DeckRepresentation(
+                decksDAO.getDeckById(deckId.get(), user.getId()).getName(),
+                access.get()
         );
+
+        decksDAO.update(deck.map());
     }
 }

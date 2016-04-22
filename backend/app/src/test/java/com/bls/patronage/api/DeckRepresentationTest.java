@@ -31,7 +31,8 @@ public class DeckRepresentationTest {
         deckWithFlashcardNumberAndCreatorEmail = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC)
                 .setCreatorEmail(FIXTURE_CREATOR_EMAIL).setFlashcardsNumber(FIXTURE_FLASHCARD_NUMBER);
         dbModel = new Deck(FIXTURE_DECK_ID, FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC);
-        deckFromDbModel = new DeckRepresentation(dbModel);
+        deckFromDbModel = new DeckRepresentation(dbModel).setCreatorEmail(FIXTURE_CREATOR_EMAIL);
+
     }
 
     @Test

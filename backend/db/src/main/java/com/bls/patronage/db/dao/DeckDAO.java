@@ -45,6 +45,9 @@ public abstract class DeckDAO {
     @SqlQuery("select userId from usersDecks where deckId = :id")
     abstract String getDeckUserId(@Bind("id") UUID id);
 
+    @SqlQuery("select email from users where id = :id")
+    abstract String getCreatorEmailFromUserId(@Bind("id") UUID id);
+
     @SqlQuery("select id, name, public from decks where name like :name and public='true'")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
@@ -97,6 +100,10 @@ public abstract class DeckDAO {
     public Collection<Deck> getAllDecks() {
         Collection<Deck> decks = getDecks();
         return decks;
+    }
+
+    public String getCreatorEmailFromDeckId(UUID deckId){
+        return getCreatorEmailFromUserId(UUID.fromString(getDeckUserId(deckId)));
     }
 
 }

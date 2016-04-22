@@ -23,7 +23,6 @@ public class DeckRepresentation implements DbMappable<Deck> {
     @Email
     private String creatorEmail;
 
-
     public DeckRepresentation(@JsonProperty("name") String name,
                               @JsonProperty("isPublic") Boolean publicVisible) {
         this.name = name;
@@ -43,7 +42,6 @@ public class DeckRepresentation implements DbMappable<Deck> {
     public Boolean isPublicVisible() {
         return publicVisible;
     }
-
 
     public String getName() {
         return name;

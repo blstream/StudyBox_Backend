@@ -41,18 +41,16 @@ public class Deck extends IdentifiableEntity {
         return name;
     }
 
-    public Deck setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public boolean getIsPublic() {
         return isPublic;
     }
 
-    public Deck setIsPublic(Boolean isPublic) {
+    public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
-        return this;
     }
 
     @Override
