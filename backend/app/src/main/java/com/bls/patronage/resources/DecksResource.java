@@ -162,7 +162,6 @@ public class DecksResource {
     }
 
     private Collection<DeckRepresentation> deckCollectionToDeckRespresentationCollection(Collection<Deck> deckCollection) {
-        final Collection<DeckRepresentation> deckRepresentationCollection;
         final List deckRepresentations = new ArrayList<>();
         Deck deck;
 
