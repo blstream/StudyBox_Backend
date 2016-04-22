@@ -6,6 +6,8 @@ import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.BooleanParam;
 import io.dropwizard.jersey.params.UUIDParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.ws.rs.DELETE;
@@ -66,9 +68,9 @@ public class DeckResource {
                              @Valid @PathParam("access") BooleanParam access) {
 
         DeckRepresentation deck = new DeckRepresentation(
-                decksDAO.getDeckById(deckId.get(), user.getId()).getName(),
-                access.get()
+                decksDAO.getDeckById(deckId.get(), user.getId())
         );
+        deck.setPublicVisible(access.get());
 
         decksDAO.update(deck.map());
     }

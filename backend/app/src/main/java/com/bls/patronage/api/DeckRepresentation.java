@@ -18,7 +18,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
     @Length(min = 1, max = 50)
     final private String name;
     @NotNull
-    final private Boolean publicVisible;
+    private Boolean publicVisible;
     private Integer flashcardsNumber;
     @Email
     private String creatorEmail;
@@ -42,6 +42,11 @@ public class DeckRepresentation implements DbMappable<Deck> {
 
     public Boolean isPublicVisible() {
         return publicVisible;
+    }
+
+    public DeckRepresentation setPublicVisible(Boolean publicVisible) {
+        this.publicVisible = publicVisible;
+        return this;
     }
 
     public String getName() {
