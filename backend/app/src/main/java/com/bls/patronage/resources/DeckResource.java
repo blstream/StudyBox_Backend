@@ -64,11 +64,9 @@ public class DeckResource {
                              @Valid @PathParam("deckId") UUIDParam deckId,
                              @Valid @PathParam("access") BooleanParam access) {
 
-        DeckRepresentation deck = new DeckRepresentation(
-                decksDAO.getDeckById(deckId.get(), user.getId()).getName(),
-                access.get()
+        decksDAO.update(
+                decksDAO.getDeckById(deckId.get(), user.getId())
+                        .setIsPublic(access.get())
         );
-
-        decksDAO.update(deck.map());
     }
 }
