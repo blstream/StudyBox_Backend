@@ -33,7 +33,7 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
         streamService.persistStream(stream, location);
 
-        listenerInformer.inform(listener, message.getMessage());
+        listenerInformer.inform(listener, message);
 
     }
 
