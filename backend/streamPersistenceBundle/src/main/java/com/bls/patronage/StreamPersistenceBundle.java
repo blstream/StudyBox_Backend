@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-public abstract class FilePersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
+public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
     Listener listener;
     StreamPersistenceService streamService;
     ListenerInformer listenerInformer;
+    String input;
+    Path location;
 
     @Override
     public void run(E configuration, Environment environment) throws Exception {
