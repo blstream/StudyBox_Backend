@@ -7,6 +7,7 @@ import io.dropwizard.db.DataSourceFactory;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.nio.file.Path;
 
 public class StudyBoxConfiguration extends Configuration {
 
@@ -20,6 +21,10 @@ public class StudyBoxConfiguration extends Configuration {
 
     @Valid
     @NotNull
+    private Path fileContentBaseLocation;
+
+    @Valid
+    @NotNull
     private DataSourceFactory database = new DataSourceFactory();
 
     public DataSourceFactory getDatabase() {
@@ -30,7 +35,11 @@ public class StudyBoxConfiguration extends Configuration {
         return CacheBuilder.from(DEFAULT_AUTH_CACHE_SPEC);
     }
 
-    public URI getCVServerURI() {
+    public URI getCvServerURI() {
         return cvServerURI;
+    }
+
+    public Path getFileContentBaseLocation() {
+        return fileContentBaseLocation;
     }
 }

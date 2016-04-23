@@ -11,6 +11,7 @@ import com.bls.patronage.db.model.User;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
+import com.bls.patronage.resources.FilesResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import com.bls.patronage.resources.ResultsResource;
@@ -30,6 +31,7 @@ import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.skife.jdbi.v2.DBI;
 
 public class StudyBox extends Application<StudyBoxConfiguration> {
@@ -41,7 +43,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         @Override
         public Listener getListener(StudyBoxConfiguration configuration) {
             //Return listener with CV server URI
-            return () -> configuration.getCVServerURI();
+            return () -> configuration.getCvServerURI();
         }
     };
 
@@ -87,6 +89,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
                 jdbi.onDemand(ResultDAO.class)));
+        environment.jersey().register(MultiPartFeature.class);
+        environment.jersey().register(new FilesResource(streamPersistenceBundle, jdbi.onDemand(DeckDAO.class), configuration.getFileContentBaseLocation()));
         environment.jersey().register(new DataAccessExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
