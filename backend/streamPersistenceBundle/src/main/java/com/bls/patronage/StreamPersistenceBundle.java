@@ -29,12 +29,12 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     abstract public Listener getListener(E configuration);
 
-    public Path persistStreamAsFile(InputStream stream, Path location) throws IOException {
-        final Path path = streamService.persistStream(stream, location);
+    public void persistStreamAsFile(InputStream stream, Path location, Message message) throws IOException {
 
-        listenerInformer.inform(listener, path);
+        streamService.persistStream(stream, location);
 
-        return path;
+        listenerInformer.inform(listener, message.getMessage());
+
     }
 
 }
