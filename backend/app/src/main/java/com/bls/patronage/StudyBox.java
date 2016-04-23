@@ -7,8 +7,8 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
-import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
+import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
@@ -37,6 +37,14 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
     private static final String APP_NAME = "backend";
     private static final String HEALTH_CHECK_DATABASE_NAME = "database";
 
+    private final StreamPersistenceBundle<StudyBoxConfiguration> streamPersistenceBundle = new StreamPersistenceBundle<StudyBoxConfiguration>() {
+        @Override
+        public Listener getListener(StudyBoxConfiguration configuration) {
+            //Return listener with CV server URI
+            return () -> configuration.getCVServerURI();
+        }
+    };
+
     public static void main(String[] args) throws Exception {
         new StudyBox().run(args);
     }
@@ -62,6 +70,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
                 return configuration.getDatabase();
             }
         });
+
+        bootstrap.addBundle(streamPersistenceBundle);
     }
 
     @Override
