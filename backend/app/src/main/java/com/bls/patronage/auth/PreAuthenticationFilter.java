@@ -27,15 +27,15 @@ public class PreAuthenticationFilter implements ContainerRequestFilter {
             }
         }
         if (!hasValidHeader) {
-            if (request.getMethod() != "GET" &&
-                    !(
-                            request.getMethod() == "POST" &&
-                                    request.getUriInfo().getMatchedResources().size() > 0 &&
-                                    request.getUriInfo().getMatchedResources().get(0) instanceof UsersResource
-                    )
-                    ) {
+            final boolean isPostingUser =
+                    request.getMethod() == "POST" &&
+                            request.getUriInfo().getMatchedResources().size() > 0 &&
+                            request.getUriInfo().getMatchedResources().get(0) instanceof UsersResource;
+
+            if (request.getMethod() != "GET" && !isPostingUser) {
                 request.abortWith(Response.noContent().status(Response.Status.FORBIDDEN).build());
             }
+
             final String base64 = Base64.encodeAsString(defultUserEmail + ":" + defultUserPassword);
             request.getHeaders().putSingle(HttpHeaders.AUTHORIZATION, "Basic " + base64);
         }
