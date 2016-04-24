@@ -5,6 +5,7 @@ import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,6 +53,11 @@ public class UsersResourceTest extends BasicAuthenticationTest {
         user = new User("12345678-9012-3456-7890-123456789012", "asd@mail.com", "asd", "12345678");
         decksURI = UriBuilder.fromResource(DecksResource.class).toString();
         deckURI = UriBuilder.fromResource(DeckResource.class).build(UUID.randomUUID()).toString();
+    }
+
+    @After
+    public void cleanUp() {
+        reset(userDAO);
     }
 
     @Test
@@ -111,6 +118,15 @@ public class UsersResourceTest extends BasicAuthenticationTest {
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode()
         );
+    }
+
+    @Test
+    public void AnonymousUserCanPostNewUser() throws Exception {
+        Response response = resources.client().target(usersURI)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new UserRepresentation("test@foo.baz", "fooz", "barbarbar")));
+
+        assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
     }
 
     @Test
