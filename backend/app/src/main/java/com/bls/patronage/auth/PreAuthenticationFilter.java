@@ -1,5 +1,6 @@
 package com.bls.patronage.auth;
 
+import com.bls.patronage.resources.UsersResource;
 import org.glassfish.jersey.internal.util.Base64;
 
 import javax.annotation.Priority;
@@ -26,7 +27,13 @@ public class PreAuthenticationFilter implements ContainerRequestFilter {
             }
         }
         if (!hasValidHeader) {
-            if (request.getMethod() != "GET") {
+            if (request.getMethod() != "GET" &&
+                    !(
+                            request.getMethod() == "POST" &&
+                                    request.getUriInfo().getMatchedResources().size() > 0 &&
+                                    request.getUriInfo().getMatchedResources().get(0) instanceof UsersResource
+                    )
+                    ) {
                 request.abortWith(Response.noContent().status(Response.Status.FORBIDDEN).build());
             }
             final String base64 = Base64.encodeAsString(defultUserEmail + ":" + defultUserPassword);
