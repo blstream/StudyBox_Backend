@@ -27,11 +27,11 @@ import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.skife.jdbi.v2.DBI;
 
 public class StudyBox extends Application<StudyBoxConfiguration> {
@@ -74,6 +74,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         });
 
         bootstrap.addBundle(streamPersistenceBundle);
+        bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override
@@ -89,8 +90,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
                 jdbi.onDemand(ResultDAO.class)));
-        environment.jersey().register(MultiPartFeature.class);
-        environment.jersey().register(new FilesResource(streamPersistenceBundle, jdbi.onDemand(DeckDAO.class), configuration.getFileContentBaseLocation()));
+        environment.jersey().register(new FilesResource(streamPersistenceBundle, configuration.getFileContentBaseLocation(),
+                jdbi.onDemand(DeckDAO.class), jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
