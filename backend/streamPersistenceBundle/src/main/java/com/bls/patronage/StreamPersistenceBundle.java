@@ -8,14 +8,13 @@ import io.dropwizard.setup.Environment;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
     Listener listener;
     StreamPersistenceService streamService;
     HTTPListenerInformer listenerInformer;
-    String input;
-    Path location;
 
     @Override
     public void run(E configuration, Environment environment) throws Exception {
@@ -30,11 +29,16 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     abstract public Listener getListener(E configuration);
 
-    public Response persistStreamAsFile(InputStream stream, Path location, Message message) throws IOException {
+    public URL persistStream(InputStream stream, URL location) throws IOException, URISyntaxException {
 
-        streamService.persistStream(stream, location);
+        return streamService.persistStream(stream, location);
+    }
 
+    public Response informListener(Message message) {
         return listenerInformer.inform(listener, message);
     }
 
+    public void deleteStream(URL location) throws IOException {
+        streamService.deleteStream(location);
+    }
 }
