@@ -5,6 +5,7 @@ import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -12,7 +13,7 @@ import java.nio.file.Path;
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
     Listener listener;
     StreamPersistenceService streamService;
-    ListenerInformer listenerInformer;
+    HTTPListenerInformer listenerInformer;
     String input;
     Path location;
 
@@ -29,12 +30,11 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     abstract public Listener getListener(E configuration);
 
-    public void persistStreamAsFile(InputStream stream, Path location, Message message) throws IOException {
+    public Response persistStreamAsFile(InputStream stream, Path location, Message message) throws IOException {
 
         streamService.persistStream(stream, location);
 
-        listenerInformer.inform(listener, message);
-
+        return listenerInformer.inform(listener, message);
     }
 
 }
