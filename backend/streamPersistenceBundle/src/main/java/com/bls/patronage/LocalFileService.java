@@ -28,8 +28,12 @@ class LocalFileService implements StreamPersistenceService {
 
     @Override
     public URL persistStream(InputStream stream, URL location) throws IOException, URISyntaxException {
-        logger.debug("In persistStream(), using Location: " + location + " to create path to file");
-        final Path path = Paths.get(location.getPath()).resolve(UUID.randomUUID().toString());
+        logger.debug("Mapping location: " + location + " to directory");
+        Path directory = Paths.get(location.getPath());
+        logger.debug("Checking if the directory is present in file system, and if not, creating it");
+        if (!Files.exists(directory)) Files.createDirectory(directory);
+        logger.debug("In persistStream(), using Direcory: " + directory + " to create path to file");
+        final Path path = directory.resolve(UUID.randomUUID().toString());
         logger.debug("Created path: " + path);
         logger.debug("Files.copy with path and stream: " + stream);
         Files.copy(stream, path);
