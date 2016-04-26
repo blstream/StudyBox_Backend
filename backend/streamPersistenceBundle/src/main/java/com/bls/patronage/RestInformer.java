@@ -1,18 +1,17 @@
 package com.bls.patronage;
 
-import org.glassfish.jersey.client.JerseyClientBuilder;
-
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 class RestInformer implements HTTPListenerInformer {
     @Override
+    //TODO wait until CV returns collections of flashcards as response
     public Response inform(Listener listener, Object content) {
-        return JerseyClientBuilder
-                .newClient()
-                .target(listener.getUri())
-                .request()
-                .buildPost(Entity.json(content))
-                .invoke();
+//        return JerseyClientBuilder
+//                .newClient()
+//                .target(listener.getUri())
+//                .request()
+//                .buildPost(Entity.json(content))
+//                .invoke();
+        return Response.ok().build();
     }
 }
