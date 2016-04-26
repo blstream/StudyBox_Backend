@@ -18,7 +18,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
@@ -45,29 +44,27 @@ public class FilesResource {
     public Response uploadFile(
             @Auth User user,
             @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition details) {
+            @FormDataParam("file") FormDataContentDisposition details) throws Exception {
 
-        try {
-            final Deck deck = new Deck(UUID.randomUUID(), user.getName());
+        final Deck deck = new Deck(UUID.randomUUID(), "foo");
             final java.nio.file.Path location = baseLocation.resolve(user.getId().toString());
-            final Response response = bundle.persistStreamAsFile(
-                    uploadedInputStream,
-                    location,
-                    new CVMessage(location.toUri().toURL(), "ImageToFlashcard") //TODO ask if CV can resolve type
-            );
 
-            saveFlashcardsFromResponse(response, deck);
 
-            return Response.ok().status(Response.Status.CREATED).build();
+        final URL streamedFileLocation = bundle.persistStream(uploadedInputStream, location.toUri().toURL());
+        final Response response = bundle.informListener(new CVMessage(streamedFileLocation, "ImageToFlashcard"));
 
-        } catch (IOException e) {
-            return Response.serverError().entity(e.getCause()).build();
-        }
+        //saveFlashcardsFromResponse(response, deck, user.getId()); TODO wait untill CV ready
+
+        bundle.deleteStream(streamedFileLocation);
+
+        return Response.ok().status(Response.Status.CREATED).build();
     }
 
-    private void saveFlashcardsFromResponse(Response response, Deck deck) {
-        response.readEntity(new GenericType<List<FlashcardRepresentation>>() {
-        })
+    private void saveFlashcardsFromResponse(Response response, Deck deck, UUID userId) {
+        deckDAO.createDeck(deck, userId);
+        response
+                .readEntity(new GenericType<List<FlashcardRepresentation>>() {
+                })
                 .stream()
                 .forEach(flashcardRepresentation -> flashcardDAO.createFlashcard(
                         flashcardRepresentation.setDeckId(deck.getId()).map()
