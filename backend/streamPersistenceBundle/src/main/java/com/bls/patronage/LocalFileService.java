@@ -1,5 +1,8 @@
 package com.bls.patronage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -12,8 +15,11 @@ import java.util.UUID;
 class LocalFileService implements StreamPersistenceService {
 
     private static final LocalFileService LOCAL_FILE_SERVICE = new LocalFileService();
+    private final Logger logger;
+
 
     private LocalFileService() {
+        logger = LoggerFactory.getLogger(LocalFileService.class);
     }
 
     public static StreamPersistenceService getInstance() {
@@ -22,15 +28,19 @@ class LocalFileService implements StreamPersistenceService {
 
     @Override
     public URL persistStream(InputStream stream, URL location) throws IOException, URISyntaxException {
+        logger.debug("In persistStream(), using Location: " + location + " to create path to file");
         final Path path = Paths.get(location.getPath()).resolve(UUID.randomUUID().toString());
-
+        logger.debug("Created path: " + path);
+        logger.debug("Files.copy with path and stream: " + stream);
         Files.copy(stream, path);
-
+        logger.debug("Returning path as a url");
         return path.toUri().toURL();
     }
 
     @Override
     public void deleteStream(URL location) throws IOException {
-        Files.delete(Paths.get(location.toString()));
+        logger.debug("In deleteStream(), using Location: " + location + " to delete file from location");
+        Files.delete(Paths.get(location.getPath()));
+        logger.debug("Delete completed");
     }
 }
