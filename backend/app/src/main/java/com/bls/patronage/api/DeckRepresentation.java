@@ -19,7 +19,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
     final private String name;
     @NotNull
     final private Boolean publicVisible;
-    private Integer flashcardsNumber;
+    private Integer flashcardsCount;
     @Email
     private String creatorEmail;
 
@@ -47,12 +47,12 @@ public class DeckRepresentation implements DbMappable<Deck> {
         return name;
     }
 
-    public Integer getFlashcardsNumber() {
-        return flashcardsNumber;
+    public Integer getFlashcardsCount() {
+        return flashcardsCount;
     }
 
-    public DeckRepresentation setFlashcardsNumber(int flashcardsNumber) {
-        this.flashcardsNumber = flashcardsNumber;
+    public DeckRepresentation setFlashcardsCount(int flashcardsCount) {
+        this.flashcardsCount = flashcardsCount;
         return this;
     }
 
@@ -80,7 +80,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 "name='" + name + '\'' +
                 ", publicVisible=" + publicVisible +
                 ", id=" + id +
-                ", flashcardsNumber=" + flashcardsNumber +
+                ", flashcardsCount=" + flashcardsCount +
                 ", creatorEmail='" + creatorEmail + '\'' +
                 '}';
     }
@@ -90,7 +90,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeckRepresentation that = (DeckRepresentation) o;
-        return flashcardsNumber == that.flashcardsNumber &&
+        return flashcardsCount == that.flashcardsCount &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(publicVisible, that.publicVisible) &&
                 Objects.equals(id, that.id) &&
@@ -99,6 +99,6 @@ public class DeckRepresentation implements DbMappable<Deck> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, publicVisible, id, flashcardsNumber, creatorEmail);
+        return Objects.hash(name, publicVisible, id, flashcardsCount, creatorEmail);
     }
 }

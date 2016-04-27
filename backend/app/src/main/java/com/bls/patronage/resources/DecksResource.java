@@ -58,7 +58,7 @@ public class DecksResource {
         return new DeckCollectionBuilder(user.getId())
                 .includeOwn(Optional.ofNullable(includeOwn))
                 .filterByName(Optional.ofNullable(name))
-                .enableFlashcardsNumber(Optional.ofNullable(isEnabled))
+                .enableFlashcardsCounts(Optional.ofNullable(isEnabled))
                 .getRandom(Optional.ofNullable(random))
                 .build();
     }
@@ -70,7 +70,7 @@ public class DecksResource {
         Collection<Deck> decks = decksDAO.getAllUserDecks(user.getId());
 
         if (Optional.ofNullable(isEnabled).isPresent()) {
-            return new DeckCollectionBuilder().addFlashcardsNumbersToDeck(decks);
+            return new DeckCollectionBuilder().addFlashcardsCountsToDeck(decks);
         } else {
             return decks
                     .stream()
@@ -84,7 +84,7 @@ public class DecksResource {
         private UUID userId;
         private boolean includeOwn;
         private Optional<String> filteredName;
-        private Boolean enableFlashcardsNumber;
+        private Boolean enableFlashcardsCounts;
         private Boolean random;
 
         private DeckCollectionBuilder() {
@@ -104,8 +104,8 @@ public class DecksResource {
             return this;
         }
 
-        public DeckCollectionBuilder enableFlashcardsNumber(Optional<Boolean> isEnabled) {
-            this.enableFlashcardsNumber = isEnabled.orElse(false);
+        public DeckCollectionBuilder enableFlashcardsCounts(Optional<Boolean> isEnabled) {
+            this.enableFlashcardsCounts = isEnabled.orElse(false);
             return this;
         }
 
@@ -142,25 +142,25 @@ public class DecksResource {
                         .collect(Collectors.toList());
             }
 
-            if (enableFlashcardsNumber) {
-                return addFlashcardsNumbersToDeck(deckCollection);
+            if (enableFlashcardsCounts) {
+                return addFlashcardsCountsToDeck(deckCollection);
             }
 
             return deckCollectionToDeckRespresentationCollection(deckCollection);
         }
 
-        private Collection<DeckRepresentation> addFlashcardsNumbersToDeck(Collection<Deck> decks) {
-            List<Integer> flashcardsNumbers =
+        private Collection<DeckRepresentation> addFlashcardsCountsToDeck(Collection<Deck> decks) {
+            List<Integer> flashcardsCounts =
                     decks.stream()
-                            .map(deck -> decksDAO.getFlashcardsNumber(deck.getId()))
+                            .map(deck -> decksDAO.getFlashcardsCount(deck.getId()))
                             .collect(Collectors.toList());
 
             List tempDecks = new ArrayList<>();
             Iterator<Deck> deckIterator = decks.iterator();
-            Iterator<Integer> numberIterator = flashcardsNumbers.iterator();
+            Iterator<Integer> numberIterator = flashcardsCounts.iterator();
 
             while (deckIterator.hasNext() && numberIterator.hasNext()) {
-                tempDecks.add(new DeckRepresentation(deckIterator.next()).setFlashcardsNumber(numberIterator.next()));
+                tempDecks.add(new DeckRepresentation(deckIterator.next()).setFlashcardsCount(numberIterator.next()));
             }
 
             return tempDecks;

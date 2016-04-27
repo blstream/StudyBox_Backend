@@ -24,7 +24,7 @@ public abstract class DeckDAO {
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
     @SqlQuery("select count(flashcards.id) from flashcards where flashcards.deckId = :deckId")
-    public abstract Integer getFlashcardsNumber(@Bind("deckId") UUID deckId);
+    public abstract Integer getFlashcardsCount(@Bind("deckId") UUID deckId);
 
     @SqlUpdate("insert into decks (id, name, isPublic) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);

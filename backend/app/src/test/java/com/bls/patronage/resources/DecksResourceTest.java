@@ -169,12 +169,12 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Test
     public void listUserDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(userDeck.map(), 3);
-        when(deckDao.getFlashcardsNumber(deckExample.getId()))
+        when(deckDao.getFlashcardsCount(deckExample.getId()))
                 .thenReturn(deckExample.getCount());
 
         final ImmutableList<DeckRepresentation> decks
                 = ImmutableList.of(new DeckRepresentation(deckExample)
-                .setFlashcardsNumber(deckExample.getCount()));
+                .setFlashcardsCount(deckExample.getCount()));
         final Response response = getResponseWithCredentials(userDecksWithFlashcardNumberURI, encodedCredentials);
         final List<DeckRepresentation> decksInResponse = response
                 .readEntity(new GenericType<List<DeckRepresentation>>() {
@@ -182,10 +182,10 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllUserDecks(user.getId());
         verify(userDAO).getUserByEmail(user.getEmail());
-        verify(deckDao).getFlashcardsNumber(deckExample.getId());
+        verify(deckDao).getFlashcardsCount(deckExample.getId());
 
         assertThat(decksInResponse).containsAll(decks);
-        assertThat(decksInResponse.get(0).getFlashcardsNumber()).isEqualTo(deckExample.getCount());
+        assertThat(decksInResponse.get(0).getFlashcardsCount()).isEqualTo(deckExample.getCount());
     }
 
     @Test

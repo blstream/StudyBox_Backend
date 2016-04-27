@@ -117,6 +117,6 @@ public class DeckDAOTest extends DAOTest {
                 .filter(flashcard -> flashcard.getDeckId()
                         .equals(deckId)).collect(Collectors.toList());
 
-        assertThat(dao.getFlashcardsNumber(deckId)).isEqualTo(flashcardsInOneDeck.size());
+        assertThat(dao.getFlashcardsCount(deckId)).isEqualTo(flashcardsInOneDeck.size());
     }
 }
