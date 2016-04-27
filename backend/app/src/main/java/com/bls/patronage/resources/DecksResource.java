@@ -162,12 +162,13 @@ public class DecksResource {
     }
 
     private Collection<DeckRepresentation> deckCollectionToDeckRespresentationCollection(Collection<Deck> deckCollection) {
-        final List deckRepresentations = new ArrayList<>();
+        Collection<DeckRepresentation> deckRepresentations =
+                deckCollection
+                        .stream()
+                        .map(deck -> new DeckRepresentation(deck)
+                                .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId())))
+                        .collect(Collectors.toList());
 
-        for (Iterator<Deck> i = deckCollection.iterator(); i.hasNext(); ) {
-            Deck deck = i.next();
-            deckRepresentations.add(new DeckRepresentation(deck).setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId())));
-        }
         return deckRepresentations;
     }
 }

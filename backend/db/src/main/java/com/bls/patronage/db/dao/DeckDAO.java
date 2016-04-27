@@ -60,10 +60,13 @@ public abstract class DeckDAO {
     abstract Collection<Deck> getDecks();
 
     @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId and decks.public = 'true' " +
-            "limit 1 offset floor(random()*(select count(*) from decks join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId and decks.public = 'true'))")
-    public abstract Collection<Deck> getRandomDecks(@Bind("userId") UUID userId);
+        "where usersDecks.userId = :userId or decks.public = 'true' " +
+        "limit 1 offset floor(:random*:number)")
+    public abstract Collection<Deck> getRandomDeck(@Bind("userId") UUID userId, @Bind("random") Double random, @Bind("number") Integer number);
+
+    @SqlQuery("select count(*) from decks join usersDecks on usersDecks.deckId = decks.id " +
+            "where usersDecks.userId = :userId or decks.public = 'true' ")
+    abstract Integer getCountUserDecks(@Bind("userId") UUID userId);
 
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
@@ -104,6 +107,12 @@ public abstract class DeckDAO {
 
     public String getCreatorEmailFromDeckId(UUID deckId){
         return getCreatorEmailFromUserId(UUID.fromString(getDeckUserId(deckId)));
+    }
+
+public Collection<Deck> getRandomDecks(UUID userId){
+        Integer number = getCountUserDecks(userId);
+        Collection<Deck> decks = getRandomDeck(userId, Math.random(), number);
+        return decks;
     }
 
 }
