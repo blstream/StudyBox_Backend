@@ -143,7 +143,7 @@ public class DecksResource {
                         .distinct()
                         .collect(Collectors.toList());
             }
-            
+
             if (enableFlashcardsNumber) {
                 return addFlashcardsNumbersToDeck(deckCollection);
             }
