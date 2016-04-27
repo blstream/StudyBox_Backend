@@ -83,10 +83,10 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         decksByEmptyNameURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("name", "").build().toString();
         decksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("isEnabled", true).build().toString();
+                .queryParam("flashcardsCount", true).build().toString();
         userDecksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class).build().toString()
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks")
-                .queryParam("isEnabled", true).build().toString();
+                .queryParam("flashcardsCount", true).build().toString();
         userDecksURI = UriBuilder.fromResource(DecksResource.class).build().toString()
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
 

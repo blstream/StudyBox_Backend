@@ -51,25 +51,26 @@ public class DecksResource {
     @GET
     public Collection<DeckRepresentation> listDecks(@Auth User user,
                                                     @QueryParam("name") String name,
-                                                    @QueryParam("isEnabled") Boolean isEnabled,
+                                                    @QueryParam("flashcardsCount") Boolean flashcardsCount,
                                                     @QueryParam("includeOwn") Boolean includeOwn,
                                                     @QueryParam("random") Boolean random) {
 
         return new DeckCollectionBuilder(user.getId())
                 .includeOwn(Optional.ofNullable(includeOwn))
                 .filterByName(Optional.ofNullable(name))
-                .enableFlashcardsCounts(Optional.ofNullable(isEnabled))
+                .enableFlashcardsCounts(Optional.ofNullable(flashcardsCount))
                 .getRandom(Optional.ofNullable(random))
                 .build();
     }
 
     @Path("/me")
     @GET
-    public Collection<DeckRepresentation> listMyDecks(@Auth User user, @QueryParam("isEnabled") Boolean isEnabled) {
+    public Collection<DeckRepresentation> listMyDecks(@Auth User user,
+                                                      @QueryParam("flashcardsCount") Boolean flashcardsCount) {
 
         Collection<Deck> decks = decksDAO.getAllUserDecks(user.getId());
 
-        if (Optional.ofNullable(isEnabled).isPresent()) {
+        if (Optional.ofNullable(flashcardsCount).isPresent()) {
             return new DeckCollectionBuilder().addFlashcardsCountsToDeck(decks);
         } else {
             return decks
@@ -104,8 +105,8 @@ public class DecksResource {
             return this;
         }
 
-        public DeckCollectionBuilder enableFlashcardsCounts(Optional<Boolean> isEnabled) {
-            this.enableFlashcardsCounts = isEnabled.orElse(false);
+        public DeckCollectionBuilder enableFlashcardsCounts(Optional<Boolean> flashcardsCount) {
+            this.enableFlashcardsCounts = flashcardsCount.orElse(false);
             return this;
         }
 
