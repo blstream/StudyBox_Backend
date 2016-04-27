@@ -113,8 +113,11 @@ public class DeckDAOTest extends DAOTest {
     public void getFlashcardsNumber() throws Exception {
         final List<Flashcard> flashcards = getAllEntities(Flashcard.class, FlashcardMapper.class, "flashcards");
         UUID deckId = flashcards.get(0).getDeckId();
-        List<Flashcard> flashcardsInOneDeck = flashcards.stream().filter(flashcard -> flashcard.getDeckId().equals(deckId)).collect(Collectors.toList());
+        List<Flashcard> flashcardsInOneDeck = flashcards
+                .stream()
+                .filter(flashcard -> flashcard.getDeckId()
+                        .equals(deckId)).collect(Collectors.toList());
 
-        assertThat(dao.getFlashcardsNumber(Collections.singletonList(deckId))).isEqualTo(Collections.singletonList(flashcardsInOneDeck.size()));
+        assertThat(dao.getFlashcardsNumber(deckId)).isEqualTo(flashcardsInOneDeck.size());
     }
 }

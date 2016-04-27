@@ -66,15 +66,18 @@ public class DecksResource {
 
     @Path("/me")
     @GET
-    public Collection<Deck> listMyDecks(@Auth User user, @QueryParam("isEnabled") Boolean isEnabled) {
+    public Collection<DeckRepresentation> listMyDecks(@Auth User user, @QueryParam("isEnabled") Boolean isEnabled) {
 
         Collection<Deck> decks = decksDAO.getAllUserDecks(user.getId());
 
         if (Optional.ofNullable(isEnabled).isPresent()) {
-            decks = new DeckCollectionBuilder().addFlashcardsNumbersToDeck(decks);
+            return new DeckCollectionBuilder().addFlashcardsNumbersToDeck(decks);
+        } else {
+            return decks
+                    .stream()
+                    .map(DeckRepresentation::new)
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
-
-        return decks;
     }
 
     private class DeckCollectionBuilder {
@@ -136,28 +139,26 @@ public class DecksResource {
                 );
             }
             if (enableFlashcardsNumber) {
-                deckCollection = addFlashcardsNumbersToDeck(deckCollection);
+                return addFlashcardsNumbersToDeck(deckCollection);
             }
 
 
             return deckCollectionToDeckRespresentationCollection(deckCollection);
         }
 
-        private Collection<Deck> addFlashcardsNumbersToDeck(Collection<Deck> decks) {
-            Collection<Integer> flashcardsNumbers =
-                    decksDAO.getFlashcardsNumber(
-                            decks.stream()
-                                    .map(Deck::getId)
-                                    .collect(Collectors.toList()));
+        private Collection<DeckRepresentation> addFlashcardsNumbersToDeck(Collection<Deck> decks) {
+            List<Integer> flashcardsNumbers =
+                    decks.stream()
+                            .map(deck -> decksDAO.getFlashcardsNumber(deck.getId()))
+                            .collect(Collectors.toList());
             List tempDecks = new ArrayList<>();
             Iterator<Deck> deckIterator = decks.iterator();
             Iterator<Integer> numberIterator = flashcardsNumbers.iterator();
             while (deckIterator.hasNext() && numberIterator.hasNext()) {
-                tempDecks.add(new DeckWithFlashcardsNumber(deckIterator.next(), numberIterator.next()));
+                tempDecks.add(new DeckRepresentation(deckIterator.next()).setFlashcardsNumber(numberIterator.next()));
             }
 
-            decks = tempDecks;
-            return decks;
+            return tempDecks;
         }
     }
 

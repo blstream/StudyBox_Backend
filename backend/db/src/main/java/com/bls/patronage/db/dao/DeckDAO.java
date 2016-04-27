@@ -24,8 +24,8 @@ public abstract class DeckDAO {
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
-    @SqlQuery("select count(flashcards.id) from flashcards where deckId in (<decks>)")
-    public abstract Collection<Integer> getFlashcardsNumber(@BindIn("decks") List<UUID> decks);
+    @SqlQuery("select count(flashcards.id) from flashcards where flashcards.deckId = :deckId")
+    public abstract Integer getFlashcardsNumber(@Bind("deckId") UUID deckId);
 
     @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);
