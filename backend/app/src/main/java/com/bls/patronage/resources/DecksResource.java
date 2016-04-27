@@ -142,7 +142,6 @@ public class DecksResource {
                 return addFlashcardsNumbersToDeck(deckCollection);
             }
 
-
             return deckCollectionToDeckRespresentationCollection(deckCollection);
         }
 
@@ -151,9 +150,11 @@ public class DecksResource {
                     decks.stream()
                             .map(deck -> decksDAO.getFlashcardsNumber(deck.getId()))
                             .collect(Collectors.toList());
+
             List tempDecks = new ArrayList<>();
             Iterator<Deck> deckIterator = decks.iterator();
             Iterator<Integer> numberIterator = flashcardsNumbers.iterator();
+
             while (deckIterator.hasNext() && numberIterator.hasNext()) {
                 tempDecks.add(new DeckRepresentation(deckIterator.next()).setFlashcardsNumber(numberIterator.next()));
             }
