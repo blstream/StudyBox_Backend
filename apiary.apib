@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 28/04/2016 toja
+ - name of parameter isEnabled changed to flashcardsCount
 ## 17/04/2016 toja
  - added resource to list flashcards with tips count 
 ## 14/04/2016 toja
@@ -115,12 +117,12 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (Deck)
 
-### Get all Decks [GET /decks{?includeOwn}{?isEnabled}{?name}]
+### Get all Decks [GET /decks{?includeOwn}{?flashcardsCount}{?name}]
 
 + Parameters
     + includeOwn (optional, boolean, `true`) - include decks created by logged user
     + name (string, optional) - name of a deck to find
-    + isEnabled (optional, boolean, `true`) - show number of contained flashcards.
+    + flashcardsCount (optional, boolean, `true`) - show number of contained flashcards.
 
 + Request
 
@@ -131,10 +133,10 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (DeckCollection)
 
-### Get all User's Decks [GET /decks/me{?isEnabled}]
+### Get all User's Decks [GET /decks/me{?flashcardsCount}]
 
 + Parameters
-    + isEnabled (optional, boolean, `true`) - show number of contained flashcards.
+    + flashcardsCount (optional, boolean, `true`) - show number of contained flashcards.
 
 + Request
 
