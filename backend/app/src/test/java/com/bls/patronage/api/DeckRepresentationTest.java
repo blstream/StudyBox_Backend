@@ -26,10 +26,10 @@ public class DeckRepresentationTest {
     @Before
     public void setup() {
         deck = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC);
-        deckWithFlashcardNumber = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC).setFlashcardsNumber(FIXTURE_FLASHCARD_NUMBER);
+        deckWithFlashcardNumber = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC).setFlashcardsCount(FIXTURE_FLASHCARD_NUMBER);
         deckWithCreatorEmail = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC).setCreatorEmail(FIXTURE_CREATOR_EMAIL);
         deckWithFlashcardNumberAndCreatorEmail = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC)
-                .setCreatorEmail(FIXTURE_CREATOR_EMAIL).setFlashcardsNumber(FIXTURE_FLASHCARD_NUMBER);
+                .setCreatorEmail(FIXTURE_CREATOR_EMAIL).setFlashcardsCount(FIXTURE_FLASHCARD_NUMBER);
         dbModel = new Deck(FIXTURE_DECK_ID, FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC);
         deckFromDbModel = new DeckRepresentation(dbModel).setCreatorEmail(FIXTURE_CREATOR_EMAIL);
 

@@ -10,7 +10,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -113,8 +112,11 @@ public class DeckDAOTest extends DAOTest {
     public void getFlashcardsNumber() throws Exception {
         final List<Flashcard> flashcards = getAllEntities(Flashcard.class, FlashcardMapper.class, "flashcards");
         UUID deckId = flashcards.get(0).getDeckId();
-        List<Flashcard> flashcardsInOneDeck = flashcards.stream().filter(flashcard -> flashcard.getDeckId().equals(deckId)).collect(Collectors.toList());
+        List<Flashcard> flashcardsInOneDeck = flashcards
+                .stream()
+                .filter(flashcard -> flashcard.getDeckId()
+                        .equals(deckId)).collect(Collectors.toList());
 
-        assertThat(dao.getFlashcardsNumber(Collections.singletonList(deckId))).isEqualTo(Collections.singletonList(flashcardsInOneDeck.size()));
+        assertThat(dao.getFlashcardsCount(deckId)).isEqualTo(flashcardsInOneDeck.size());
     }
 }

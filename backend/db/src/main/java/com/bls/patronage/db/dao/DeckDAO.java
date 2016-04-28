@@ -9,7 +9,6 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
-import org.skife.jdbi.v2.unstable.BindIn;
 
 import javax.ws.rs.core.Response;
 import java.util.Collection;
@@ -20,26 +19,26 @@ import java.util.UUID;
 @UseStringTemplate3StatementLocator
 public abstract class DeckDAO {
 
-    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
+    @SqlQuery("select decks.id, decks.name, decks.isPublic from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId group by decks.id")
     public abstract Collection<Deck> getAllUserDecks(@Bind("userId") UUID userId);
 
-    @SqlQuery("select count(flashcards.id) from flashcards where deckId in (<decks>)")
-    public abstract Collection<Integer> getFlashcardsNumber(@BindIn("decks") List<UUID> decks);
+    @SqlQuery("select count(flashcards.id) from flashcards where flashcards.deckId = :deckId")
+    public abstract Integer getFlashcardsCount(@Bind("deckId") UUID deckId);
 
-    @SqlUpdate("insert into decks (id, name, public) values (:id, :name, :isPublic)")
+    @SqlUpdate("insert into decks (id, name, isPublic) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);
 
     @SqlUpdate("insert into usersDecks (deckId, userId) values (:id, :userId)")
     abstract void insertUsersDeck(@BindBean Deck deck, @Bind("userId") UUID userId);
 
-    @SqlUpdate("update decks set name = :name, public = :isPublic where id = :id")
+    @SqlUpdate("update decks set name = :name, isPublic = :isPublic where id = :id")
     public abstract void update(@BindBean Deck deck);
 
     @SqlUpdate("delete from decks where id = :id")
     public abstract void deleteDeck(@Bind("id") UUID id);
 
-    @SqlQuery("select id, name, public from decks where id = :id")
+    @SqlQuery("select id, name, isPublic from decks where id = :id")
     abstract Deck getDeck(@Bind("id") UUID id);
 
     @SqlQuery("select userId from usersDecks where deckId = :id")
@@ -48,24 +47,27 @@ public abstract class DeckDAO {
     @SqlQuery("select email from users where id = :id")
     abstract String getCreatorEmailFromUserId(@Bind("id") UUID id);
 
-    @SqlQuery("select id, name, public from decks where name like :name and public='true'")
+    @SqlQuery("select id, name, isPublic from decks where name like :name and isPublic='true'")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name);
 
-    @SqlQuery("select id, name, public from decks " +
+    @SqlQuery("select id, name, isPublic from decks " +
             "inner join usersDecks on decks.id = usersDecks.deckId " +
-            "where decks.name like :name and usersDecks.userId = :id")
+            "where decks.name like :name and usersDecks.userId = :id and decks.isPublic='false'")
     abstract List<Deck> getUserDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
 
-    @SqlQuery("select id, name, public from decks where public='true'")
+    @SqlQuery("select id, name, isPublic from decks where isPublic='true'")
     abstract Collection<Deck> getDecks();
 
-    @SqlQuery("select decks.id, decks.name, decks.public from decks join usersDecks on usersDecks.deckId = decks.id " +
-        "where usersDecks.userId = :userId or decks.public = 'true' " +
-        "limit 1 offset floor(:random*:number)")
-    public abstract Collection<Deck> getRandomDeck(@Bind("userId") UUID userId, @Bind("random") Double random, @Bind("number") Integer number);
+    @SqlQuery("select decks.id, decks.name, decks.isPublic from decks " +
+            "join usersDecks on usersDecks.deckId = decks.id " +
+            "where usersDecks.userId = :userId or decks.isPublic = 'true' " +
+            "limit 1 offset floor(:random*:number)")
+    public abstract Collection<Deck> getRandomDeck(@Bind("userId") UUID userId,
+                                                   @Bind("random") Double random,
+                                                   @Bind("number") Integer number);
 
     @SqlQuery("select count(*) from decks join usersDecks on usersDecks.deckId = decks.id " +
-            "where usersDecks.userId = :userId or decks.public = 'true' ")
+            "where usersDecks.userId = :userId or decks.isPublic = 'true' ")
     abstract Integer getCountUserDecks(@Bind("userId") UUID userId);
 
     public void createDeck(Deck deck, UUID userId) {
@@ -86,17 +88,11 @@ public abstract class DeckDAO {
 
     public Collection<Deck> getDecksByName(String name) {
         List<Deck> decks = getDecksUsingName(name);
-        if (decks.isEmpty()) {
-            throw new DataAccessException("There are no decks matching this name");
-        }
         return decks;
     }
 
     public Collection<Deck> getUserDecksByName(String name, UUID userId) {
         List<Deck> decks = getUserDecksUsingName(name, userId);
-        if (decks.isEmpty()) {
-            throw new DataAccessException("There are no decks matching this name");
-        }
         return decks;
     }
 
@@ -109,7 +105,7 @@ public abstract class DeckDAO {
         return getCreatorEmailFromUserId(UUID.fromString(getDeckUserId(deckId)));
     }
 
-public Collection<Deck> getRandomDecks(UUID userId){
+    public Collection<Deck> getRandomDecks(UUID userId){
         Integer number = getCountUserDecks(userId);
         Collection<Deck> decks = getRandomDeck(userId, Math.random(), number);
         return decks;

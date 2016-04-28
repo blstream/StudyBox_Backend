@@ -21,7 +21,6 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -84,10 +83,10 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         decksByEmptyNameURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("name", "").build().toString();
         decksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("isEnabled", true).build().toString();
+                .queryParam("flashcardsCount", true).build().toString();
         userDecksWithFlashcardNumberURI = UriBuilder.fromResource(DecksResource.class).build().toString()
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks")
-                .queryParam("isEnabled", true).build().toString();
+                .queryParam("flashcardsCount", true).build().toString();
         userDecksURI = UriBuilder.fromResource(DecksResource.class).build().toString()
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
 
@@ -170,25 +169,23 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Test
     public void listUserDecksWithFlashcardsNumber() {
         final DeckWithFlashcardsNumber deckExample = new DeckWithFlashcardsNumber(userDeck.map(), 3);
-        when(deckDao.getFlashcardsNumber(Collections.singletonList(deckExample.getId())))
-                .thenReturn(Collections.singletonList(deckExample.getCount()));
+        when(deckDao.getFlashcardsCount(deckExample.getId()))
+                .thenReturn(deckExample.getCount());
 
-        final ImmutableList<Deck> decks = ImmutableList.of(deckExample);
+        final ImmutableList<DeckRepresentation> decks
+                = ImmutableList.of(new DeckRepresentation(deckExample)
+                .setFlashcardsCount(deckExample.getCount()));
         final Response response = getResponseWithCredentials(userDecksWithFlashcardNumberURI, encodedCredentials);
-        final List<DeckWithFlashcardsNumber> decksInResponse = response
-                .readEntity(new GenericType<List<DeckWithFlashcardsNumber>>() {
+        final List<DeckRepresentation> decksInResponse = response
+                .readEntity(new GenericType<List<DeckRepresentation>>() {
                 });
-
-
-
-        List<Deck> mappedDecks = decksInResponse.stream().collect(Collectors.toList());
 
         verify(deckDao).getAllUserDecks(user.getId());
         verify(userDAO).getUserByEmail(user.getEmail());
-        verify(deckDao).getFlashcardsNumber(Collections.singletonList(deckExample.getId()));
+        verify(deckDao).getFlashcardsCount(deckExample.getId());
 
-        assertThat(mappedDecks).containsAll(decks);
-        assertThat(decksInResponse.get(0).getCount()).isEqualTo(deckExample.getCount());
+        assertThat(decksInResponse).containsAll(decks);
+        assertThat(decksInResponse.get(0).getFlashcardsCount()).isEqualTo(deckExample.getCount());
     }
 
     @Test

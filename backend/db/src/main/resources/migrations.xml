@@ -148,5 +148,11 @@
         <addPrimaryKey columnNames="flashcardId, userId"
                        tableName="results"/>
     </changeSet>
+    <changeSet id="11" author="toja">
+        <renameColumn columnDataType="boolean"
+                      newColumnName="isPublic"
+                      oldColumnName="public"
+                      tableName="decks"/>
+    </changeSet>
 </databaseChangeLog>
 
