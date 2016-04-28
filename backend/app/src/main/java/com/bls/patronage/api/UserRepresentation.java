@@ -11,15 +11,18 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRepresentation implements DbMappable<User> {
-    private UUID id;
     @Email
     @NotEmpty
     private final String email;
-    @NotEmpty
-    private final String name;
+    private UUID id;
+    private String name;
     @NotEmpty
     @Length(min = 8)
     private String password;
+
+    public UserRepresentation(String email) {
+        this.email = email;
+    }
 
     public UserRepresentation(@JsonProperty("email") String email,
                               @JsonProperty("name") String name,
@@ -29,9 +32,9 @@ public class UserRepresentation implements DbMappable<User> {
         this.password = password;
     }
 
-    public UserRepresentation(String email, String name) {
+    public UserRepresentation(String email, String password) {
         this.email = email;
-        this.name = name;
+        this.password = password;
     }
 
     public UserRepresentation(User user) {
@@ -51,6 +54,11 @@ public class UserRepresentation implements DbMappable<User> {
 
     public String getName() {
         return name;
+    }
+
+    public UserRepresentation setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public String getPassword() {

@@ -47,6 +47,12 @@ public class UsersResourceTest extends BasicAuthenticationTest {
                 .post(Entity.entity(new UserRepresentation(email, name, password), MediaType.APPLICATION_JSON_TYPE));
     }
 
+    static private Response postUser(String uri, String email, String password) {
+        return resources.client().target(uri)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(new UserRepresentation(email, password), MediaType.APPLICATION_JSON_TYPE));
+    }
+
     @Before
     public void setUp() {
         usersURI = UriBuilder.fromResource(UsersResource.class).build().toString();
@@ -67,6 +73,17 @@ public class UsersResourceTest extends BasicAuthenticationTest {
         verify(userDAO).createUser(userCaptor.capture());
         assertThat(userCaptor.getValue().getId()).isNotNull();
         assertThat(userCaptor.getValue().getName()).isEqualTo(user.getName());
+        assertThat(userCaptor.getValue().getEmail()).isEqualTo(user.getEmail());
+    }
+
+    @Test
+    public void createUserWithoutName() {
+        Response response = postUser(usersURI, user.getEmail(), user.getPassword());
+
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
+        verify(userDAO).createUser(userCaptor.capture());
+        assertThat(userCaptor.getValue().getId()).isNotNull();
+        assertThat(userCaptor.getValue().getName()).isNull();
         assertThat(userCaptor.getValue().getEmail()).isEqualTo(user.getEmail());
     }
 

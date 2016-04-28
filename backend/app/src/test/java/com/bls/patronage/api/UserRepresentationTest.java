@@ -24,7 +24,7 @@ public class UserRepresentationTest {
     @Before
     public void setup() {
         userRequest = new UserRepresentation(FIXTURE_EMAIL, FIXTURE_NAME, FIXTURE_PASSWORD);
-        userResponse = new UserRepresentation(FIXTURE_EMAIL, FIXTURE_NAME).setId(UUID.fromString(FIXTURE_ID));
+        userResponse = new UserRepresentation(FIXTURE_EMAIL).setName(FIXTURE_NAME).setId(UUID.fromString(FIXTURE_ID));
     }
 
     @Test
