@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 28/04/2016 toja
+ - name of parameter isEnabled changed to flashcardsCount
 ## 17/04/2016 toja
  - added resource to list flashcards with tips count 
 ## 14/04/2016 toja
@@ -115,12 +117,12 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (Deck)
 
-### Get all Decks [GET /decks{?includeOwn}{?isEnabled}{?name}]
+### Get all Decks [GET /decks{?includeOwn}{?flashcardsCount}{?name}]
 
 + Parameters
     + includeOwn (optional, boolean, `true`) - include decks created by logged user
     + name (string, optional) - name of a deck to find
-    + isEnabled (optional, boolean, `true`) - show number of contained flashcards.
+    + flashcardsCount (optional, boolean, `true`) - show number of contained flashcards.
 
 + Request
 
@@ -129,12 +131,12 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
             Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
 
 + Response 200 (application/json)
-    + Attributes (DeckCollection)
+    + Attributes (DeckWithEmailCollection)
 
-### Get all User's Decks [GET /decks/me{?isEnabled}]
+### Get all User's Decks [GET /decks/me{?flashcardsCount}]
 
 + Parameters
-    + isEnabled (optional, boolean, `true`) - show number of contained flashcards.
+    + flashcardsCount (optional, boolean, `true`) - show number of contained flashcards.
 
 + Request
 
@@ -184,6 +186,12 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Parameters
     + deckId: `1212-1212-1212-121212121212` (string, required) - deck UUID to update
     + isPublic: false (boolean, required) - value to be set in isPublic field
+    
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdEBtYWlsLmNvbTpwYXNzd29yZA==
 
 + Response 204
 
@@ -417,7 +425,7 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
     + deckId: `1233-0000-0000-000000000001` (string, required) - deck UUID which contain flashcard
     
 + Response 200 (application/json)
-    + Attributes (FlashcardResultCollection)
+    + Attributes (FlashcardResultForUserCollection)
 
 ### Save Test Results [POST]
 
@@ -452,6 +460,7 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 
 ### Deck (DeckWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
++ creatorEmail: `test@mail.com` (string, required) - email of a user which created a deck
 
 ### FlashcardWithoutId (object)
 + question: `Sample question` (string, required) - question attribute for Flashcard
@@ -460,6 +469,7 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 
 ### Flashcard (FlashcardWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
++ deckId: `291acb97-6f50-4522-8049-aee0b4e16b42` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 
 ### TipWithoutId (object)
 + prompt: `Sample prompt` (string) - prompt attribute for Tip
@@ -491,6 +501,15 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + id: `0d081870-553c-4df7-b9e2-be7e5ba791c0` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + isPublic: `false` (boolean, required) - status of Deck access rights
 
+### DeckWithEmail0 (Deck0)
++ creatorEmail: `test@mail.com` (string, required) - email of a user which created a deck
+
+### DeckWithEmail1 (Deck1)
++ creatorEmail: `test@mail.com` (string, required) - email of a user which created a deck
+
+### DeckWithEmail2 (Deck2)
++ creatorEmail: `test@mail.com` (string, required) - email of a user which created a deck
+
 ### DeckWithCount0 (Deck0)
 + count: `12` (number) - Count of the Flashcards in Deck
 
@@ -504,18 +523,21 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + id: `00e60c87-1fac-46dc-a7ee-1dd1f3996ccc` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `First question` (string) - question attribute for Flashcard
 + answer: `First answer` (string) - answer attribute for Flashcard
++ deckId: `291acb97-6f50-4522-8049-aee0b4e16b42` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + isHidden: `false` (boolean, required) - visibility of Flashcard
 
 ### Flashcard1 (object)
 + id: `2c8815e6-4e16-41ce-95bf-d0039c35af2d` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `Second question` (string) - question attribute for Flashcard
 + answer: `Second answer` (string) - answer attribute for Flashcard
++ deckId: `291acb97-6f50-4522-8049-aee0b4e16b42` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + isHidden: `true` (boolean, required) - visibility of Flashcard
 
 ### Flashcard2 (object)
 + id: `369f0665-c895-41bb-bede-62b443519964` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + question: `Third question` (string) - question attribute for Flashcard
 + answer: `Third answer` (string) - answer attribute for Flashcard
++ deckId: `291acb97-6f50-4522-8049-aee0b4e16b42` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + isHidden: `false` (boolean, required) - visibility of Flashcard
 
 ### FlashcardWithCount0 (Flashcard0)
@@ -563,12 +585,32 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + flashcardId: `369f0665-c895-41bb-bede-62b443519964` (string, required) - Flashcard UUID
 + isCorrectAnswer: `true` (boolean, required) - Shows whether an answer was correct or not
 
+### FlashcardResultForUser0 (object)
++ flashcardId: `00e60c87-1fac-46dc-a7ee-1dd1f3996ccc` (string, required) - Flashcard UUID
++ correctAnswers: `1` (number, required) - Shows number of correct answers for a flashcard
++ userId: `5560063c-a336-43bd-85bc-4d13973509b5` (string, required) - User UUID
+
+### FlashcardResultForUser1 (object)
++ flashcardId: `2c8815e6-4e16-41ce-95bf-d0039c35af2d` (string, required) - Flashcard UUID
++ correctAnswers: `12` (number, required) - Shows number of correct answers for a flashcard
++ userId: `5560063c-a336-43bd-85bc-4d13973509b5` (string, required) - User UUID
+
+### FlashcardResultForUser2 (object)
++ flashcardId: `369f0665-c895-41bb-bede-62b443519964` (string, required) - Flashcard UUID
++ correctAnswers: `4` (number, required) - Shows number of correct answers for a flashcard
++ userId: `5560063c-a336-43bd-85bc-4d13973509b5` (string, required) - User UUID
+
 ## Collections
 
 ### DeckCollection (array)
 + (Deck0)
 + (Deck1)
 + (Deck2)
+
+### DeckWithEmailCollection (array)
++ (DeckWithEmail0)
++ (DeckWithEmail1)
++ (DeckWithEmail2)
 
 ### FlashcardCollection (array)
 + (Flashcard0)
@@ -599,6 +641,11 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + (FlashcardResult0)
 + (FlashcardResult1)
 + (FlashcardResult2)
+
+### FlashcardResultForUserCollection (array)
++ (FlashcardResultForUser0)
++ (FlashcardResultForUser1)
++ (FlashcardResultForUser2)
 
 ## BadRequestResponse (object)
 + code: `E001` (string, required) - TODO sample error code
