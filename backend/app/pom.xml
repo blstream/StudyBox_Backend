@@ -26,6 +26,11 @@
             <groupId>de.svenkubiak</groupId>
             <artifactId>jBCrypt</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.bls.patronage</groupId>
+            <artifactId>streamPersistenceBundle</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
