@@ -7,10 +7,11 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
-import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
+import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
+import com.bls.patronage.resources.FilesResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import com.bls.patronage.resources.ResultsResource;
@@ -26,16 +27,27 @@ import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
 
+import java.net.URI;
+
 public class StudyBox extends Application<StudyBoxConfiguration> {
 
     private static final String APP_NAME = "backend";
     private static final String HEALTH_CHECK_DATABASE_NAME = "database";
+
+    private final StreamPersistenceBundle<StudyBoxConfiguration> streamPersistenceBundle = new StreamPersistenceBundle<StudyBoxConfiguration>() {
+        @Override
+        public URI getListenerURI(StudyBoxConfiguration configuration) {
+            //Return CV server URI
+            return configuration.getCvServerURI();
+        }
+    };
 
     public static void main(String[] args) throws Exception {
         new StudyBox().run(args);
@@ -62,6 +74,9 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
                 return configuration.getDatabase();
             }
         });
+
+        bootstrap.addBundle(streamPersistenceBundle);
+        bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override
@@ -77,6 +92,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
                 jdbi.onDemand(ResultDAO.class)));
+        environment.jersey().register(new FilesResource(streamPersistenceBundle, configuration.getFileContentBaseLocation(),
+                jdbi.onDemand(DeckDAO.class), jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
