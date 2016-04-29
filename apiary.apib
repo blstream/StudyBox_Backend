@@ -474,8 +474,8 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + deckId: `291acb97-6f50-4522-8049-aee0b4e16b42` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 
 ### TipWithoutId (object)
-+ essence: `Sample content` (string) - content of a Tip
-+ difficult: `8` (int) - difficult level of a Tip, must be between 0 and 10
++ essence: `Sample content` (string, required) - content of a Tip
++ difficult: `8` (number, required) - difficult level of a Tip, must be between 0 and 10
 
 ### Tip (TipWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - tip UUID, 36 chars, 8-4-4-4-12 chars
@@ -554,18 +554,18 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 
 ### Tip0 (object)
 + id: `51155739-1028-4479-a425-9ebaa501d9fe` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
-+ essence: `First tip content` (string) - content of a Tip
-+ difficult: `0` (int) - difficult level of a Tip, must be between 0 and 10
++ essence: `First tip content` (string, required) - content of a Tip
++ difficult: `0` (number, required) - difficult level of a Tip, must be between 0 and 10
 
 ### Tip1 (object)
 + id: `6351db42-6597-42ba-909c-11488ee9814a` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
-+ essence: `Second tip content` (string) - content of a Tip
-+ difficult: `4` (int) - difficult level of a Tip, must be between 0 and 10
++ essence: `Second tip content` (string, required) - content of a Tip
++ difficult: `4` (number, required) - difficult level of a Tip, must be between 0 and 10
 
 ### Tip2 (object)
 + id: `e9b7760a-b645-4c35-9b4e-f5af5c1826c0` (string, required) - Tip UUID, 36 chars, 8-4-4-4-12 chars
-+ essence: `Third tip content` (string) - content of a Tip
-+ difficult: `9` (int) - difficult level of a Tip, must be between 0 and 10
++ essence: `Third tip tips content` (string, required) - content of a Tip
++ difficult: `9` (number, required) - difficult level of a Tip, must be between 0 and 10
 
 ### Tag0 (object)
 + id: `13972214-cf00-4239-aff6-eaad03f4b841` (string, required) - Tag UUID, 36 chars, 8-4-4-4-12 chars
