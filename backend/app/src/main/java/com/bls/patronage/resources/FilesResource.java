@@ -1,6 +1,5 @@
 package com.bls.patronage.resources;
 
-import com.bls.patronage.StreamPersistenceBundle;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
@@ -31,8 +30,8 @@ public class FilesResource {
     private final DeckDAO deckDAO;
     private final FileHelper helper;
 
-    public FilesResource(StreamPersistenceBundle bundle, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
-        this.helper = new FileHelper(bundle);
+    public FilesResource(FileHelper helper, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
+        this.helper = helper;
         this.deckDAO = deckDAO;
         this.baseLocation = baseLocation;
         this.flashcardDAO = flashcardDAO;
