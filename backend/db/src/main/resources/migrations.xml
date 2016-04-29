@@ -154,5 +154,8 @@
                       oldColumnName="public"
                       tableName="decks"/>
     </changeSet>
+    <changeSet id="11" author="lupi">
+        <dropNotNullConstraint tableName="users" columnName="name" columnDataType="text"/>
+    </changeSet>
 </databaseChangeLog>
 
