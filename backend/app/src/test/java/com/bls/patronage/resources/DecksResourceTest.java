@@ -18,6 +18,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private ArgumentCaptor<Deck> deckCaptor;
     @Captor
     private ArgumentCaptor<UUID> uuidCaptor;
-
+    @Captor
+    private ArgumentCaptor<Instant> instantCaptor;
     private DeckRepresentation deck;
     private List<DeckRepresentation> decksRepresentations;
     private List<Deck> decks;
@@ -107,10 +109,11 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         final Response response = postDeck(decksURI, deck.getName(), deck.isPublicVisible(), encodedCredentials);
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
-        verify(deckDao).createDeck(deckCaptor.capture(), uuidCaptor.capture(), );
+        verify(deckDao).createDeck(deckCaptor.capture(), uuidCaptor.capture(), instantCaptor.capture());
         assertThat(deckCaptor.getValue().getId()).isNotNull();
         assertThat(deckCaptor.getValue().getName()).isEqualTo(deck.getName());
         assertThat(uuidCaptor.getValue()).isEqualTo(user.getId());
+        assertThat(instantCaptor.getValue()).isNotNull();
     }
 
     @Test
