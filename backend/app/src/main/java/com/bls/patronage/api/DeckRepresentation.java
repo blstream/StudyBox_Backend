@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DeckRepresentation implements DbMappable<Deck> {
+public class DeckRepresentation implements DbMappable<Deck>, Comparable<DeckRepresentation> {
     private UUID id;
     @NotEmpty
     @Length(min = 1, max = 50)
@@ -112,5 +112,10 @@ public class DeckRepresentation implements DbMappable<Deck> {
     @Override
     public int hashCode() {
         return Objects.hash(name, publicVisible, id, flashcardsCount, creatorEmail, creationDate);
+    }
+
+    @Override
+    public int compareTo(DeckRepresentation o) {
+        return getCreationDate().compareTo(o.getCreationDate());
     }
 }
