@@ -32,8 +32,9 @@ public class DeckResource {
             @Valid
             @PathParam("deckId") UUIDParam deckId) {
 
-        return new DeckRepresentation(decksDAO.getDeckById(deckId.get(), user.getId())).setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deckId.get()));
-
+        return new DeckRepresentation(decksDAO.getDeckById(deckId.get(), user.getId()))
+                .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deckId.get()))
+                .setCreationDate(decksDAO.getDeckCreationDate(deckId.get()));
     }
 
     @DELETE
