@@ -11,6 +11,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 
 import javax.ws.rs.core.Response;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -29,8 +30,8 @@ public abstract class DeckDAO {
     @SqlUpdate("insert into decks (id, name, isPublic) values (:id, :name, :isPublic)")
     abstract void insertDeck(@BindBean Deck deck);
 
-    @SqlUpdate("insert into usersDecks (deckId, userId) values (:id, :userId)")
-    abstract void insertUsersDeck(@BindBean Deck deck, @Bind("userId") UUID userId);
+    @SqlUpdate("insert into usersDecks (deckId, userId, creationDate) values (:id, :userId, :date)")
+    abstract void insertUsersDeck(@BindBean Deck deck, @Bind("userId") UUID userId, @Bind("date") String date);
 
     @SqlUpdate("update decks set name = :name, isPublic = :isPublic where id = :id")
     public abstract void update(@BindBean Deck deck);
@@ -70,9 +71,9 @@ public abstract class DeckDAO {
             "where usersDecks.userId = :userId or decks.isPublic = 'true' ")
     abstract Integer getCountUserDecks(@Bind("userId") UUID userId);
 
-    public void createDeck(Deck deck, UUID userId) {
+    public void createDeck(Deck deck, UUID userId, Instant date) {
         insertDeck(deck);
-        insertUsersDeck(deck, userId);
+        insertUsersDeck(deck, userId, date.toString());
     }
 
     public Deck getDeckById(UUID deckId, UUID userId) {
