@@ -5,6 +5,7 @@ import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +41,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Captor
     private ArgumentCaptor<Instant> instantCaptor;
     private DeckRepresentation deck;
+    private DeckRepresentation deck2;
     private List<DeckRepresentation> decksRepresentations;
     private List<Deck> decks;
     private DeckRepresentation userDeck;
@@ -70,9 +73,18 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Before
     public void setUp() {
         super.setUp();
-        deck = new DeckRepresentation("foo", false).setId(UUID.randomUUID());
-        decksRepresentations = Collections.singletonList(deck);
-        decks = Collections.singletonList(deck.map());
+        deck = new DeckRepresentation("foo", false)
+                .setId(UUID.randomUUID())
+                .setCreationDate("2016-04-21 08:23:11.0");
+        deck2 = new DeckRepresentation("bar", false)
+                .setId(UUID.randomUUID())
+                .setCreationDate("2016-05-29 08:23:11.0");
+        decksRepresentations = new ArrayList<>();
+        decksRepresentations.add(deck);
+        decksRepresentations.add(deck2);
+        decks = new ArrayList<>();
+        decks.add(deck.map());
+        decks.add(deck2.map());
         userDeck = new DeckRepresentation("baz", false).setId(UUID.randomUUID());
         userDecksRepresentations = Collections.singletonList(userDeck);
         userDecks = Collections.singletonList(userDeck.map());
@@ -94,6 +106,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
 
         when(deckDao.getAllDecks()).thenReturn(decks);
+        when(deckDao.getDeckCreationDate(deck.getId())).thenReturn(deck.getCreationDate());
+        when(deckDao.getDeckCreationDate(deck2.getId())).thenReturn(deck2.getCreationDate());
         when(deckDao.getAllUserDecks(user.getId())).thenReturn(userDecks);
         when(deckDao.getDeckById(deck.getId(), user.getId())).thenReturn(deck.map());
         when(deckDao.getDeckById(userDeck.getId(), user.getId())).thenReturn(userDeck.map());
@@ -134,6 +148,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllUserDecks(user.getId());
         assertThat(response).containsAll(userDecksRepresentations);
+        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
     }
 
     @Test
@@ -142,6 +157,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllDecks();
         assertThat(response).containsAll(decksRepresentations);
+        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
     }
 
     @Test
@@ -150,6 +166,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getDecksByName(deck.getName());
         assertThat(response).containsAll(decksRepresentations);
+        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
     }
 
     @Test
@@ -190,6 +207,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         assertThat(decksInResponse).containsAll(decks);
         assertThat(decksInResponse.get(0).getFlashcardsCount()).isEqualTo(deckExample.getCount());
+        assertThat(Ordering.natural().reverse().isOrdered(decksInResponse)).isTrue();
     }
 
     @Test
@@ -234,6 +252,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getRandomDecks(user.getId());
         assertThat(decksRepresentations).containsAll(response);
+        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
     }
 
 }
