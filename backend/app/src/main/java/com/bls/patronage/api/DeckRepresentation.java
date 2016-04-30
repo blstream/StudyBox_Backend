@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
     private Integer flashcardsCount;
     @Email
     private String creatorEmail;
+    private Instant creationDate;
 
     public DeckRepresentation(@JsonProperty("name") String name,
                               @JsonProperty("isPublic") Boolean publicVisible) {
@@ -71,6 +73,15 @@ public class DeckRepresentation implements DbMappable<Deck> {
 
     public DeckRepresentation setId(UUID id) {
         this.id = id;
+        return this;
+    }
+
+    public String getCreationDate() {
+        return creationDate.toString();
+    }
+
+    public DeckRepresentation setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
         return this;
     }
 
