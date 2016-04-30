@@ -93,6 +93,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 ", id=" + id +
                 ", flashcardsCount=" + flashcardsCount +
                 ", creatorEmail='" + creatorEmail + '\'' +
+                ", creationDate='" + creationDate.toString() + '\'' +
                 '}';
     }
 
@@ -105,11 +106,12 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 Objects.equals(name, that.name) &&
                 Objects.equals(publicVisible, that.publicVisible) &&
                 Objects.equals(id, that.id) &&
-                Objects.equals(creatorEmail, that.creatorEmail);
+                Objects.equals(creatorEmail, that.creatorEmail) &&
+                Objects.equals(creationDate, that.creationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, publicVisible, id, flashcardsCount, creatorEmail);
+        return Objects.hash(name, publicVisible, id, flashcardsCount, creatorEmail, creationDate);
     }
 }
