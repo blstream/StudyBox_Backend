@@ -115,8 +115,8 @@ public abstract class DeckDAO {
         return decks;
     }
 
-    public Instant getDeckCreationDate(UUID deckId){
-        return Instant.parse(getCreationDate(deckId).replace(' ','T') + "Z");
+    public String getDeckCreationDate(UUID deckId){
+        return getCreationDate(deckId);
     }
 
 }
