@@ -71,6 +71,9 @@ public abstract class DeckDAO {
             "where usersDecks.userId = :userId or decks.isPublic = 'true' ")
     abstract Integer getCountUserDecks(@Bind("userId") UUID userId);
 
+    @SqlQuery("select creationDate from usersDecks where deckId = :id")
+    abstract String getCreationDate(@Bind("id") UUID id);
+
     public void createDeck(Deck deck, UUID userId, Instant date) {
         insertDeck(deck);
         insertUsersDeck(deck, userId, date.toString());
@@ -110,6 +113,10 @@ public abstract class DeckDAO {
         Integer number = getCountUserDecks(userId);
         Collection<Deck> decks = getRandomDeck(userId, Math.random(), number);
         return decks;
+    }
+
+    public Instant getDeckCreationDate(UUID deckId){
+        return Instant.parse(getCreationDate(deckId).replace(' ','T') + "Z");
     }
 
 }

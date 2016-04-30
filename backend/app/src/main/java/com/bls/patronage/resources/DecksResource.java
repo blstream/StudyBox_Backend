@@ -76,7 +76,8 @@ public class DecksResource {
         } else {
             return decks
                     .stream()
-                    .map(DeckRepresentation::new)
+                    .map(deck -> new DeckRepresentation(deck)
+                            .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
                     .collect(Collectors.toCollection(ArrayList::new));
         }
     }
@@ -158,12 +159,13 @@ public class DecksResource {
                             .collect(Collectors.toList());
 
             List tempDecks = new ArrayList<>();
-            Iterator<Deck> deckIterator = decks.iterator();
             Iterator<Integer> numberIterator = flashcardsCounts.iterator();
 
-            while (deckIterator.hasNext() && numberIterator.hasNext()) {
-                tempDecks.add(new DeckRepresentation(deckIterator.next()).setFlashcardsCount(numberIterator.next()));
-            }
+            tempDecks.addAll(decks.stream()
+                    .map(deck -> new DeckRepresentation(deck)
+                            .setFlashcardsCount(numberIterator.next())
+                            .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
+                    .collect(Collectors.toList()));
 
             return tempDecks;
         }
@@ -174,7 +176,8 @@ public class DecksResource {
                 deckCollection
                         .stream()
                         .map(deck -> new DeckRepresentation(deck)
-                                .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId())))
+                                .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
+                                .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
                         .collect(Collectors.toList());
 
         return deckRepresentations;
