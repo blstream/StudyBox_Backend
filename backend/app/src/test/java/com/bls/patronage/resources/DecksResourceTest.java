@@ -35,7 +35,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private ArgumentCaptor<Deck> deckCaptor;
     @Captor
     private ArgumentCaptor<UUID> uuidCaptor;
-    
+
     private DeckRepresentation deck;
     private List<DeckRepresentation> decksRepresentations;
     private List<Deck> decks;

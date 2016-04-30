@@ -72,7 +72,7 @@ public abstract class DeckDAO {
     abstract Integer getCountUserDecks(@Bind("userId") UUID userId);
 
     @SqlQuery("select creationDate from usersDecks where deckId = :id")
-    abstract String getCreationDate(@Bind("id") UUID id);
+    public abstract String getDeckCreationDate(@Bind("id") UUID id);
 
     public void createDeck(Deck deck, UUID userId, Instant date) {
         insertDeck(deck);
@@ -114,9 +114,4 @@ public abstract class DeckDAO {
         Collection<Deck> decks = getRandomDeck(userId, Math.random(), number);
         return decks;
     }
-
-    public String getDeckCreationDate(UUID deckId){
-        return getCreationDate(deckId);
-    }
-
 }
