@@ -78,6 +78,7 @@ public class DecksResource {
                     .stream()
                     .map(deck -> new DeckRepresentation(deck)
                             .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
+                    .sorted(Collections.reverseOrder())
                     .collect(Collectors.toCollection(ArrayList::new));
         }
     }
@@ -149,7 +150,7 @@ public class DecksResource {
                 return addFlashcardsCountsToDeck(deckCollection);
             }
 
-            return deckCollectionToDeckRespresentationCollection(deckCollection);
+            return deckCollectionToDeckRepresentationCollection(deckCollection);
         }
 
         private Collection<DeckRepresentation> addFlashcardsCountsToDeck(Collection<Deck> decks) {
@@ -165,21 +166,21 @@ public class DecksResource {
                     .map(deck -> new DeckRepresentation(deck)
                             .setFlashcardsCount(numberIterator.next())
                             .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
+                    .sorted(Collections.reverseOrder())
                     .collect(Collectors.toList()));
 
             return tempDecks;
         }
     }
 
-    private Collection<DeckRepresentation> deckCollectionToDeckRespresentationCollection(Collection<Deck> deckCollection) {
-        Collection<DeckRepresentation> deckRepresentations =
-                deckCollection
-                        .stream()
-                        .map(deck -> new DeckRepresentation(deck)
-                                .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
-                                .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
-                        .collect(Collectors.toList());
+    private Collection<DeckRepresentation> deckCollectionToDeckRepresentationCollection(Collection<Deck> deckCollection) {
 
-        return deckRepresentations;
+        return deckCollection
+                .stream()
+                .map(deck -> new DeckRepresentation(deck)
+                        .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
+                        .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
+                .sorted(Collections.reverseOrder())
+                .collect(Collectors.toList());
     }
 }
