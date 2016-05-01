@@ -40,11 +40,10 @@ public class DecksResource {
     @POST
     public Response createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
 
-        User user = (User) context.getUserPrincipal();
+        final User user = (User) context.getUserPrincipal();
 
-        Instant date = Instant.now();
+        final Instant date = Instant.now();
         decksDAO.createDeck(deck.setId(UUID.randomUUID()).map(), user.getId(), date);
-
 
         return Response.ok(deck).status(Response.Status.CREATED).build();
     }
