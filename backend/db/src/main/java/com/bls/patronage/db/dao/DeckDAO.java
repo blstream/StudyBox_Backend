@@ -11,7 +11,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 
 import javax.ws.rs.core.Response;
-import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +31,7 @@ public abstract class DeckDAO {
     abstract void insertDeck(@BindBean Deck deck);
 
     @SqlUpdate("insert into usersDecks (deckId, userId, creationDate) values (:id, :userId, :date)")
-    abstract void insertUsersDeck(@BindBean Deck deck, @Bind("userId") UUID userId, @Bind("date") Timestamp date);
+    abstract void insertUsersDeck(@BindBean Deck deck, @Bind("userId") UUID userId, @Bind("date") Date date);
 
     @SqlUpdate("update decks set name = :name, isPublic = :isPublic where id = :id")
     public abstract void update(@BindBean Deck deck);
@@ -77,8 +76,7 @@ public abstract class DeckDAO {
 
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
-        final Date creationDate = new Date();
-        insertUsersDeck(deck, userId, new Timestamp(creationDate.getTime()));
+        insertUsersDeck(deck, userId, new Date());
     }
 
     public Deck getDeckById(UUID deckId, UUID userId) {
