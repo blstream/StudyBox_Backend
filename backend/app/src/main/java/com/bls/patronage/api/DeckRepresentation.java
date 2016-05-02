@@ -113,5 +113,4 @@ public class DeckRepresentation implements DbMappable<Deck> {
     public int hashCode() {
         return Objects.hash(name, publicVisible, id, flashcardsCount, creatorEmail, creationDate);
     }
-
 }

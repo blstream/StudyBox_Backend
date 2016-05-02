@@ -17,7 +17,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,8 +42,7 @@ public class DecksResource {
 
         final User user = (User) context.getUserPrincipal();
 
-        final Instant date = Instant.now();
-        decksDAO.createDeck(deck.setId(UUID.randomUUID()).map(), user.getId(), date);
+        decksDAO.createDeck(deck.setId(UUID.randomUUID()).map(), user.getId());
 
         return Response.ok(deck).status(Response.Status.CREATED).build();
     }

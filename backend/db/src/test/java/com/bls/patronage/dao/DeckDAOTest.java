@@ -10,7 +10,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -91,7 +90,7 @@ public class DeckDAOTest extends DAOTest {
 
     public void createDeck() throws Exception {
         final Deck createdDeck = new Deck(UUID.randomUUID(), "foo", true);
-        dao.createDeck(createdDeck, defaultUserUUID, Instant.now());
+        dao.createDeck(createdDeck, defaultUserUUID);
         assertThat(dao.getDeckById(createdDeck.getId(), defaultUserUUID)).isEqualTo(createdDeck);
     }
 

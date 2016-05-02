@@ -5,7 +5,6 @@ import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Ordering;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +18,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,8 +37,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private ArgumentCaptor<Deck> deckCaptor;
     @Captor
     private ArgumentCaptor<UUID> uuidCaptor;
-    @Captor
-    private ArgumentCaptor<Instant> instantCaptor;
     private DeckRepresentation deck;
     private DeckRepresentation deck2;
     private List<DeckRepresentation> decksRepresentations;
@@ -124,11 +120,10 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         final Response response = postDeck(decksURI, deck.getName(), deck.isPublicVisible(), encodedCredentials);
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
-        verify(deckDao).createDeck(deckCaptor.capture(), uuidCaptor.capture(), instantCaptor.capture());
+        verify(deckDao).createDeck(deckCaptor.capture(), uuidCaptor.capture());
         assertThat(deckCaptor.getValue().getId()).isNotNull();
         assertThat(deckCaptor.getValue().getName()).isEqualTo(deck.getName());
         assertThat(uuidCaptor.getValue()).isEqualTo(user.getId());
-        assertThat(instantCaptor.getValue()).isNotNull();
     }
 
     @Test
