@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -148,7 +149,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllUserDecks(user.getId());
         assertThat(response).containsAll(userDecksRepresentations);
-        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
+        userDecksRepresentations
+                .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
+        assertThat(response.get(0)).isEqualTo(userDecksRepresentations.get(0));
     }
 
     @Test
@@ -157,7 +160,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllDecks();
         assertThat(response).containsAll(decksRepresentations);
-        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
+        decksRepresentations
+                .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
+        assertThat(response.get(0)).isEqualTo(decksRepresentations.get(0));
     }
 
     @Test
@@ -166,7 +171,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getDecksByName(deck.getName());
         assertThat(response).containsAll(decksRepresentations);
-        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
+        decksRepresentations
+                .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
+        assertThat(response.get(0)).isEqualTo(decksRepresentations.get(0));
     }
 
     @Test
@@ -207,7 +214,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         assertThat(decksInResponse).containsAll(decks);
         assertThat(decksInResponse.get(0).getFlashcardsCount()).isEqualTo(deckExample.getCount());
-        assertThat(Ordering.natural().reverse().isOrdered(decksInResponse)).isTrue();
     }
 
     @Test
@@ -252,7 +258,6 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getRandomDecks(user.getId());
         assertThat(decksRepresentations).containsAll(response);
-        assertThat(Ordering.natural().reverse().isOrdered(response)).isTrue();
     }
 
 }

@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +78,7 @@ public class DecksResource {
                     .stream()
                     .map(deck -> new DeckRepresentation(deck)
                             .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
-                    .sorted(Collections.reverseOrder())
+                    .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
                     .collect(Collectors.toCollection(ArrayList::new));
         }
     }
@@ -165,7 +166,7 @@ public class DecksResource {
                     .map(deck -> new DeckRepresentation(deck)
                             .setFlashcardsCount(numberIterator.next())
                             .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
-                    .sorted(Collections.reverseOrder())
+                    .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
                     .collect(Collectors.toList()));
 
             return tempDecks;
@@ -179,7 +180,7 @@ public class DecksResource {
                 .map(deck -> new DeckRepresentation(deck)
                         .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
                         .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
-                .sorted(Collections.reverseOrder())
+                .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
     }
 }
