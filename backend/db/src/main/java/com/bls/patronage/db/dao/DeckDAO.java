@@ -77,7 +77,7 @@ public abstract class DeckDAO {
 
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
-        Date creationDate = new Date();
+        final Date creationDate = new Date();
         insertUsersDeck(deck, userId, new Timestamp(creationDate.getTime()));
     }
 
