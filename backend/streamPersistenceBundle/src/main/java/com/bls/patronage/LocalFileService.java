@@ -6,10 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 class LocalFileService implements StreamPersistenceService {
@@ -22,29 +20,29 @@ class LocalFileService implements StreamPersistenceService {
         logger = LoggerFactory.getLogger(LocalFileService.class);
     }
 
-    public static StreamPersistenceService getInstance() {
+    public static LocalFileService getInstance() {
         return LOCAL_FILE_SERVICE;
     }
 
     @Override
-    public URL persistStream(InputStream stream, URL location) throws IOException, URISyntaxException {
-        logger.debug("Mapping location: " + location + " to directory");
-        Path directory = Paths.get(location.getPath());
-        logger.debug("Checking if the directory is present in file system, and if not, creating it");
-        if (!Files.exists(directory)) Files.createDirectory(directory);
-        logger.debug("In persistStream(), using Direcory: " + directory + " to create path to file");
-        final Path path = directory.resolve(UUID.randomUUID().toString());
-        logger.debug("Created path: " + path);
-        logger.debug("Files.copy with path and stream: " + stream);
+    public Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException {
+        Path path = createPathToFile(location);
+
         Files.copy(stream, path);
-        logger.debug("Returning path as a url");
-        return path.toUri().toURL();
+
+        return path;
+    }
+
+    public Path createPathToFile(Path location) throws IOException {
+        if (!Files.exists(location)) {
+            Files.createDirectory(location);
+        }
+
+        return location.resolve(UUID.randomUUID().toString());
     }
 
     @Override
-    public void deleteStream(URL location) throws IOException {
-        logger.debug("In deleteStream(), using Location: " + location + " to delete file from location");
-        Files.delete(Paths.get(location.getPath()));
-        logger.debug("Delete completed");
+    public void deleteStream(Path location) throws IOException {
+        Files.delete(location);
     }
 }

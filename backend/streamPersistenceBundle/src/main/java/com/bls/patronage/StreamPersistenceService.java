@@ -3,10 +3,10 @@ package com.bls.patronage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Path;
 
 public interface StreamPersistenceService {
-    URL persistStream(InputStream stream, URL location) throws IOException, URISyntaxException;
+    Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException;
 
-    void deleteStream(URL location) throws IOException;
+    void deleteStream(Path location) throws IOException;
 }
