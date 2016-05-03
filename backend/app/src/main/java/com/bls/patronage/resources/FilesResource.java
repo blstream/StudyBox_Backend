@@ -47,25 +47,29 @@ public class FilesResource {
         final java.nio.file.Path location = baseLocation.resolve(user.getId().toString());
 
 
-        Response response = helper.handleInputStream(uploadedInputStream, location);
+        java.nio.file.Path filePath = helper.handleInputStream(uploadedInputStream, location);
+
+        Response response = helper.informListener(filePath.toUri().toURL());
 
         saveFlashcardsFromResponse(response, deck, user.getId());
 
-        helper.cleanUp(location);
+        helper.cleanUp(filePath);
 
         return Response.ok().status(Response.Status.CREATED).build();
     }
 
     private void saveFlashcardsFromResponse(Response response, Deck deck, UUID userId) {
         deckDAO.createDeck(deck, userId);
-        response
-                .readEntity(new GenericType<List<FlashcardRepresentation>>() {
-                })
-                .stream()
-                .filter(Objects::nonNull)
-                .forEach(flashcardRepresentation -> flashcardDAO.createFlashcard(
-                        flashcardRepresentation.setDeckId(deck.getId()).map()
-                        )
-                );
+        if (response.getEntity() != null) {
+            response
+                    .readEntity(new GenericType<List<FlashcardRepresentation>>() {
+                    })
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .forEach(flashcardRepresentation -> flashcardDAO.createFlashcard(
+                            flashcardRepresentation.setDeckId(deck.getId()).map()
+                            )
+                    );
+        }
     }
 }

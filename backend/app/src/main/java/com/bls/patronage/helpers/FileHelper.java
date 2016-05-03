@@ -15,12 +15,15 @@ public class FileHelper {
         this.bundle = bundle;
     }
 
-    public Response handleInputStream(InputStream stream, Path location) throws Exception {
-        final URL streamedFileLocation = bundle.persistStream(stream, location.toUri().toURL());
-        return bundle.informListener(new CVMessage(streamedFileLocation, "ImageToFlashcard"));
+    public Path handleInputStream(InputStream stream, Path location) throws Exception {
+        return bundle.persistStream(stream, location);
+    }
+
+    public Response informListener(URL location) {
+        return bundle.informListener(new CVMessage(location, "ImageToFlashcard"));
     }
 
     public void cleanUp(Path location) throws Exception {
-        bundle.deleteStream(location.toUri().toURL());
+        bundle.deleteStream(location);
     }
 }
