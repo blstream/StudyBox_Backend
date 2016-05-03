@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 03/05/2016 toja
+ - added creation date to Deck model
 ## 28/04/2016 arka
  - fixed tips to current state
 ## 28/04/2016 toja
@@ -463,6 +465,7 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 ### Deck (DeckWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + creatorEmail: `test@mail.com` (string, required) - email of a user which created a deck
++ creationDate: `2016-05-03 01:25:44.629` (string, required) - date od Deck creation 'in YYYY-MM-DD hh:mm:ss.SSS' format
 
 ### FlashcardWithoutId (object)
 + question: `Sample question` (string, required) - question attribute for Flashcard
@@ -493,16 +496,19 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + name: `First name` (string, required) - name attribute for Deck
 + id: `1d92b949-38c7-4a1a-a184-1b5fb469ad9b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + isPublic: `true` (boolean, required) - status of Deck access rights
++ creationDate: `2016-05-03 01:25:44.629` (string, required) - date od Deck creation 'in YYYY-MM-DD hh:mm:ss.SSS' format
 
 ### Deck1 (object)
 + name: `Second name` (string, required) - name attribute for Deck
 + id: `6d48d685-53f4-4e41-aea0-ec54d8919f0b` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + isPublic: `false` (boolean, required) - status of Deck access rights
++ creationDate: `2016-05-01 01:25:44.629` (string, required) - date od Deck creation 'in YYYY-MM-DD hh:mm:ss.SSS' format
 
 ### Deck2 (object)
 + name: `Third name` (string, required) - name attribute for Deck
 + id: `0d081870-553c-4df7-b9e2-be7e5ba791c0` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
 + isPublic: `false` (boolean, required) - status of Deck access rights
++ creationDate: `2016-04-25 01:25:44.629` (string, required) - date od Deck creation 'in YYYY-MM-DD hh:mm:ss.SSS' format
 
 ### DeckWithEmail0 (Deck0)
 + creatorEmail: `test@mail.com` (string, required) - email of a user which created a deck
