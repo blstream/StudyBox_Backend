@@ -157,5 +157,15 @@
     <changeSet id="11" author="lupi">
         <dropNotNullConstraint tableName="users" columnName="name" columnDataType="text"/>
     </changeSet>
+    <changeSet id="13" author="toja">
+        <addColumn tableName="usersDecks">
+            <column name="creationDate" type="TIMESTAMP"/>
+        </addColumn>
+        <loadUpdateData primaryKey="deckId,userId" tableName="usersDecks" file="initialData/usersDecksWithDate.csv">
+            <column name="deckId" type="STRING"/>
+            <column name="userId" type="STRING"/>
+            <column name="creationDate" type="TIMESTAMP"/>
+        </loadUpdateData>
+    </changeSet>
 </databaseChangeLog>
 

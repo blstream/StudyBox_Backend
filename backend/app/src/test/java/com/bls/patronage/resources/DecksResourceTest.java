@@ -18,7 +18,9 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +38,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Captor
     private ArgumentCaptor<UUID> uuidCaptor;
     private DeckRepresentation deck;
+    private DeckRepresentation deck2;
     private List<DeckRepresentation> decksRepresentations;
     private List<Deck> decks;
     private DeckRepresentation userDeck;
@@ -67,9 +70,18 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Before
     public void setUp() {
         super.setUp();
-        deck = new DeckRepresentation("foo", false).setId(UUID.randomUUID());
-        decksRepresentations = Collections.singletonList(deck);
-        decks = Collections.singletonList(deck.map());
+        deck = new DeckRepresentation("foo", false)
+                .setId(UUID.randomUUID())
+                .setCreationDate("2016-04-21 08:23:11.0");
+        deck2 = new DeckRepresentation("bar", false)
+                .setId(UUID.randomUUID())
+                .setCreationDate("2016-05-29 08:23:11.0");
+        decksRepresentations = new ArrayList<>();
+        decksRepresentations.add(deck);
+        decksRepresentations.add(deck2);
+        decks = new ArrayList<>();
+        decks.add(deck.map());
+        decks.add(deck2.map());
         userDeck = new DeckRepresentation("baz", false).setId(UUID.randomUUID());
         userDecksRepresentations = Collections.singletonList(userDeck);
         userDecks = Collections.singletonList(userDeck.map());
@@ -91,6 +103,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
 
         when(deckDao.getAllDecks()).thenReturn(decks);
+        when(deckDao.getDeckCreationDate(deck.getId())).thenReturn(deck.getCreationDate());
+        when(deckDao.getDeckCreationDate(deck2.getId())).thenReturn(deck2.getCreationDate());
         when(deckDao.getAllUserDecks(user.getId())).thenReturn(userDecks);
         when(deckDao.getDeckById(deck.getId(), user.getId())).thenReturn(deck.map());
         when(deckDao.getDeckById(userDeck.getId(), user.getId())).thenReturn(userDeck.map());
@@ -130,6 +144,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllUserDecks(user.getId());
         assertThat(response).containsAll(userDecksRepresentations);
+        userDecksRepresentations
+                .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
+        assertThat(response.get(0)).isEqualTo(userDecksRepresentations.get(0));
     }
 
     @Test
@@ -138,6 +155,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getAllDecks();
         assertThat(response).containsAll(decksRepresentations);
+        decksRepresentations
+                .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
+        assertThat(response.get(0)).isEqualTo(decksRepresentations.get(0));
     }
 
     @Test
@@ -146,6 +166,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
         verify(deckDao).getDecksByName(deck.getName());
         assertThat(response).containsAll(decksRepresentations);
+        decksRepresentations
+                .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
+        assertThat(response.get(0)).isEqualTo(decksRepresentations.get(0));
     }
 
     @Test

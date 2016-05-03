@@ -22,6 +22,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
     private Integer flashcardsCount;
     @Email
     private String creatorEmail;
+    private String creationDate;
 
     public DeckRepresentation(@JsonProperty("name") String name,
                               @JsonProperty("isPublic") Boolean publicVisible) {
@@ -74,6 +75,15 @@ public class DeckRepresentation implements DbMappable<Deck> {
         return this;
     }
 
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public DeckRepresentation setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "DeckRepresentation{" +
@@ -82,6 +92,7 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 ", id=" + id +
                 ", flashcardsCount=" + flashcardsCount +
                 ", creatorEmail='" + creatorEmail + '\'' +
+                ", creationDate='" + creationDate + '\'' +
                 '}';
     }
 
@@ -94,11 +105,12 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 Objects.equals(name, that.name) &&
                 Objects.equals(publicVisible, that.publicVisible) &&
                 Objects.equals(id, that.id) &&
-                Objects.equals(creatorEmail, that.creatorEmail);
+                Objects.equals(creatorEmail, that.creatorEmail) &&
+                Objects.equals(creationDate, that.creationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, publicVisible, id, flashcardsCount, creatorEmail);
+        return Objects.hash(name, publicVisible, id, flashcardsCount, creatorEmail, creationDate);
     }
 }
