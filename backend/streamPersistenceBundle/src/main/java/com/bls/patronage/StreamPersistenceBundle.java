@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Path;
 
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
     StreamPersistenceService streamService;
@@ -32,24 +32,15 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     abstract public URI getListenerURI(E configuration);
 
-    public URL persistStream(InputStream stream, URL location) throws IOException, URISyntaxException {
-        logger.debug("in persistStream() arguments passed to streamService");
-        logger.debug("Stream: " + stream + " Location: " + location);
+    public Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException {
         return streamService.persistStream(stream, location);
     }
 
     public Response informListener(Message message) {
-        logger.debug("in informListener() argument passed to listenerInformer");
-        logger.debug("Message: " + message);
-        Response inform = listenerInformer.inform(message);
-        logger.debug("Listener informed");
-        return inform;
+        return listenerInformer.inform(message);
     }
 
-    public void deleteStream(URL location) throws IOException {
-        logger.debug("in deleteStream()");
-        logger.debug("Location: " + location);
+    public void deleteStream(Path location) throws IOException {
         streamService.deleteStream(location);
-        logger.debug("Location deleted");
     }
 }
