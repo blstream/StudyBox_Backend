@@ -166,6 +166,15 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     }
 
     @Test
+    public void listDecksWithoutCreationDate() {
+        when(deckDao.getDeckCreationDate(deck.getId())).thenReturn(null);
+        final List<DeckRepresentation> response = getListFromResponse(decksURI, encodedCredentials);
+
+        verify(deckDao).getAllDecks();
+        assertThat(response).isNotNull();
+    }
+
+    @Test
     public void listDecksByNames() {
         final List<DeckRepresentation> response = getListFromResponse(decksByNameURI, encodedCredentials);
 

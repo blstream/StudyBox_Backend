@@ -78,7 +78,8 @@ public class DecksResource {
                     .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
                             .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
                             .build())
-                    .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
+                    .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,
+                            Comparator.nullsLast(Comparator.reverseOrder())))
                     .collect(Collectors.toCollection(ArrayList::new));
         }
     }
@@ -167,7 +168,8 @@ public class DecksResource {
                             .withFlashcardsCount(numberIterator.next())
                             .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
                     .build())
-                    .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
+                    .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,
+                            Comparator.nullsLast(Comparator.reverseOrder())))
                     .collect(Collectors.toList()));
 
             return tempDecks;
@@ -182,7 +184,8 @@ public class DecksResource {
                         .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
                         .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
                         .build())
-                .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
+                .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,
+                        Comparator.nullsLast(Comparator.reverseOrder())))
                 .collect(Collectors.toList());
     }
 }
