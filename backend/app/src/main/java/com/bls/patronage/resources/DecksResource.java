@@ -38,13 +38,14 @@ public class DecksResource {
     }
 
     @POST
-    public Response createDeck(@Auth @Valid DeckRepresentation deck, @Context SecurityContext context) {
+    public Response createDeck(@Auth @Valid DeckRepresentation.DeckRepresentationBuilder deckBuilder,
+                               @Context SecurityContext context) {
 
         final User user = (User) context.getUserPrincipal();
 
-        decksDAO.createDeck(deck.setId(UUID.randomUUID()).map(), user.getId());
+        decksDAO.createDeck(deckBuilder.withId(UUID.randomUUID()).build().map(), user.getId());
 
-        return Response.ok(deck).status(Response.Status.CREATED).build();
+        return Response.ok(deckBuilder.build()).status(Response.Status.CREATED).build();
     }
 
     @GET
@@ -74,8 +75,9 @@ public class DecksResource {
         } else {
             return decks
                     .stream()
-                    .map(deck -> new DeckRepresentation(deck)
-                            .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
+                    .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
+                            .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                            .build())
                     .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
                     .collect(Collectors.toCollection(ArrayList::new));
         }
@@ -161,9 +163,10 @@ public class DecksResource {
             Iterator<Integer> numberIterator = flashcardsCounts.iterator();
 
             tempDecks.addAll(decks.stream()
-                    .map(deck -> new DeckRepresentation(deck)
-                            .setFlashcardsCount(numberIterator.next())
-                            .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
+                    .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
+                            .withFlashcardsCount(numberIterator.next())
+                            .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                    .build())
                     .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
                     .collect(Collectors.toList()));
 
@@ -175,9 +178,10 @@ public class DecksResource {
 
         return deckCollection
                 .stream()
-                .map(deck -> new DeckRepresentation(deck)
-                        .setCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
-                        .setCreationDate(decksDAO.getDeckCreationDate(deck.getId())))
+                .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
+                        .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
+                        .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                        .build())
                 .sorted(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
     }
