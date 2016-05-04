@@ -25,20 +25,32 @@ public class DeckRepresentationTest {
 
     @Before
     public void setup() {
-        deck = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC);
-        deckWithFlashcardNumber = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC).setFlashcardsCount(FIXTURE_FLASHCARD_NUMBER);
-        deckWithCreatorEmail = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC).setCreatorEmail(FIXTURE_CREATOR_EMAIL);
-        deckWithFlashcardNumberAndCreatorEmail = new DeckRepresentation(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC)
-                .setCreatorEmail(FIXTURE_CREATOR_EMAIL).setFlashcardsCount(FIXTURE_FLASHCARD_NUMBER);
+        deck = new DeckRepresentation.DeckRepresentationBuilder(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC)
+                .build();
+        deckWithFlashcardNumber = new DeckRepresentation.DeckRepresentationBuilder(FIXTURE_DECK_NAME,
+                FIXTURE_DECK_PUBLIC)
+                .withFlashcardsCount(FIXTURE_FLASHCARD_NUMBER)
+                .build();
+        deckWithCreatorEmail = new DeckRepresentation.DeckRepresentationBuilder(FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC)
+                .withCreatorEmail(FIXTURE_CREATOR_EMAIL)
+                .build();
+        deckWithFlashcardNumberAndCreatorEmail = new DeckRepresentation.DeckRepresentationBuilder(FIXTURE_DECK_NAME,
+                FIXTURE_DECK_PUBLIC)
+                .withCreatorEmail(FIXTURE_CREATOR_EMAIL)
+                .withFlashcardsCount(FIXTURE_FLASHCARD_NUMBER)
+                .build();
         dbModel = new Deck(FIXTURE_DECK_ID, FIXTURE_DECK_NAME, FIXTURE_DECK_PUBLIC);
-        deckFromDbModel = new DeckRepresentation(dbModel).setCreatorEmail(FIXTURE_CREATOR_EMAIL);
+        deckFromDbModel = new DeckRepresentation.DeckRepresentationBuilder(dbModel)
+                .withCreatorEmail(FIXTURE_CREATOR_EMAIL)
+                .build();
 
     }
 
     @Test
     public void serializesToJSON() throws Exception {
         final String expected = MAPPER.writeValueAsString(
-                MAPPER.readValue(fixture("fixtures/deckRepresentation.json"), DeckRepresentation.class));
+                MAPPER.readValue(fixture("fixtures/deckRepresentation.json"),
+                        DeckRepresentation.class));
 
         assertThat(MAPPER.writeValueAsString(deck)).isEqualTo(expected);
     }

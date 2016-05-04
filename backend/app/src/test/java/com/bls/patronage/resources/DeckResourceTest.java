@@ -33,7 +33,9 @@ public class DeckResourceTest extends BasicAuthenticationTest {
     private String deckURI;
     private String fakeURI;
 
-    static private Response getPutResponse(String uri, DeckRepresentation deck, String encodedUserInfo) {
+    static private Response getPutResponse(String uri,
+                                           DeckRepresentation deck,
+                                           String encodedUserInfo) {
         return authResources.client()
                 .target(uri)
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -53,7 +55,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         super.setUp();
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
-        deck = new DeckRepresentation("biology", false).setId(deckId);
+        deck = new DeckRepresentation.DeckRepresentationBuilder("biology", false).withId(deckId).build();
         deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
 
@@ -110,7 +112,9 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void updateDeck() {
-        final Response response = getPutResponse(deckURI, deck, encodedCredentials);
+        final Response response = getPutResponse(deckURI,
+                new DeckRepresentation.DeckRepresentationBuilder(deck.getName(), deck.getIsPublic()).build(),
+                encodedCredentials);
 
         final DeckRepresentation updatedDeck = response.readEntity(DeckRepresentation.class);
         verify(deckDao).update(updatedDeck.map());
@@ -121,7 +125,9 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void updateDeckWhenThereIsNoDeck() {
-        final Response response = getPutResponse(fakeURI, deck, encodedCredentials);
+        final Response response = getPutResponse(fakeURI,
+                new DeckRepresentation.DeckRepresentationBuilder(deck.getName(), deck.getIsPublic()).build(),
+                encodedCredentials);
 
         verify(deckDao).getDeckById(fakeId, user.getId());
         verify(deckDao, never()).update(any(Deck.class));
@@ -130,7 +136,9 @@ public class DeckResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void updateDeckWithEmptyName() {
-        final Response response = getPutResponse(deckURI, new DeckRepresentation("", false), encodedCredentials);
+        final Response response = getPutResponse(deckURI,
+                new DeckRepresentation.DeckRepresentationBuilder("", false).build(),
+                encodedCredentials);
 
         verify(deckDao, never()).update(any(Deck.class));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
