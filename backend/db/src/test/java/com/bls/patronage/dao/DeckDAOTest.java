@@ -78,9 +78,19 @@ public class DeckDAOTest extends DAOTest {
         assertThat(dao.getUserDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
     }
 
+    public void getUsersDeckByPartOfTheName() throws Exception {
+        Deck deck = getDecksFromDatabase().get(0);
+        assertThat(dao.getUserDecksByName(deck.getName().substring(0,2), defaultUserUUID)).contains(deck);
+    }
+
     public void getDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(3);
         assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
+    }
+
+    public void getDeckByPartOfTheName() throws Exception {
+        Deck deck = getDecksFromDatabase().get(3);
+        assertThat(dao.getDecksByName(deck.getName().substring(0,2))).contains(deck);
     }
 
     public void getRandomDeck() throws Exception {
