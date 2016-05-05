@@ -91,12 +91,12 @@ public abstract class DeckDAO {
     }
 
     public Collection<Deck> getDecksByName(String name) {
-        List<Deck> decks = getDecksUsingName("%" + name + "%");
+        List<Deck> decks = getDecksUsingName(String.format("%%%s%%", name));
         return decks;
     }
 
     public Collection<Deck> getUserDecksByName(String name, UUID userId) {
-        List<Deck> decks = getUserDecksUsingName("%" + name + "%", userId);
+        List<Deck> decks = getUserDecksUsingName(String.format("%%%s%%", name), userId);
         return decks;
     }
 
