@@ -52,14 +52,12 @@ public class DecksResource {
     public Collection<DeckRepresentation> listDecks(@Auth User user,
                                                     @QueryParam("name") String name,
                                                     @QueryParam("flashcardsCount") Boolean flashcardsCount,
-                                                    @QueryParam("includeOwn") Boolean includeOwn,
-                                                    @QueryParam("random") Boolean random) {
+                                                    @QueryParam("includeOwn") Boolean includeOwn) {
 
         return new DeckCollectionBuilder(user.getId())
                 .includeOwn(Optional.ofNullable(includeOwn))
                 .filterByName(Optional.ofNullable(name))
                 .enableFlashcardsCounts(Optional.ofNullable(flashcardsCount))
-                .getRandom(Optional.ofNullable(random))
                 .build();
     }
 
@@ -70,7 +68,7 @@ public class DecksResource {
 
         Collection<Deck> decks = decksDAO.getAllUserDecks(user.getId());
 
-        if (Optional.ofNullable(flashcardsCount).isPresent()) {
+        if (Optional.ofNullable(flashcardsCount).isPresent() && flashcardsCount) {
             return new DeckCollectionBuilder().addFlashcardsCountsToDeck(decks);
         } else {
             return decks
@@ -84,13 +82,25 @@ public class DecksResource {
         }
     }
 
+    @Path("/random")
+    @GET
+    public DeckRepresentation getRandomDeck(@Auth User user,
+                                            @QueryParam("flashcardsCount") Boolean flashcardsCount) {
+        final Deck deck = decksDAO.getRandomDeck(user.getId());
+        return new DeckRepresentation.DeckRepresentationBuilder(deck)
+                .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
+                .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                .withFlashcardsCount((flashcardsCount==null || !flashcardsCount) ?
+                         null : decksDAO.getFlashcardsCount(deck.getId()))
+                .build();
+    }
+
     private class DeckCollectionBuilder {
         private Collection<Deck> deckCollection;
         private UUID userId;
         private boolean includeOwn;
         private Optional<String> filteredName;
         private Boolean enableFlashcardsCounts;
-        private Boolean random;
 
         private DeckCollectionBuilder() {
         }
@@ -114,11 +124,6 @@ public class DecksResource {
             return this;
         }
 
-        public DeckCollectionBuilder getRandom(Optional<Boolean> random) {
-            this.random = random.orElse(false);
-            return this;
-        }
-
         public Collection<DeckRepresentation> build() {
             //pre-building deckCollection tasks
             if (filteredName.isPresent()) {
@@ -126,10 +131,6 @@ public class DecksResource {
                 deckCollection.addAll(
                         includeOwn ? decksDAO.getUserDecksByName(filteredName.get(), userId) : Collections.emptyList()
                 );
-            }
-
-            if (random) {
-                deckCollection = decksDAO.getRandomDecks(userId);
             }
 
             //end of building phase. If none of the above worked, collection is created now
