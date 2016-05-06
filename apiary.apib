@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 06/05/2016 toja
+ - changing getting random deck
 ## 03/05/2016 toja
  - added creation date to Deck model
 ## 28/04/2016 arka
@@ -107,10 +109,10 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (Deck)
 
-### Get random Deck [GET /decks{?random}]
+### Get random Deck [GET /decks/random{?flashcardsCount}]
 
 + Parameters
-    + random (required, boolean, `true`) ... An order to get one random deck from available decks
+    + flashcardsCount (optional, boolean, `true`) - show number of contained flashcards.
     
 + Request
 
