@@ -68,7 +68,7 @@ public class DecksResource {
 
         Collection<Deck> decks = decksDAO.getAllUserDecks(user.getId());
 
-        if (Optional.ofNullable(flashcardsCount).isPresent() && flashcardsCount) {
+        if (Boolean.TRUE.equals(flashcardsCount)) {
             return new DeckCollectionBuilder().addFlashcardsCountsToDeck(decks);
         } else {
             return decks
@@ -87,12 +87,16 @@ public class DecksResource {
     public DeckRepresentation getRandomDeck(@Auth User user,
                                             @QueryParam("flashcardsCount") Boolean flashcardsCount) {
         final Deck deck = decksDAO.getRandomDeck(user.getId());
-        return new DeckRepresentation.DeckRepresentationBuilder(deck)
+        final DeckRepresentation.DeckRepresentationBuilder builder
+                = new DeckRepresentation.DeckRepresentationBuilder(deck)
                 .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
-                .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
-                .withFlashcardsCount((flashcardsCount==null || !flashcardsCount) ?
-                         null : decksDAO.getFlashcardsCount(deck.getId()))
-                .build();
+                .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()));
+        
+        if (Boolean.TRUE.equals(flashcardsCount)) {
+            builder.withFlashcardsCount(decksDAO.getFlashcardsCount(deck.getId()));
+        }
+
+        return builder.build();
     }
 
     private class DeckCollectionBuilder {
