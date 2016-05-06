@@ -63,9 +63,9 @@ public abstract class DeckDAO {
             "join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId or decks.isPublic = 'true' " +
             "limit 1 offset floor(:random*:number)")
-    public abstract Collection<Deck> getRandomDeck(@Bind("userId") UUID userId,
-                                                   @Bind("random") Double random,
-                                                   @Bind("number") Integer number);
+    abstract Deck getRandom(@Bind("userId") UUID userId,
+                            @Bind("random") Double random,
+                            @Bind("number") Integer number);
 
     @SqlQuery("select count(*) from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId or decks.isPublic = 'true' ")
@@ -109,9 +109,8 @@ public abstract class DeckDAO {
         return getCreatorEmailFromUserId(UUID.fromString(getDeckUserId(deckId)));
     }
 
-    public Collection<Deck> getRandomDecks(UUID userId){
+    public Deck getRandomDeck(UUID userId){
         Integer number = getCountUserDecks(userId);
-        Collection<Deck> decks = getRandomDeck(userId, Math.random(), number);
-        return decks;
+        return getRandom(userId, Math.random(), number);
     }
 }

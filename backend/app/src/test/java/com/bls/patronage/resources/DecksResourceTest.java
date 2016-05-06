@@ -52,6 +52,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private String decksByEmptyNameURI;
     private String userDecksURI;
     private String randomDeckURI;
+    private String randomDeckWithFlashcardsCountURI;
 
     static private Response postDeck(String uri, String name, Boolean isPublic, String encodedUserInfo) {
         return authResources.client().target(uri)
@@ -91,8 +92,11 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         userDecksRepresentations = Collections.singletonList(userDeck);
         userDecks = Collections.singletonList(userDeck.map());
         decksURI = UriBuilder.fromResource(DecksResource.class).build().toString();
-        randomDeckURI = UriBuilder.fromResource(DecksResource.class)
-                .queryParam("random", true).build().toString();
+        randomDeckURI = UriBuilder.fromResource(DecksResource.class).build().toString()
+                + UriBuilder.fromMethod(DecksResource.class, "getRandomDeck");
+        randomDeckWithFlashcardsCountURI = UriBuilder.fromResource(DecksResource.class).build().toString()
+                + UriBuilder.fromMethod(DecksResource.class, "getRandomDeck")
+                .queryParam("flashcardsCount", true);
         decksByNameURI = UriBuilder.fromResource(DecksResource.class)
                 .queryParam("name", deck.getName()).build().toString();
         decksByBadNameURI = UriBuilder.fromResource(DecksResource.class)
@@ -115,7 +119,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         when(deckDao.getDeckById(userDeck.getId(), user.getId())).thenReturn(userDeck.map());
         when(deckDao.getUserDecksByName(any(String.class), eq(userDeck.getId()))).thenReturn(userDecks);
         when(deckDao.getDecksByName(deck.getName())).thenReturn(decks);
-
+        when(deckDao.getRandomDeck(user.getId())).thenReturn(deck.map());
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         when(userDAO.getUserById(user.getId())).thenReturn(user);
     }
@@ -264,10 +268,19 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void getRandomDeck() {
-        final List<DeckRepresentation> response = getListFromResponse(randomDeckURI, encodedCredentials);
+        final Response response = getResponseWithCredentials(randomDeckURI, encodedCredentials);
+        final DeckRepresentation deck = response.readEntity(DeckRepresentation.class);
 
-        verify(deckDao).getRandomDecks(user.getId());
-        assertThat(decksRepresentations).containsAll(response);
+        verify(deckDao).getRandomDeck(user.getId());
+        assertThat(decksRepresentations).contains(deck);
     }
 
+    @Test
+    public void getRandomDeckWithFlashcardsCount() {
+        final Response response = getResponseWithCredentials(randomDeckWithFlashcardsCountURI, encodedCredentials);
+        final DeckRepresentation deck = response.readEntity(DeckRepresentation.class);
+
+        verify(deckDao).getRandomDeck(user.getId());
+        assertThat(deck.getFlashcardsCount()).isNotNull();
+    }
 }
