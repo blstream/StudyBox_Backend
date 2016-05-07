@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 07/05/2016 toja
+ - adding resources to reset password
 ## 06/05/2016 toja
  - changing getting random deck
 ## 03/05/2016 toja
@@ -310,6 +312,23 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (UserWithoutPassword)
     
+## Reset Password  [/users/password]
+
+### Password Recovery [GET /users/password/recovery]
+
++ Request (application/json)
+
+    + Attributes (UserPasswordRecovery)
+    
++ Response 200
+    
+## Password Change [GET /users/password/change]
+
++ Request (application/json)
+
+    + Attributes (UserPasswordChange)
+    
++ Response 200
 
 # Group Tip
 
@@ -491,6 +510,12 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 ### Tag (TagWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - tag UUID, 36 chars, 8-4-4-4-12 chars
 
+### UserPasswordRecovery (object)
++ email: `test@mail.com` (string, required) - email of the user
+
+### UserPasswordChange (UserPasswordRecovery)
++ password: `newPassword` (string, required) - new password containing at least 8 chars
++ token: `d65ace55-e5b5-48f0-823c-fc2214374cd3` (string, required) - security token needed for password changing
 
 ## Objects for Collections
 
