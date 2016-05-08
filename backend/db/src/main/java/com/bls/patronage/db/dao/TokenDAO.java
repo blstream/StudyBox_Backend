@@ -1,11 +1,14 @@
 package com.bls.patronage.db.dao;
 
+import com.bls.patronage.db.mapper.TokenMapper;
 import com.bls.patronage.db.model.Token;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+@RegisterMapper(TokenMapper.class)
 abstract public class TokenDAO {
 
     @SqlQuery("select token,isActive,email,expirationDate from passwordTokens where email = :email")
