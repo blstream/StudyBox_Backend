@@ -7,6 +7,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.UUID;
 
 public class TokenMapper implements ResultSetMapper<Token> {
@@ -15,7 +16,7 @@ public class TokenMapper implements ResultSetMapper<Token> {
         return new Token(
                 (UUID) r.getObject("token"),
                 r.getString("email"),
-                r.getDate("expirationDate"),
+                (Date) r.getObject("expirationDate"),
                 r.getBoolean("isActive"));
     }
 }

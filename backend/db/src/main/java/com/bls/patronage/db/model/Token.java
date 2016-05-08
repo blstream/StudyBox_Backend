@@ -67,12 +67,21 @@ public class Token {
 
         return this.token.equals(that.token) &&
                 this.email.equals(that.email) &&
-                this.expirationDate.equals(that.expirationDate) &&
                 this.isActive.equals(that.isActive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(token, email, isActive, expirationDate);
+        return Objects.hashCode(token, email, isActive);
+    }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "token=" + token +
+                ", email='" + email + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", isActive=" + isActive +
+                '}';
     }
 }
