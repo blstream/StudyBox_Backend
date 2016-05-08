@@ -167,5 +167,21 @@
             <column name="creationDate" type="TIMESTAMP"/>
         </loadUpdateData>
     </changeSet>
+    <changeSet id="14" author="toja">
+        <createTable tableName="passwordTokens">
+            <column name="token" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="isActive" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expirationDate" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
 
