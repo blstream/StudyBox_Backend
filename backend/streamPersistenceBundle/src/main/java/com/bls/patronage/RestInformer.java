@@ -1,9 +1,12 @@
 package com.bls.patronage;
 
+import org.glassfish.jersey.client.JerseyClientBuilder;
+
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-class RestInformer implements HTTPListenerInformer {
+class RestInformer implements HTTPInformer {
     private final URI uri;
 
     public RestInformer(URI uri) {
@@ -11,14 +14,12 @@ class RestInformer implements HTTPListenerInformer {
     }
 
     @Override
-    //TODO wait until CV returns collections of flashcards as response
     public Response inform(Message message) {
-//        return JerseyClientBuilder
-//                .newClient()
-//                .target(uri)
-//                .request()
-//                .buildPost(Entity.json(message))
-//                .invoke();
-        return Response.ok().build();
+        return JerseyClientBuilder
+                .newClient()
+                .target(uri)
+                .request()
+                .buildPost(Entity.json(message))
+                .invoke();
     }
 }
