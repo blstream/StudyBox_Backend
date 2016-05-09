@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.PasswordChangeRepresentation;
 import com.bls.patronage.api.UserRepresentation;
+import com.bls.patronage.db.dao.TokenDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import org.hibernate.validator.constraints.Email;
 
@@ -21,9 +22,11 @@ import static com.bls.patronage.auth.BasicAuthenticator.generateSafeHash;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersResource {
     private final UserDAO userDAO;
+    private final TokenDAO tokenDAO;
 
-    public UsersResource(UserDAO userDAO) {
+    public UsersResource(UserDAO userDAO, TokenDAO tokenDAO) {
         this.userDAO = userDAO;
+        this.tokenDAO = tokenDAO;
     }
 
     @POST
@@ -47,7 +50,7 @@ public class UsersResource {
     @POST
     @Path("/password/change")
     public Response changePassword(@Valid PasswordChangeRepresentation user) {
-        
+
         return Response.ok().status(Response.Status.OK).build();
     }
 }
