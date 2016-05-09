@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.net.URI;
 
-public class CVMessage implements Message {
+public class CVRequest implements Message {
 
     public final URI location;
     public final String action;
 
-    public CVMessage(URI location, String action) {
+    public CVRequest(URI location, String action) {
         this.location = location;
         this.action = action;
     }

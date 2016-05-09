@@ -21,7 +21,7 @@ public class FileHelper {
     }
 
     public Response informService(URI location) {
-        return bundle.informService(new CVMessage(location, "ImageToFlashcard"));
+        return bundle.informService(new CVRequest(location, "ImageToFlashcard"));
     }
 
     public void cleanUp(Path location) throws Exception {
