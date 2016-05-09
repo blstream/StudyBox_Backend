@@ -20,14 +20,14 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
     @Override
     public void run(E configuration, Environment environment) throws Exception {
         streamService = LocalFileService.getInstance();
-        listenerInformer = new RestInformer(getListenerURI(configuration));
+        listenerInformer = new RestInformer(getServiceURI(configuration));
     }
 
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
     }
 
-    abstract public URI getListenerURI(E configuration);
+    abstract public URI getServiceURI(E configuration);
 
     public Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException {
         return streamService.persistStream(stream, location);
