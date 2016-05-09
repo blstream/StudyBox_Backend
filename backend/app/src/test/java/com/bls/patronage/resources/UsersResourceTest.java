@@ -29,11 +29,10 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class UsersResourceTest extends BasicAuthenticationTest {
     private static final UserDAO userDAO = mock(UserDAO.class);
-    private static final TokenDAO tokenDAO = mock(TokenDAO.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new UsersResource(userDAO, tokenDAO))
+            .addResource(new UsersResource(userDAO))
             .build();
 
     @Captor
