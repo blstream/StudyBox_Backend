@@ -46,7 +46,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
 
     private final StreamPersistenceBundle<StudyBoxConfiguration> streamPersistenceBundle = new StreamPersistenceBundle<StudyBoxConfiguration>() {
         @Override
-        public URI getServiceURI(StudyBoxConfiguration configuration) {
+        public URI getServiceURI(final StudyBoxConfiguration configuration) {
             //Return CV server URI
             return configuration.getCvServerURI();
         }

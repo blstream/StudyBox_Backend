@@ -25,7 +25,7 @@ public class FileHelper {
     }
 
     public void cleanUp(Path location) throws Exception {
-        bundle.deleteStream(location);
+        bundle.deleteFile(location);
     }
 
     public File getFile(Path filePath) {

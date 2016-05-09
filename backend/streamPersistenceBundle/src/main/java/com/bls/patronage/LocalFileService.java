@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
-class LocalFileService implements StreamPersistenceService {
+class LocalFileService implements StorageService {
 
     private static final LocalFileService LOCAL_FILE_SERVICE = new LocalFileService();
     private final Logger logger;
@@ -43,12 +43,12 @@ class LocalFileService implements StreamPersistenceService {
     }
 
     @Override
-    public void deleteStream(Path location) throws IOException {
+    public void deleteFile(Path location) throws IOException {
         Files.delete(location);
     }
 
     @Override
-    public File getStream(Path filePath) {
+    public File getFile(Path filePath) {
         return filePath.toFile();
     }
 }

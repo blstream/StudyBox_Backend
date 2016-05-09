@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
-    StreamPersistenceService streamService;
+    StorageService streamService;
     HTTPInformer listenerInformer;
 
     @Override
@@ -37,11 +37,11 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
         return listenerInformer.inform(message);
     }
 
-    public void deleteStream(Path location) throws IOException {
-        streamService.deleteStream(location);
+    public void deleteFile(Path location) throws IOException {
+        streamService.deleteFile(location);
     }
 
     public File getFile(Path filePath) {
-        return streamService.getStream(filePath);
+        return streamService.getFile(filePath);
     }
 }
