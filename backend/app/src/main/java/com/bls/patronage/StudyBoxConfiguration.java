@@ -21,7 +21,7 @@ public class StudyBoxConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    private Path fileContentBaseLocation;
+    private Path filesBaseLocation;
 
     @Valid
     @NotNull
@@ -39,7 +39,7 @@ public class StudyBoxConfiguration extends Configuration {
         return cvServerURI;
     }
 
-    public Path getFileContentBaseLocation() {
-        return fileContentBaseLocation;
+    public Path getFilesBaseLocation() {
+        return filesBaseLocation;
     }
 }

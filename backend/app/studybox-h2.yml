@@ -8,7 +8,7 @@ cvServerURI: "http://www.example.com/api/flashcards"
 fileContentBaseLocation: "/root/test"
 
 cvServerURI: "http://www.example.com/api/flashcards"
-fileContentBaseLocation: "/root/test"
+filesBaseLocation: "/root/test"
 
 server:
   type: simple

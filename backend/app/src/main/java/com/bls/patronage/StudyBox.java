@@ -93,7 +93,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
                 jdbi.onDemand(ResultDAO.class)));
-        environment.jersey().register(new FilesResource(new FileHelper(streamPersistenceBundle), configuration.getFileContentBaseLocation(),
+        environment.jersey().register(new FilesResource(new FileHelper(streamPersistenceBundle), configuration.getFilesBaseLocation(),
                 jdbi.onDemand(DeckDAO.class), jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
 
