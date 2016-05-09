@@ -21,12 +21,11 @@ import static com.bls.patronage.auth.BasicAuthenticator.generateSafeHash;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersResource {
-    private final UserDAO userDAO;
-    private final TokenDAO tokenDAO;
 
-    public UsersResource(UserDAO userDAO, TokenDAO tokenDAO) {
+    private final UserDAO userDAO;
+
+    public UsersResource(UserDAO userDAO) {
         this.userDAO = userDAO;
-        this.tokenDAO = tokenDAO;
     }
 
     @POST
@@ -38,19 +37,5 @@ public class UsersResource {
                         .map()
         );
         return Response.ok(new UserRepresentation(user.map())).status(Response.Status.CREATED).build();
-    }
-
-    @POST
-    @Path("/password/recovery")
-    public Response recoverPassword(@Valid @Email String email) {
-
-        return Response.ok().status(Response.Status.OK).build();
-    }
-
-    @POST
-    @Path("/password/change")
-    public Response changePassword(@Valid PasswordChangeRepresentation user) {
-
-        return Response.ok().status(Response.Status.OK).build();
     }
 }
