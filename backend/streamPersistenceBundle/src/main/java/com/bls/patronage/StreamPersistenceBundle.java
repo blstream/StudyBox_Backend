@@ -4,10 +4,9 @@ import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -16,14 +15,12 @@ import java.nio.file.Path;
 
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
     StreamPersistenceService streamService;
-    HTTPListenerInformer listenerInformer;
-    private Logger logger;
+    HTTPInformer listenerInformer;
 
     @Override
     public void run(E configuration, Environment environment) throws Exception {
         streamService = LocalFileService.getInstance();
         listenerInformer = new RestInformer(getListenerURI(configuration));
-        logger = LoggerFactory.getLogger(StreamPersistenceBundle.class);
     }
 
     @Override
@@ -36,11 +33,15 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
         return streamService.persistStream(stream, location);
     }
 
-    public Response informListener(Message message) {
+    public Response informService(Message message) {
         return listenerInformer.inform(message);
     }
 
     public void deleteStream(Path location) throws IOException {
         streamService.deleteStream(location);
+    }
+
+    public File getFile(Path filePath) {
+        return streamService.getStream(filePath);
     }
 }

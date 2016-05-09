@@ -3,6 +3,7 @@ package com.bls.patronage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -44,5 +45,10 @@ class LocalFileService implements StreamPersistenceService {
     @Override
     public void deleteStream(Path location) throws IOException {
         Files.delete(location);
+    }
+
+    @Override
+    public File getStream(Path filePath) {
+        return filePath.toFile();
     }
 }
