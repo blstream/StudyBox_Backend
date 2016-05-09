@@ -1,23 +1,26 @@
 package com.bls.patronage.resources;
 
-import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;
+import com.bls.patronage.helpers.CVResponse;
 import com.bls.patronage.helpers.FileHelper;
+import com.bls.patronage.helpers.FilePathsCoder;
 import io.dropwizard.auth.Auth;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.InputStream;
-import java.util.List;
+import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,13 +31,24 @@ public class FilesResource {
     private final java.nio.file.Path baseLocation;
     private final FlashcardDAO flashcardDAO;
     private final DeckDAO deckDAO;
-    private final FileHelper helper;
+    private final FileHelper fileHelper;
 
-    public FilesResource(FileHelper helper, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
-        this.helper = helper;
+    public FilesResource(FileHelper fileHelper, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
+        this.fileHelper = fileHelper;
         this.deckDAO = deckDAO;
         this.baseLocation = baseLocation;
         this.flashcardDAO = flashcardDAO;
+    }
+
+    @GET
+    @Path("/{fileId}")
+    public Response getFile(@Auth User user,
+                            @PathParam("fileId") UUID fileId) {
+        java.nio.file.Path filePath = FilePathsCoder.decodeFilePath(baseLocation, user.getId(), fileId);
+
+        File file = fileHelper.getFile(filePath);
+
+        return Response.ok(file).type(MediaType.MULTIPART_FORM_DATA).build();
     }
 
     @POST
@@ -46,14 +60,15 @@ public class FilesResource {
         final Deck deck = new Deck(UUID.randomUUID(), "foo");
         final java.nio.file.Path location = baseLocation.resolve(user.getId().toString());
 
+        java.nio.file.Path filePath = fileHelper.handleInputStream(uploadedInputStream, location);
 
-        java.nio.file.Path filePath = helper.handleInputStream(uploadedInputStream, location);
+        URI uri = FilePathsCoder.encodeFilePath(filePath);
 
-        Response response = helper.informListener(filePath.toUri().toURL());
+        Response response = fileHelper.informService(uri);
 
         saveFlashcardsFromResponse(response, deck, user.getId());
 
-        helper.cleanUp(filePath);
+        fileHelper.cleanUp(filePath);
 
         return Response.ok().status(Response.Status.CREATED).build();
     }
@@ -62,8 +77,8 @@ public class FilesResource {
         deckDAO.createDeck(deck, userId);
         if (response.getEntity() != null) {
             response
-                    .readEntity(new GenericType<List<FlashcardRepresentation>>() {
-                    })
+                    .readEntity(CVResponse.class)
+                    .getFlashcards()
                     .stream()
                     .filter(Objects::nonNull)
                     .forEach(flashcardRepresentation -> flashcardDAO.createFlashcard(
