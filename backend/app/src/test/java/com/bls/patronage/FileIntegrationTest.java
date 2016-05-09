@@ -1,5 +1,8 @@
 package com.bls.patronage;
 
+import com.bls.patronage.api.FlashcardRepresentation;
+import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.resources.FilesResource;
 import com.bls.patronage.resources.UsersResource;
 import io.dropwizard.testing.ConfigOverride;
@@ -15,6 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -23,9 +27,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @Ignore("This test has Authorization issues, but with real users it should work")
@@ -38,6 +49,9 @@ public class FileIntegrationTest {
             StudyBox.class, CONFIG_PATH,
             ConfigOverride.config("database.url", "jdbc:h2:" + TMP_FILE));
 
+    private static final RestInformer informer = mock(RestInformer.class);
+    private static final FlashcardDAO flashcardDAO = mock(FlashcardDAO.class);
+
 
     private static final FileDataBodyPart filePart = new FileDataBodyPart("file", new File("pom.xml"));
     private static final MultiPart multipart = new FormDataMultiPart().bodyPart(filePart);
@@ -48,6 +62,7 @@ public class FileIntegrationTest {
             .toString();
 
     private Client client;
+    private ArgumentCaptor<Flashcard> flashcardCaptior;
 
     @BeforeClass
     public static void migrateDb() throws Exception {
@@ -80,11 +95,25 @@ public class FileIntegrationTest {
                 .append(UriBuilder.fromResource(FilesResource.class).build(UUID.randomUUID()))
                 .toString();
 
+        List<FlashcardRepresentation> flashcards = new ArrayList<>();
+        flashcards.add(new FlashcardRepresentation("testQuestion", "testAnswer", true));
+        flashcards.add(new FlashcardRepresentation("testQuestion2", "testAnswer2", false));
+
+        when(informer.inform(any())).thenReturn(Response.ok().build());
+        when(flashcardDAO.createFlashcard(any(Flashcard.class))).thenReturn(null);
+
         final Response response = client.target(fileURI)
                 .request()
                 .post(Entity.entity(multipart, multipart.getMediaType()));
 
         assertThat(response.getStatus()).isEqualTo(201);
+        verify(informer).inform(any(Message.class));
+        verify(flashcardDAO, times(2)).createFlashcard(flashcardCaptior.capture());
+
+        assertThat(flashcardCaptior.getValue().getDeckId()).isInstanceOf(UUID.class);
+        assertThat(flashcardCaptior.getValue().getId()).isInstanceOf(UUID.class);
+        assertThat(flashcardCaptior.getValue().getAnswer()).isNotEmpty();
+        assertThat(flashcardCaptior.getValue().getQuestion()).isNotEmpty();
     }
 
 }
