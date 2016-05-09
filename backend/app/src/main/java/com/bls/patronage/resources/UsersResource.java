@@ -1,5 +1,6 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.api.PasswordChangeRepresentation;
 import com.bls.patronage.api.UserRepresentation;
 import com.bls.patronage.db.dao.UserDAO;
 import org.hibernate.validator.constraints.Email;
@@ -45,8 +46,8 @@ public class UsersResource {
 
     @POST
     @Path("/password/change")
-    public Response changePassword() {
-
+    public Response changePassword(@Valid PasswordChangeRepresentation user) {
+        
         return Response.ok().status(Response.Status.OK).build();
     }
 }
