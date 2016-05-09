@@ -1,5 +1,6 @@
 package com.bls.patronage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -9,4 +10,6 @@ public interface StreamPersistenceService {
     Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException;
 
     void deleteStream(Path location) throws IOException;
+
+    File getStream(Path filePath);
 }
