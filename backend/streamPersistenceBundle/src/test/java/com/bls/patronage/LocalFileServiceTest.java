@@ -39,7 +39,7 @@ public class LocalFileServiceTest {
         assertThat(pathToFile.getParent()).isEqualTo(nonExistingDir);
         assertThat(pathToFile.getFileName().toString()).matches(UUIDPattern);
 
-        service.deleteStream(nonExistingDir);
+        service.deleteFile(nonExistingDir);
 
         assertThat(Files.notExists(nonExistingDir)).isTrue();
     }

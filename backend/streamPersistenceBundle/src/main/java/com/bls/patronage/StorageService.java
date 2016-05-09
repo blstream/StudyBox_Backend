@@ -6,10 +6,10 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
-public interface StreamPersistenceService {
+public interface StorageService {
     Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException;
 
-    void deleteStream(Path location) throws IOException;
+    void deleteFile(Path location) throws IOException;
 
-    File getStream(Path filePath);
+    File getFile(Path filePath);
 }
