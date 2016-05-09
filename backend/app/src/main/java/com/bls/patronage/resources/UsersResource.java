@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.UserRepresentation;
 import com.bls.patronage.db.dao.UserDAO;
+import org.hibernate.validator.constraints.Email;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -33,5 +34,19 @@ public class UsersResource {
                         .map()
         );
         return Response.ok(new UserRepresentation(user.map())).status(Response.Status.CREATED).build();
+    }
+
+    @POST
+    @Path("/password/recovery")
+    public Response recoverPassword(@Valid @Email String email) {
+
+        return Response.ok().status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Path("/password/change")
+    public Response changePassword() {
+
+        return Response.ok().status(Response.Status.OK).build();
     }
 }
