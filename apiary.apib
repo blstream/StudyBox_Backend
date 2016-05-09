@@ -6,6 +6,8 @@ Study Box REST API backend documentation and mock.
 
 # Change log
 
+## 07/05/2016 toja
+ - adding resources to reset password
 ## 06/05/2016 toja
  - changing getting random deck
 ## 03/05/2016 toja
@@ -310,7 +312,68 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (UserWithoutPassword)
     
+## Reset Password  [/users/password]
 
+A purpose of this resource is to provide the possibility to reset a password by users.
+First endpoint is used for deliver an email of a user who wants to reset his password.
+After successful validation we are sending a message with a generated link (containig secret token)
+to the user's email address. After clicking on the link the second endpoint should be
+used to deliver email, new password and secret token which will allow us to change the user's password.
+If anything fails, a suitable error code with description will be returned.
+
+### Password Recovery [POST /users/password/recovery]
+
++ Request (application/json)
+
+    + Attributes (UserEmail)
+    
++ Response 200 (application/json)
+
+    + Attributes (PasswordResetToken)
+    
++ Response 400 (application/json)
+
+        {
+            "code":400,
+            "message":"There is no user with such email."
+        }
+        
++ Response 400 (application/json)
+
+        {
+            "code":400,
+            "message":"A token for this user was already generated."
+        }
+        
++ Response 500 (application/json)
+
+        {
+            "code":500,
+            "message":"Unable to send email message."
+        }
+    
+### Password Change [POST /users/password/change]
+
++ Request (application/json)
+
+    + Attributes (UserPasswordChange)
+    
++ Response 200 
+
++ Response 400 (application/json)
+
+        {
+            "code":400,
+            "message":"Password must be at least 8 characters."
+        }
+
++ Response 400 (application/json)
+
+        {
+            "code":400,
+            "message":"Reset password failed."
+        }
+        
 # Group Tip
 
 ## Tips [/decks/{deckId}/flashcards/{flashcardId}/tips]
@@ -450,12 +513,17 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 
 ## Single objects
 
-### UserBase (object)
+### UserPassword (object)
++ password: `newPassword` (string, required) - new password containing at least 8 chars
+
+### UserEmail (object)
 + email: `test@mail.com` (string, required) - email of the user
+
+### UserBase (UserEmail)
 + name: `Foo Bar` (string, required) - name of the user
 
-### UserWithoutId (UserBase)
-+ password: `password` (string, required) - encrypted password
+### UserWithoutId (UserBase) 
++ Include UserPassword
 
 ### UserWithoutPassword (UserBase)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - user's id
@@ -490,6 +558,13 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 
 ### Tag (TagWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - tag UUID, 36 chars, 8-4-4-4-12 chars
+
+### PasswordResetToken (object)
++ token: `d65ace55-e5b5-48f0-823c-fc2214374cd3` (string, required) - secret token which allows password change
+
+### UserPasswordChange (UserEmail)
++ Include UserPassword
++ Include PasswordResetToken
 
 
 ## Objects for Collections
