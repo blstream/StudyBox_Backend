@@ -5,17 +5,17 @@ import com.google.common.base.Objects;
 import java.util.Date;
 import java.util.UUID;
 
-public class Token {
+public class ResetPasswordToken {
 
     UUID token;
     String email;
     Boolean isActive;
     Date expirationDate;
 
-    public Token() {
+    public ResetPasswordToken() {
     }
 
-    public Token(UUID token, String email, Date expirationDate, Boolean isActive) {
+    public ResetPasswordToken(UUID token, String email, Date expirationDate, Boolean isActive) {
         this.token = token;
         this.email = email;
         this.expirationDate = expirationDate;
@@ -59,11 +59,11 @@ public class Token {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Token)) {
+        if (!(o instanceof ResetPasswordToken)) {
             return false;
         }
 
-        final Token that = (Token) o;
+        final ResetPasswordToken that = (ResetPasswordToken) o;
 
         return this.token.equals(that.token) &&
                 this.email.equals(that.email) &&
@@ -77,7 +77,7 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token{" +
+        return "ResetPasswordToken{" +
                 "token=" + token +
                 ", email='" + email + '\'' +
                 ", expirationDate=" + expirationDate +

@@ -1,14 +1,12 @@
 package com.bls.patronage.dao;
 
 import com.bls.patronage.db.dao.TokenDAO;
-import com.bls.patronage.db.model.Token;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import com.bls.patronage.db.model.ResetPasswordToken;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -41,7 +39,7 @@ public class TokenDAOTest extends DAOTest {
     }
 
     public void createToken() {
-        final Token token = new Token(UUID.randomUUID(), defaultUserEmail, new Date(), true);
+        final ResetPasswordToken token = new ResetPasswordToken(UUID.randomUUID(), defaultUserEmail, new Date(), true);
         dao.create(token);
         assertThat(dao.findByEmail(defaultUserEmail)).isEqualTo(token);
     }
