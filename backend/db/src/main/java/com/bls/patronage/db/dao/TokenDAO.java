@@ -9,22 +9,33 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 
 @RegisterMapper(ResetPasswordTokenMapper.class)
 abstract public class TokenDAO {
 
-    @SqlQuery("select token,isActive,email,expirationDate from passwordTokens where email = :email")
-    public abstract ResetPasswordToken findByEmail(@Bind("email") String email);
+    @SqlQuery("select token,isActive,email,expirationDate from passwordTokens " +
+            "where email = :email and isActive = 'true'")
+    abstract ResetPasswordToken findByEmail(@Bind("email") String email);
 
     @SqlUpdate("insert into passwordTokens values (:token, :isActive, :email, :expirationDate)")
-    public abstract void insert(@BindBean ResetPasswordToken token);
+    abstract void insert(@BindBean ResetPasswordToken token);
+
+    @SqlUpdate("update passwordTokens set isActive = 'false' where token = :token")
+    public abstract void deactivate(@Bind("token") UUID token);
+
+    @SqlUpdate("delete from passwordTokens where token = :token")
+    public abstract void delete(@Bind("token") UUID token);
 
     public void createToken(ResetPasswordToken token) {
-        final Optional<ResetPasswordToken> optionalToken = Optional.of(findByEmail(token.getEmail()));
-        if(optionalToken.get().getIsActive()) {
+        final Optional<ResetPasswordToken> optionalToken = Optional.ofNullable(findByEmail(token.getEmail()));
+
+        if(optionalToken.isPresent()) {
             throw new DataAccessException("A token for this user is already generated.");
         }
+
         insert(token);
     }
 }

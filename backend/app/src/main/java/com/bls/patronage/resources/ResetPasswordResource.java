@@ -40,7 +40,7 @@ public class ResetPasswordResource {
     @POST
     @Path("/change")
     public Response changePassword(@Valid PasswordChangeRepresentation user) {
-
+        
         return Response.ok().status(Response.Status.OK).build();
     }
 }
