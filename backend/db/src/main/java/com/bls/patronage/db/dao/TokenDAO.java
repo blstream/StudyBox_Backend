@@ -17,11 +17,15 @@ import java.util.UUID;
 abstract public class TokenDAO {
 
     @SqlQuery("select token,isActive,email,expirationDate from passwordTokens " +
-            "where email = :email and isActive = 'true'")
-    abstract ResetPasswordToken findByEmail(@Bind("email") String email);
+            "where token = :token and isActive = 'true'")
+    abstract ResetPasswordToken find(@Bind("token") UUID token);
 
     @SqlUpdate("insert into passwordTokens values (:token, :isActive, :email, :expirationDate)")
     abstract void insert(@BindBean ResetPasswordToken token);
+
+    @SqlQuery("select token,isActive,email,expirationDate from passwordTokens " +
+            "where email = :email and isActive = 'true'")
+    public abstract ResetPasswordToken findByEmail(@Bind("email") String email);
 
     @SqlUpdate("update passwordTokens set isActive = 'false' where token = :token")
     public abstract void deactivate(@Bind("token") UUID token);
@@ -39,9 +43,9 @@ abstract public class TokenDAO {
         insert(token);
     }
 
-    public ResetPasswordToken getTokenByEmail(String email) {
+    public ResetPasswordToken getToken(UUID token) {
 
-        final Optional<ResetPasswordToken> optionalToken = Optional.ofNullable(findByEmail(email));
+        final Optional<ResetPasswordToken> optionalToken = Optional.ofNullable(find(token));
         return optionalToken.orElseThrow(() -> new DataAccessException("Reset password failed."));
     }
 }

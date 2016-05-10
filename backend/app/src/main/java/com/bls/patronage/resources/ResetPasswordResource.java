@@ -48,7 +48,7 @@ public class ResetPasswordResource {
     @Path("/change")
     public Response changePassword(@Valid PasswordChangeRepresentation user) {
 
-        tokenDAO.getTokenByEmail(user.getEmail());
+        tokenDAO.getToken(user.getToken());
         tokenDAO.deactivate(user.getToken());
 
         return Response.ok().status(Response.Status.OK).build();
