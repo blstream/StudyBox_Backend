@@ -10,10 +10,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserRepresentation implements DbMappable<User> {
-    @Email
-    @NotEmpty
-    private final String email;
+public class UserRepresentation extends EmailRepresentation implements DbMappable<User> {
+
     private UUID id;
     private String name;
     @NotEmpty
@@ -21,35 +19,31 @@ public class UserRepresentation implements DbMappable<User> {
     private String password;
 
     public UserRepresentation(String email) {
-        this.email = email;
+        super(email);
     }
 
     public UserRepresentation(@JsonProperty("email") String email,
                               @JsonProperty("name") String name,
                               @JsonProperty("password") String password) {
-        this.email = email;
+        super(email);
         this.name = name;
         this.password = password;
     }
 
     public UserRepresentation(String email, String password) {
-        this.email = email;
+        super(email);
         this.password = password;
     }
 
     public UserRepresentation(User user) {
+        super(user.getEmail());
         this.id = user.getId();
-        this.email = user.getEmail();
         this.name = user.getName();
     }
 
     @Override
     public User map() {
-        return new User(id, email, name, password);
-    }
-
-    public String getEmail() {
-        return email;
+        return new User(id, super.getEmail(), name, password);
     }
 
     public String getName() {

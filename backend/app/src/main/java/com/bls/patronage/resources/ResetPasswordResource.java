@@ -1,11 +1,13 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.api.EmailRepresentation;
 import com.bls.patronage.api.PasswordChangeRepresentation;
 import com.bls.patronage.db.dao.TokenDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.ResetPasswordToken;
 import com.bls.patronage.service.ResetPasswordService;
 import com.bls.patronage.service.TokenService;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.Valid;
@@ -32,13 +34,13 @@ public class ResetPasswordResource {
 
     @POST
     @Path("/recovery")
-    public Response recoverPassword(@Valid @Email String email) {
+    public Response recoverPassword(@Valid EmailRepresentation email) {
 
-        userDAO.getUserByEmail(email);
+        userDAO.getUserByEmail(email.getEmail());
         TokenService tokenService = new ResetPasswordService(resetPasswordUri);
-        ResetPasswordToken token = tokenService.generate(email);
+        ResetPasswordToken token = tokenService.generate(email.getEmail());
         tokenDAO.createToken(token);
-        tokenService.sendMessage(email, token.getToken());
+        tokenService.sendMessage(email.getEmail(), token.getToken());
 
         return Response.ok(token.getToken()).status(Response.Status.OK).build();
     }

@@ -9,11 +9,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.UUID;
 
-public class PasswordChangeRepresentation {
+public class PasswordChangeRepresentation extends EmailRepresentation{
 
-    @Email
-    @NotEmpty
-    private final String email;
     @Length(min = 8)
     private final String password;
     @NotEmpty
@@ -22,13 +19,9 @@ public class PasswordChangeRepresentation {
     public PasswordChangeRepresentation(@JsonProperty("email") String email,
                                         @JsonProperty("password") String password,
                                         @JsonProperty("token") UUID token) {
-        this.email = email;
+        super(email);
         this.password = password;
         this.token = token;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getPassword() {
