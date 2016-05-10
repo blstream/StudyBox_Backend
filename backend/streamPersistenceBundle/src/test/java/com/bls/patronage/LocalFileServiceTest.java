@@ -3,6 +3,7 @@ package com.bls.patronage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +18,7 @@ public class LocalFileServiceTest {
     @BeforeClass
     public static void setUp() throws Exception {
         service = LocalFileService.getInstance();
-        location = Paths.get("/", "root", "test");
+        location = Paths.get(new File("").getAbsolutePath());
     }
 
     @Test
