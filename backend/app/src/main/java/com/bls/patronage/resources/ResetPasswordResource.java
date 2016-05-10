@@ -22,10 +22,12 @@ import javax.ws.rs.core.Response;
 public class ResetPasswordResource {
     private final UserDAO userDAO;
     private final TokenDAO tokenDAO;
+    private final String resetPasswordUri;
 
-    public ResetPasswordResource(UserDAO userDAO, TokenDAO tokenDAO) {
+    public ResetPasswordResource(UserDAO userDAO, TokenDAO tokenDAO, String resetPasswordUri) {
         this.userDAO = userDAO;
         this.tokenDAO = tokenDAO;
+        this.resetPasswordUri = resetPasswordUri;
     }
 
     @POST
@@ -33,7 +35,7 @@ public class ResetPasswordResource {
     public Response recoverPassword(@Valid @Email String email) {
 
         userDAO.getUserByEmail(email);
-        TokenService tokenService = new ResetPasswordService();
+        TokenService tokenService = new ResetPasswordService(resetPasswordUri);
         ResetPasswordToken token = tokenService.generate(email);
         tokenDAO.createToken(token);
         tokenService.sendMessage(email);

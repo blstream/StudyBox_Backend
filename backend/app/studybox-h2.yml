@@ -11,3 +11,5 @@ server:
   connector:
     type: http
     port: 2000
+
+ResetPasswordUrl: http://exampleFrontendUrl.com

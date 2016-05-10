@@ -7,7 +7,13 @@ import java.util.Date;
 import java.util.UUID;
 
 public class ResetPasswordService implements TokenService {
+
+    private final String resetPasswordUri;
     private ResetPasswordToken token;
+
+    public ResetPasswordService(String uri) {
+        this.resetPasswordUri = uri;
+    }
 
     @Override
     public ResetPasswordToken generate(String userEmail) {
