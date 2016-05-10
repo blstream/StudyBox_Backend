@@ -1,5 +1,6 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageException;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Deck;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
@@ -55,7 +57,7 @@ public class FilesResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(
             @Auth User user,
-            @FormDataParam("file") InputStream uploadedInputStream) throws Exception {
+            @FormDataParam("file") InputStream uploadedInputStream) throws StorageException, MalformedURLException {
 
         final Deck deck = new Deck(UUID.randomUUID(), "foo");
         final java.nio.file.Path location = baseLocation.resolve(user.getId().toString());

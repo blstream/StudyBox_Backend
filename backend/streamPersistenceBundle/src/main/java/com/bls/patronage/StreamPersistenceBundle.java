@@ -7,10 +7,8 @@ import io.dropwizard.setup.Environment;
 
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
@@ -29,7 +27,7 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     abstract public URI getServiceURI(E configuration);
 
-    public Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException {
+    public Path persistStream(InputStream stream, Path location) throws StorageException {
         return streamService.persistStream(stream, location);
     }
 
@@ -37,7 +35,7 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
         return listenerInformer.inform(message);
     }
 
-    public void deleteFile(Path location) throws IOException {
+    public void deleteFile(Path location) throws StorageException {
         streamService.deleteFile(location);
     }
 

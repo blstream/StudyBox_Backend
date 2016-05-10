@@ -1,15 +1,13 @@
 package com.bls.patronage;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 public interface StorageService {
-    Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException;
+    Path persistStream(InputStream stream, Path location) throws StorageException;
 
-    void deleteFile(Path location) throws IOException;
+    void deleteFile(Path location) throws StorageException;
 
     File getFile(Path filePath);
 }

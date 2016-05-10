@@ -1,5 +1,6 @@
 package com.bls.patronage.helpers;
 
+import com.bls.patronage.StorageException;
 import com.bls.patronage.StreamPersistenceBundle;
 
 import javax.ws.rs.core.Response;
@@ -16,7 +17,7 @@ public class FileHelper {
         this.bundle = bundle;
     }
 
-    public Path handleInputStream(InputStream stream, Path location) throws Exception {
+    public Path handleInputStream(InputStream stream, Path location) throws StorageException {
         return bundle.persistStream(stream, location);
     }
 
@@ -24,7 +25,7 @@ public class FileHelper {
         return bundle.informService(new CVRequest(location, "ImageToFlashcard"));
     }
 
-    public void cleanUp(Path location) throws Exception {
+    public void cleanUp(Path location) throws StorageException {
         bundle.deleteFile(location);
     }
 

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -26,25 +25,38 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public Path persistStream(InputStream stream, Path location) throws IOException, URISyntaxException {
-        Path path = createPathToFile(location);
+    public Path persistStream(InputStream stream, Path location) throws StorageException {
+        Path path = null;
+        try {
+            path = createPathToFile(location);
 
-        Files.copy(stream, path);
+            Files.copy(stream, path);
+        } catch (IOException e) {
+            throw (StorageException) new StorageException().initCause(e);
+        }
 
         return path;
     }
 
-    public Path createPathToFile(Path location) throws IOException {
+    public Path createPathToFile(Path location) throws StorageException {
         if (!Files.exists(location)) {
-            Files.createDirectory(location);
+            try {
+                Files.createDirectory(location);
+            } catch (IOException e) {
+                throw (StorageException) new StorageException().initCause(e);
+            }
         }
 
         return location.resolve(UUID.randomUUID().toString());
     }
 
     @Override
-    public void deleteFile(Path location) throws IOException {
-        Files.delete(location);
+    public void deleteFile(Path location) throws StorageException {
+        try {
+            Files.delete(location);
+        } catch (IOException e) {
+            throw (StorageException) new StorageException().initCause(e);
+        }
     }
 
     @Override
