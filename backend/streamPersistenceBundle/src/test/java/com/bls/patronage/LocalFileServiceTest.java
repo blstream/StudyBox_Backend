@@ -7,13 +7,14 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocalFileServiceTest {
     static LocalFileService service;
     static Path location;
-    private String UUIDPattern = "[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}";
+    private Pattern UUIDPattern = Pattern.compile("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
 
     @BeforeClass
     public static void setUp() throws Exception {
