@@ -37,7 +37,7 @@ public class ResetPasswordResourceTest {
 
     @Test
     public void passwordRecovery(){
-        
+
     }
 
     @Test
