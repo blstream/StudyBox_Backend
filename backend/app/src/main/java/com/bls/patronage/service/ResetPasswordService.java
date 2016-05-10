@@ -7,11 +7,13 @@ import java.util.Date;
 import java.util.UUID;
 
 public class ResetPasswordService implements TokenService {
+    private ResetPasswordToken token;
 
     @Override
     public ResetPasswordToken generate(String userEmail) {
         Date date = computeExpirationDate();
-        return new ResetPasswordToken(UUID.randomUUID(), userEmail, date, true);
+        token = new ResetPasswordToken(UUID.randomUUID(), userEmail, date, true);
+        return token;
     }
 
     private Date computeExpirationDate() {
@@ -24,6 +26,8 @@ public class ResetPasswordService implements TokenService {
 
     @Override
     public void sendMessage(String email) {
+        if(token != null) {
 
+        }
     }
 }
