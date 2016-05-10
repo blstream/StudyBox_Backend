@@ -1,7 +1,6 @@
 package com.bls.patronage.resources;
 
 import com.bls.patronage.api.UserRepresentation;
-import com.bls.patronage.db.dao.TokenDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;

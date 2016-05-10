@@ -7,8 +7,6 @@ import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.ResetPasswordToken;
 import com.bls.patronage.service.ResetPasswordService;
 import com.bls.patronage.service.TokenService;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.Email;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -18,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
-import java.util.HashMap;
 
 @Path("/users/password")
 @Produces(MediaType.APPLICATION_JSON)

@@ -1,10 +1,7 @@
 package com.bls.patronage.resources;
 
-import com.bls.patronage.api.PasswordChangeRepresentation;
 import com.bls.patronage.api.UserRepresentation;
-import com.bls.patronage.db.dao.TokenDAO;
 import com.bls.patronage.db.dao.UserDAO;
-import org.hibernate.validator.constraints.Email;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;

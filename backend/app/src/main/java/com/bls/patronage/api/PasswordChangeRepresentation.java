@@ -1,11 +1,7 @@
 package com.bls.patronage.api;
 
-import com.bls.patronage.db.model.ResetPasswordToken;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
