@@ -7,13 +7,14 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public class PasswordChangeRepresentation extends EmailRepresentation{
 
     @Length(min = 8)
     private final String password;
-    @NotEmpty
+    @NotNull
     private final UUID token;
 
     public PasswordChangeRepresentation(@JsonProperty("email") String email,
