@@ -12,14 +12,15 @@ import java.util.regex.Pattern;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocalFileServiceTest {
-    static LocalFileService service;
-    static Path location;
-    private Pattern UUIDPattern = Pattern.compile("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
+    private static LocalFileService service;
+    private static Path location;
+    private static Pattern UUIDPattern;
 
     @BeforeClass
     public static void setUp() throws Exception {
         service = LocalFileService.getInstance();
         location = Paths.get(new File("").getAbsolutePath());
+        UUIDPattern = Pattern.compile("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
     }
 
     @Test
