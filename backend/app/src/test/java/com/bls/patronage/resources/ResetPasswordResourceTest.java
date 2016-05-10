@@ -7,9 +7,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
+import org.junit.Test;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 
@@ -21,7 +22,7 @@ public class ResetPasswordResourceTest {
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new ResetPasswordResource(userDAO, tokenDAO))
+            .addResource(new ResetPasswordResource(userDAO, tokenDAO, ""))
             .build();
 
     @Before
@@ -37,11 +38,11 @@ public class ResetPasswordResourceTest {
 
     @Test
     public void passwordRecovery(){
-
+        assertThat(1);
     }
 
     @Test
     public void passwordChange(){
-
+        assertThat(1);
     }
 }

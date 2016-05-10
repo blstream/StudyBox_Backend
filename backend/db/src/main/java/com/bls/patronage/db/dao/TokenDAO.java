@@ -40,12 +40,8 @@ abstract public class TokenDAO {
     }
 
     public ResetPasswordToken getTokenByEmail(String email) {
+
         final Optional<ResetPasswordToken> optionalToken = Optional.ofNullable(findByEmail(email));
-
-        if(optionalToken.isPresent()) {
-            throw new DataAccessException("Reset password failed.");
-        }
-
-        return optionalToken.get();
+        return optionalToken.orElseThrow(() -> new DataAccessException("Reset password failed."));
     }
 }

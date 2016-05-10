@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface TokenService {
     ResetPasswordToken generate(String email);
-    void sendMessage(String email);
+    void sendMessage(String email, UUID token);
 }

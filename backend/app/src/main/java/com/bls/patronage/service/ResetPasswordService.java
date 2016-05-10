@@ -9,7 +9,6 @@ import java.util.UUID;
 public class ResetPasswordService implements TokenService {
 
     private final String resetPasswordUri;
-    private ResetPasswordToken token;
 
     public ResetPasswordService(String uri) {
         this.resetPasswordUri = uri;
@@ -17,23 +16,22 @@ public class ResetPasswordService implements TokenService {
 
     @Override
     public ResetPasswordToken generate(String userEmail) {
-        Date date = computeExpirationDate();
-        token = new ResetPasswordToken(UUID.randomUUID(), userEmail, date, true);
-        return token;
+        final Date date = computeExpirationDate();
+        return new ResetPasswordToken(UUID.randomUUID(), userEmail, date, true);
     }
 
     private Date computeExpirationDate() {
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
+        final Date date = new Date();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, 1);
         return calendar.getTime();
     }
 
     @Override
-    public void sendMessage(String email) {
-        if(token != null) {
+    public void sendMessage(String email, UUID token) {
 
-        }
+        System.out.println(resetPasswordUri + "/" + token.toString());
+
     }
 }

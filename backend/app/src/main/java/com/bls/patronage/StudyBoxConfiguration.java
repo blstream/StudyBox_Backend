@@ -16,7 +16,7 @@ public class StudyBoxConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    private String ResetPasswordUrl;
+    private String resetPasswordUrl;
 
     @Valid
     @NotNull
@@ -31,7 +31,7 @@ public class StudyBoxConfiguration extends Configuration {
     }
 
     public String getResetPasswordUrl() {
-        return ResetPasswordUrl;
+        return resetPasswordUrl;
     }
 
 }

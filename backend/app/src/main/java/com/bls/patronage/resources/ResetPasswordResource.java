@@ -38,7 +38,7 @@ public class ResetPasswordResource {
         TokenService tokenService = new ResetPasswordService(resetPasswordUri);
         ResetPasswordToken token = tokenService.generate(email);
         tokenDAO.createToken(token);
-        tokenService.sendMessage(email);
+        tokenService.sendMessage(email, token.getToken());
 
         return Response.ok(token.getToken()).status(Response.Status.OK).build();
     }

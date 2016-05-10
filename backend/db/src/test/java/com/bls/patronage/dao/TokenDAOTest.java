@@ -40,7 +40,7 @@ public class TokenDAOTest extends DAOTest {
 
     public void createToken() {
         final ResetPasswordToken token = new ResetPasswordToken(UUID.randomUUID(), defaultUserEmail, new Date(), true);
-        dao.create(token);
-        assertThat(dao.findByEmail(defaultUserEmail)).isEqualTo(token);
+        dao.createToken(token);
+        assertThat(dao.getTokenByEmail(defaultUserEmail)).isEqualTo(token);
     }
 }
