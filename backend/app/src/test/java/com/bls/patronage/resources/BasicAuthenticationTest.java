@@ -2,9 +2,13 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
-import com.bls.patronage.db.dao.*;
-import com.bls.patronage.mapper.DataAccessExceptionMapper;
+import com.bls.patronage.db.dao.AuditDAO;
+import com.bls.patronage.db.dao.DeckDAO;
+import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.dao.ResultDAO;
+import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
+import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
@@ -19,9 +23,7 @@ import javax.ws.rs.core.Response;
 import java.util.Base64;
 import java.util.UUID;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class BasicAuthenticationTest {
     protected static final UserDAO userDAO = mock(UserDAO.class);
