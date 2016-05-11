@@ -49,7 +49,6 @@ public class FileIntegrationTest {
             StudyBox.class, CONFIG_PATH,
             ConfigOverride.config("database.url", "jdbc:h2:" + TMP_FILE));
 
-    private static final RestInformer informer = mock(RestInformer.class);
     private static final FlashcardDAO flashcardDAO = mock(FlashcardDAO.class);
 
 
@@ -99,7 +98,6 @@ public class FileIntegrationTest {
         flashcards.add(new FlashcardRepresentation("testQuestion", "testAnswer", true));
         flashcards.add(new FlashcardRepresentation("testQuestion2", "testAnswer2", false));
 
-        when(informer.inform(any())).thenReturn(Response.ok().build());
         when(flashcardDAO.createFlashcard(any(Flashcard.class))).thenReturn(null);
 
         final Response response = client.target(fileURI)
@@ -107,7 +105,6 @@ public class FileIntegrationTest {
                 .post(Entity.entity(multipart, multipart.getMediaType()));
 
         assertThat(response.getStatus()).isEqualTo(201);
-        verify(informer).inform(any());
         verify(flashcardDAO, times(2)).createFlashcard(flashcardCaptior.capture());
 
         assertThat(flashcardCaptior.getValue().getDeckId()).isInstanceOf(UUID.class);
