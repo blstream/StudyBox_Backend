@@ -1,8 +1,5 @@
 package com.bls.patronage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,12 +10,6 @@ import java.util.UUID;
 class LocalFileService implements StorageService {
 
     private static final LocalFileService LOCAL_FILE_SERVICE = new LocalFileService();
-    private final Logger logger;
-
-
-    private LocalFileService() {
-        logger = LoggerFactory.getLogger(LocalFileService.class);
-    }
 
     public static LocalFileService getInstance() {
         return LOCAL_FILE_SERVICE;
