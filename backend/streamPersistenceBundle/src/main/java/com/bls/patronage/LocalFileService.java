@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 class LocalFileService implements StorageService {
@@ -17,11 +18,10 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public Path persistStream(InputStream stream, Path location) throws StorageException {
-        Path path;
+    public Path persistStream(InputStream stream, UUID userId) throws StorageException {
+        Path path = Paths.get("./storage", userId.toString());
         try {
-            path = createPathToFile(location);
-
+            path = createPathToFile(path);
             Files.copy(stream, path);
         } catch (IOException e) {
             throw new StorageException(e);

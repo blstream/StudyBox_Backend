@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.UUID;
 
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
     private StorageService streamService;
@@ -29,8 +30,8 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     abstract public URI getServiceURI(E configuration);
 
-    public Path persistStream(InputStream stream, Path location) throws StorageException {
-        return streamService.persistStream(stream, location);
+    public Path persistStream(InputStream stream, UUID userId) throws StorageException {
+        return streamService.persistStream(stream, userId);
     }
 
     public Response informService(Object message) {

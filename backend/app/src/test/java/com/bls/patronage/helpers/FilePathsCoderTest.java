@@ -14,14 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FilePathsCoderTest {
 
-    private String baseLocation = "foo";
+    private String baseLocation = "./storage";
     private UUID userId = UUID.randomUUID();
     private UUID fileId = UUID.randomUUID();
 
-    private String encoded = String.format(UriBuilder
-            .fromResource(StorageResource.class)
-            .build(userId)
-            .toString(), "/", fileId);
+    private String encoded = new StringBuilder()
+            .append(UriBuilder.fromResource(StorageResource.class).build(userId).toString())
+            .append("/")
+            .append(fileId)
+            .toString();
     private Path decoded = Paths.get(baseLocation, userId.toString(), fileId.toString());
 
     @Test
@@ -33,7 +34,7 @@ public class FilePathsCoderTest {
 
     @Test
     public void testDecode() {
-        Path path = FilePathsCoder.decodeFilePath(Paths.get(baseLocation), userId, fileId);
+        Path path = FilePathsCoder.decodeFilePath(userId, fileId);
 
         assertThat(path).isEqualTo(decoded);
     }
