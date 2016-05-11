@@ -1,6 +1,7 @@
 package com.bls.patronage;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -51,7 +52,11 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public File getFile(Path filePath) {
-        return filePath.toFile();
+    public FileInputStream getFile(Path filePath) throws StorageException {
+        try {
+            return new FileInputStream(filePath.toFile());
+        } catch (FileNotFoundException e) {
+            throw (StorageException) new StorageException().initCause(e);
+        }
     }
 }
