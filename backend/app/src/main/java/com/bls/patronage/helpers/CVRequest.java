@@ -1,11 +1,10 @@
 package com.bls.patronage.helpers;
 
-import com.bls.patronage.Message;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.net.URI;
 
-public class CVRequest implements Message {
+public class CVRequest {
 
     public final URI location;
     public final String action;

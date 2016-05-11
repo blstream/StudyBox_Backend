@@ -107,7 +107,7 @@ public class FileIntegrationTest {
                 .post(Entity.entity(multipart, multipart.getMediaType()));
 
         assertThat(response.getStatus()).isEqualTo(201);
-        verify(informer).inform(any(Message.class));
+        verify(informer).inform(any());
         verify(flashcardDAO, times(2)).createFlashcard(flashcardCaptior.capture());
 
         assertThat(flashcardCaptior.getValue().getDeckId()).isInstanceOf(UUID.class);
