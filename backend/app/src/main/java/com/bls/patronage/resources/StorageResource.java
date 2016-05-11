@@ -36,15 +36,13 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 public class StorageResource {
 
-    private final java.nio.file.Path baseLocation;
     private final FlashcardDAO flashcardDAO;
     private final DeckDAO deckDAO;
     private final StreamPersistenceBundle bundle;
 
-    public StorageResource(StreamPersistenceBundle bundle, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
+    public StorageResource(StreamPersistenceBundle bundle, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
         this.bundle = bundle;
         this.deckDAO = deckDAO;
-        this.baseLocation = baseLocation;
         this.flashcardDAO = flashcardDAO;
     }
 
@@ -52,7 +50,7 @@ public class StorageResource {
     @Path("/{fileId}")
     public Response getFile(@Auth User user,
                             @PathParam("fileId") UUID fileId) throws StorageException {
-        java.nio.file.Path filePath = FilePathsCoder.decodeFilePath(baseLocation, user.getId(), fileId);
+        java.nio.file.Path filePath = FilePathsCoder.decodeFilePath(user.getId(), fileId);
 
         StreamingOutput output = new StreamingOutput() {
             @Override
@@ -73,9 +71,8 @@ public class StorageResource {
             @FormDataParam("file") InputStream uploadedInputStream) throws StorageException, MalformedURLException {
 
         final Deck deck = new Deck(UUID.randomUUID());
-        final java.nio.file.Path location = baseLocation.resolve(user.getId().toString());
 
-        java.nio.file.Path filePath = bundle.persistStream(uploadedInputStream, location);
+        java.nio.file.Path filePath = bundle.persistStream(uploadedInputStream, user.getId());
 
         URI uri = FilePathsCoder.encodeFilePath(filePath);
 

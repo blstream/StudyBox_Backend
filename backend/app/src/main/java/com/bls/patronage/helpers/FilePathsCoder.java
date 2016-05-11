@@ -6,11 +6,12 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 public class FilePathsCoder {
-    public static Path decodeFilePath(Path baseLocation, final UUID userId, final UUID fileId) {
-        return baseLocation.resolve(userId.toString()).resolve(fileId.toString());
+    public static Path decodeFilePath(final UUID userId, final UUID fileId) {
+        return Paths.get("./storage").resolve(userId.toString()).resolve(fileId.toString());
     }
 
     public static URI encodeFilePath(final Path filePath) throws MalformedURLException {
