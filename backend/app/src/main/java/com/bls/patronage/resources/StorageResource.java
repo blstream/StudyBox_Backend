@@ -17,9 +17,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Objects;
@@ -47,9 +54,16 @@ public class StorageResource {
                             @PathParam("fileId") UUID fileId) throws StorageException {
         java.nio.file.Path filePath = FilePathsCoder.decodeFilePath(baseLocation, user.getId(), fileId);
 
-        InputStream stream = fileHelper.getFile(filePath);
+        StreamingOutput output = new StreamingOutput() {
+            @Override
+            public void write(OutputStream os) throws IOException,
+                    WebApplicationException {
+                Writer writer = new BufferedWriter(new OutputStreamWriter(fileHelper.getFile(filePath)));
+                writer.flush();
+            }
+        };
 
-        return Response.ok(stream).type(MediaType.MULTIPART_FORM_DATA).build();
+        return Response.ok(output).type(MediaType.MULTIPART_FORM_DATA).build();
     }
 
     @POST

@@ -5,6 +5,7 @@ import com.bls.patronage.StreamPersistenceBundle;
 
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Path;
 
@@ -28,7 +29,7 @@ public class FileHelper {
         bundle.deleteFile(location);
     }
 
-    public InputStream getFile(Path filePath) throws StorageException {
+    public OutputStream getFile(Path filePath) throws StorageException {
         return bundle.getFile(filePath);
     }
 }
