@@ -8,7 +8,6 @@ import org.glassfish.jersey.client.JerseyClientBuilder;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Path;
@@ -46,7 +45,7 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
         streamService.deleteFile(location);
     }
 
-    public File getFile(Path filePath) {
+    public InputStream getFile(Path filePath) throws StorageException {
         return streamService.getFile(filePath);
     }
 }

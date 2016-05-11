@@ -1,6 +1,6 @@
 package com.bls.patronage;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Path;
 
@@ -9,5 +9,5 @@ public interface StorageService {
 
     void deleteFile(Path location) throws StorageException;
 
-    File getFile(Path filePath);
+    FileInputStream getFile(Path filePath) throws StorageException;
 }

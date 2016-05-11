@@ -19,7 +19,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -45,12 +44,12 @@ public class FilesResource {
     @GET
     @Path("/{fileId}")
     public Response getFile(@Auth User user,
-                            @PathParam("fileId") UUID fileId) {
+                            @PathParam("fileId") UUID fileId) throws StorageException {
         java.nio.file.Path filePath = FilePathsCoder.decodeFilePath(baseLocation, user.getId(), fileId);
 
-        File file = fileHelper.getFile(filePath);
+        InputStream stream = fileHelper.getFile(filePath);
 
-        return Response.ok(file).type(MediaType.MULTIPART_FORM_DATA).build();
+        return Response.ok(stream).type(MediaType.MULTIPART_FORM_DATA).build();
     }
 
     @POST
