@@ -106,7 +106,7 @@ public class ResetPasswordResourceTest extends BasicAuthenticationTest{
 
     @Test
     public void passwordChange(){
-        when(tokenDAO.getToken(token.getToken())).thenReturn(token);
+        when(tokenDAO.getToken(token.getToken(), user.getEmail())).thenReturn(token);
 
         final Response response  = postUserInfo(changeURI,
                 new PasswordChangeRepresentation(user.getEmail(), newPassword, token.getToken()));
@@ -133,7 +133,7 @@ public class ResetPasswordResourceTest extends BasicAuthenticationTest{
 
     @Test
     public void passwordChangeWithDeactivatedToken(){
-        when(tokenDAO.getToken(deactivatedToken.getToken())).thenThrow(new DataAccessException(""));
+        when(tokenDAO.getToken(deactivatedToken.getToken(), user.getEmail())).thenThrow(new DataAccessException(""));
 
         final Response response  = postUserInfo(changeURI,
                 new PasswordChangeRepresentation(user.getEmail(), newPassword, deactivatedToken.getToken()));
@@ -145,7 +145,7 @@ public class ResetPasswordResourceTest extends BasicAuthenticationTest{
 
     @Test
     public void passwordChangeWithNonExistentToken(){
-        when(tokenDAO.getToken(token.getToken())).thenThrow(new DataAccessException(""));
+        when(tokenDAO.getToken(token.getToken(), user.getEmail())).thenThrow(new DataAccessException(""));
 
         final Response response  = postUserInfo(changeURI,
                 new PasswordChangeRepresentation(user.getEmail(), newPassword, token.getToken()));

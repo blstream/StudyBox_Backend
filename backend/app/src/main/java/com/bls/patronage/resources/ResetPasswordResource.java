@@ -51,7 +51,7 @@ public class ResetPasswordResource {
     @Path("/change")
     public Response changePassword(@Valid PasswordChangeRepresentation userInfo) {
 
-        tokenDAO.getToken(userInfo.getToken());
+        tokenDAO.getToken(userInfo.getToken(), userInfo.getEmail());
         final User user = userDAO.getUserByEmail(userInfo.getEmail());
         userDAO.updatePassword(new User(user.getId(), user.getEmail(), user.getName(),
                 generateSafeHash(userInfo.getPassword())));
