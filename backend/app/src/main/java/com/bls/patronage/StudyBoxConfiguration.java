@@ -7,6 +7,7 @@ import io.dropwizard.db.DataSourceFactory;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.nio.file.Path;
 
 public class StudyBoxConfiguration extends Configuration {
 
@@ -17,6 +18,10 @@ public class StudyBoxConfiguration extends Configuration {
     @Valid
     @NotNull
     private URI cvServerURI;
+
+    @Valid
+    @NotNull
+    private Path fileContentBaseLocation;
 
     @Valid
     @NotNull
@@ -32,5 +37,9 @@ public class StudyBoxConfiguration extends Configuration {
 
     public URI getCvServerURI() {
         return cvServerURI;
+    }
+
+    public Path getFileContentBaseLocation() {
+        return fileContentBaseLocation;
     }
 }

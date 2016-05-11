@@ -19,7 +19,7 @@ public class LocalFileServiceTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        service = LocalFileService.getInstance();
+        service = LocalFileService.getInstance(Paths.get("./storage"));
         location = Paths.get(new File("").getAbsolutePath());
     }
 
