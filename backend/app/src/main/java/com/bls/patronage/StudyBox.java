@@ -10,6 +10,7 @@ import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.helpers.FileHelper;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
+import com.bls.patronage.mapper.StorageExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
@@ -96,6 +97,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new StorageResource(new FileHelper(streamPersistenceBundle), configuration.getFilesBaseLocation(),
                 jdbi.onDemand(DeckDAO.class), jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
+        environment.jersey().register(new StorageExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
         final CachingAuthenticator cachingAuthenticator = new CachingAuthenticator(environment.metrics(), basicAuthenticator,
