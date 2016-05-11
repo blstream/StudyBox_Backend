@@ -48,8 +48,8 @@ public class StorageResource {
 
     @GET
     @Path("/{fileId}")
-    public Response getFile(@Auth User user,
-                            @PathParam("fileId") UUID fileId) throws StorageException {
+    public StreamingOutput getFile(@Auth User user,
+                                   @PathParam("fileId") UUID fileId) throws StorageException {
         java.nio.file.Path filePath = FilePathsCoder.decodeFilePath(user.getId(), fileId);
 
         StreamingOutput output = new StreamingOutput() {
@@ -61,7 +61,7 @@ public class StorageResource {
             }
         };
 
-        return Response.ok(output).type(MediaType.MULTIPART_FORM_DATA).build();
+        return output;
     }
 
     @POST
