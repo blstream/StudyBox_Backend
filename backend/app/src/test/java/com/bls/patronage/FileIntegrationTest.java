@@ -3,7 +3,7 @@ package com.bls.patronage;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Flashcard;
-import com.bls.patronage.resources.FilesResource;
+import com.bls.patronage.resources.StorageResource;
 import com.bls.patronage.resources.UsersResource;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
@@ -91,7 +91,7 @@ public class FileIntegrationTest {
         final String fileURI = new StringBuilder()
                 .append("http://localhost:")
                 .append(RULE.getLocalPort())
-                .append(UriBuilder.fromResource(FilesResource.class).build(UUID.randomUUID()))
+                .append(UriBuilder.fromResource(StorageResource.class).build(UUID.randomUUID()))
                 .toString();
 
         List<FlashcardRepresentation> flashcards = new ArrayList<>();

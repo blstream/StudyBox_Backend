@@ -13,11 +13,11 @@ import com.bls.patronage.helpers.FileHelper;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
-import com.bls.patronage.resources.FilesResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import com.bls.patronage.resources.ResetPasswordResource;
 import com.bls.patronage.resources.ResultsResource;
+import com.bls.patronage.resources.StorageResource;
 import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
@@ -97,7 +97,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
                 jdbi.onDemand(ResultDAO.class)));
-        environment.jersey().register(new FilesResource(new FileHelper(streamPersistenceBundle), configuration.getFilesBaseLocation(),
+        environment.jersey().register(new StorageResource(new FileHelper(streamPersistenceBundle), configuration.getFilesBaseLocation(),
                 jdbi.onDemand(DeckDAO.class), jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
 
