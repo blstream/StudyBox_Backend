@@ -55,7 +55,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         @Override
         public Path getStoragePath(StudyBoxConfiguration configuration) {
             //Return local storage path
-            return configuration.getFileContentBaseLocation();
+            return configuration.getFilesContentBaseLocation();
         }
     };
 

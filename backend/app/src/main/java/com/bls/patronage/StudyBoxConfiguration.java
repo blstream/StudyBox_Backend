@@ -1,8 +1,5 @@
 package com.bls.patronage;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import com.google.common.cache.CacheBuilder;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
@@ -46,8 +43,8 @@ public class StudyBoxConfiguration extends Configuration {
         return cvServerURI;
     }
 
-    public Path getFilesBaseLocation() {
-        return filesBaseLocation;
+    public Path getFilesContentBaseLocation() {
+        return fileContentBaseLocation;
     }
     public String getResetPasswordUrl() {
         return resetPasswordUrl;
