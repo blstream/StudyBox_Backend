@@ -72,7 +72,7 @@ public class StorageResource {
             @Auth User user,
             @FormDataParam("file") InputStream uploadedInputStream) throws StorageException, MalformedURLException {
 
-        final Deck deck = new Deck(UUID.randomUUID(), "foo");
+        final Deck deck = new Deck(UUID.randomUUID());
         final java.nio.file.Path location = baseLocation.resolve(user.getId().toString());
 
         java.nio.file.Path filePath = fileHelper.handleInputStream(uploadedInputStream, location);
