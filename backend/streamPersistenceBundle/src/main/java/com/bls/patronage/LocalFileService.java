@@ -11,12 +11,10 @@ import java.util.UUID;
 
 class LocalFileService implements StorageService {
 
-    private static final LocalFileService LOCAL_FILE_SERVICE = new LocalFileService();
-    private static Path STORAGE_PATH;
+    private final Path STORAGE_PATH;
 
-    public static LocalFileService getInstance(Path storagePath) {
-        LocalFileService.STORAGE_PATH = storagePath;
-        return LOCAL_FILE_SERVICE;
+    public LocalFileService(Path storagePath) {
+        STORAGE_PATH = storagePath;
     }
 
     @Override
