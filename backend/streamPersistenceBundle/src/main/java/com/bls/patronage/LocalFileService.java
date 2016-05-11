@@ -18,7 +18,7 @@ class LocalFileService implements StorageService {
 
     @Override
     public Path persistStream(InputStream stream, Path location) throws StorageException {
-        Path path = null;
+        Path path;
         try {
             path = createPathToFile(location);
 
@@ -52,7 +52,7 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public FileInputStream getFile(Path filePath) throws StorageException {
+    public InputStream getFile(Path filePath) throws StorageException {
         try {
             return new FileInputStream(filePath.toFile());
         } catch (FileNotFoundException e) {
