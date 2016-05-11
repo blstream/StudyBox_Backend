@@ -4,7 +4,9 @@ import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.InputStream;
@@ -12,13 +14,13 @@ import java.net.URI;
 import java.nio.file.Path;
 
 public abstract class StreamPersistenceBundle<E extends Configuration> implements ConfiguredBundle<E> {
-    StorageService streamService;
-    HTTPInformer listenerInformer;
+    private StorageService streamService;
+    private URI serviceURI;
 
     @Override
     public void run(E configuration, Environment environment) throws Exception {
         streamService = LocalFileService.getInstance();
-        listenerInformer = new RestInformer(getServiceURI(configuration));
+        serviceURI = getServiceURI(configuration);
     }
 
     @Override
@@ -32,7 +34,12 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
     }
 
     public Response informService(Object message) {
-        return listenerInformer.inform(message);
+        return JerseyClientBuilder
+                .createClient()
+                .target(serviceURI)
+                .request()
+                .buildPost(Entity.json(message))
+                .invoke();
     }
 
     public void deleteFile(Path location) throws StorageException {
