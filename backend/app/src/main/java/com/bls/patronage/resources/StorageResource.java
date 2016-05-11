@@ -1,12 +1,12 @@
 package com.bls.patronage.resources;
 
 import com.bls.patronage.StorageException;
+import com.bls.patronage.StreamPersistenceBundle;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.helpers.CVResponse;
-import com.bls.patronage.helpers.FileHelper;
 import com.bls.patronage.helpers.FilePathsCoder;
 import io.dropwizard.auth.Auth;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -39,10 +39,10 @@ public class StorageResource {
     private final java.nio.file.Path baseLocation;
     private final FlashcardDAO flashcardDAO;
     private final DeckDAO deckDAO;
-    private final FileHelper fileHelper;
+    private final StreamPersistenceBundle bundle;
 
-    public StorageResource(FileHelper fileHelper, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
-        this.fileHelper = fileHelper;
+    public StorageResource(StreamPersistenceBundle bundle, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
+        this.bundle = bundle;
         this.deckDAO = deckDAO;
         this.baseLocation = baseLocation;
         this.flashcardDAO = flashcardDAO;
@@ -58,7 +58,7 @@ public class StorageResource {
             @Override
             public void write(OutputStream os) throws IOException,
                     WebApplicationException {
-                Writer writer = new BufferedWriter(new OutputStreamWriter(fileHelper.getFile(filePath)));
+                Writer writer = new BufferedWriter(new OutputStreamWriter(bundle.getFile(filePath)));
                 writer.flush();
             }
         };
@@ -75,15 +75,15 @@ public class StorageResource {
         final Deck deck = new Deck(UUID.randomUUID());
         final java.nio.file.Path location = baseLocation.resolve(user.getId().toString());
 
-        java.nio.file.Path filePath = fileHelper.handleInputStream(uploadedInputStream, location);
+        java.nio.file.Path filePath = bundle.persistStream(uploadedInputStream, location);
 
         URI uri = FilePathsCoder.encodeFilePath(filePath);
 
-        Response response = fileHelper.informService(uri);
+        Response response = bundle.informService(uri);
 
         saveFlashcardsFromResponse(response, deck, user.getId());
 
-        fileHelper.cleanUp(filePath);
+        bundle.deleteFile(filePath);
 
         return Response.ok().status(Response.Status.CREATED).build();
     }
