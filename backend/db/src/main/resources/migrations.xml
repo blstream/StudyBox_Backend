@@ -167,5 +167,31 @@
             <column name="creationDate" type="TIMESTAMP"/>
         </loadUpdateData>
     </changeSet>
+    <changeSet id="14" author="arka">
+        <createTable tableName="decksAuditFields">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="createdAt" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedAt" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedBy" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <loadData tableName="decksAuditFields" file="initialData/decksAuditFields.csv">
+            <column name="id" type="STRING"/>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="modifiedAt" type="TIMESTAMP"/>
+            <column name="createdBy" type="STRING"/>
+            <column name="modifiedBy" type="STRING"/>
+        </loadData>
+    </changeSet>
 </databaseChangeLog>
 

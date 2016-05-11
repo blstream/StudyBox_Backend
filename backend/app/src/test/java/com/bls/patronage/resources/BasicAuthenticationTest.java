@@ -2,10 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
-import com.bls.patronage.db.dao.DeckDAO;
-import com.bls.patronage.db.dao.FlashcardDAO;
-import com.bls.patronage.db.dao.ResultDAO;
-import com.bls.patronage.db.dao.UserDAO;
+import com.bls.patronage.db.dao.*;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -31,6 +28,7 @@ public class BasicAuthenticationTest {
     protected static final DeckDAO deckDao = mock(DeckDAO.class);
     protected static final ResultDAO resultDAO = mock(ResultDAO.class);
     protected static final FlashcardDAO flashcardDAO = mock(FlashcardDAO.class);
+    protected static final AuditDAO auditDAO = mock(AuditDAO.class);
 
     @ClassRule
     public static final ResourceTestRule authResources = ResourceTestRule
@@ -43,8 +41,8 @@ public class BasicAuthenticationTest {
             .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
             .addProvider(PreAuthenticationFilter.class)
             .addResource(new UserResource(userDAO))
-            .addResource(new DecksResource(deckDao))
-            .addResource(new DeckResource(deckDao))
+            .addResource(new DecksResource(deckDao, auditDAO))
+            .addResource(new DeckResource(deckDao, auditDAO))
             .addResource(new ResultsResource(flashcardDAO, resultDAO))
             .build();
 
