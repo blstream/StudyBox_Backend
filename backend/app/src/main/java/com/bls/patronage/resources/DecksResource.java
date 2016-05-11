@@ -91,7 +91,7 @@ public class DecksResource {
                 = new DeckRepresentation.DeckRepresentationBuilder(deck)
                 .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
                 .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()));
-        
+
         if (Boolean.TRUE.equals(flashcardsCount)) {
             builder.withFlashcardsCount(decksDAO.getFlashcardsCount(deck.getId()));
         }

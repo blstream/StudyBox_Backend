@@ -6,6 +6,7 @@ import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.dao.TipDAO;
+import com.bls.patronage.db.dao.TokenDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
@@ -13,6 +14,7 @@ import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
+import com.bls.patronage.resources.ResetPasswordResource;
 import com.bls.patronage.resources.ResultsResource;
 import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
@@ -73,6 +75,8 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new FlashcardsResource(jdbi.onDemand(FlashcardDAO.class)));
         environment.jersey().register(new UserResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new UsersResource(jdbi.onDemand(UserDAO.class)));
+        environment.jersey().register(new ResetPasswordResource(jdbi.onDemand(UserDAO.class),
+                jdbi.onDemand(TokenDAO.class), configuration.getResetPasswordUrl()));
         environment.jersey().register(new TipResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),

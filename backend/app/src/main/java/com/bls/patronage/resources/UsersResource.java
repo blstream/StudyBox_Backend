@@ -18,6 +18,7 @@ import static com.bls.patronage.auth.BasicAuthenticator.generateSafeHash;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersResource {
+
     private final UserDAO userDAO;
 
     public UsersResource(UserDAO userDAO) {

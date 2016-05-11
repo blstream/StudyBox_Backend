@@ -26,6 +26,9 @@ abstract public class UserDAO {
     @SqlUpdate("insert into users values (:id, :email, :name, :password)")
     abstract UUID create(@BindBean User user);
 
+    @SqlUpdate("update users set password = :password where id = :id")
+    public abstract void updatePassword(@BindBean User user);
+
     public User getUserById(UUID id) {
         Optional<User> user = Optional.ofNullable(get(id));
         return user.orElseThrow(() -> new DataAccessException("There is no user with specified id"));

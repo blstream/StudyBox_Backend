@@ -16,6 +16,10 @@ public class StudyBoxConfiguration extends Configuration {
 
     @Valid
     @NotNull
+    private String resetPasswordUrl;
+
+    @Valid
+    @NotNull
     private DataSourceFactory database = new DataSourceFactory();
 
     public DataSourceFactory getDatabase() {
@@ -24,6 +28,10 @@ public class StudyBoxConfiguration extends Configuration {
 
     public CacheBuilder<Object, Object> getAuthCacheBuilder() {
         return CacheBuilder.from(DEFAULT_AUTH_CACHE_SPEC);
+    }
+
+    public String getResetPasswordUrl() {
+        return resetPasswordUrl;
     }
 
 }
