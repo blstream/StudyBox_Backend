@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocalFileServiceTest {
-    private static final Pattern UUIDPattern = Pattern.compile("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
+    private static final Pattern VALID_UUID = Pattern.compile("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
 
     private static LocalFileService service;
     private static Path location;
@@ -28,7 +28,7 @@ public class LocalFileServiceTest {
         Path pathToFile = service.createPathToFile(location);
 
         assertThat(pathToFile.getParent()).isEqualTo(location);
-        assertThat(pathToFile.getFileName().toString()).matches(UUIDPattern);
+        assertThat(pathToFile.getFileName().toString()).matches(VALID_UUID);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class LocalFileServiceTest {
         Path pathToFile = service.createPathToFile(nonExistingDir);
 
         assertThat(pathToFile.getParent()).isEqualTo(nonExistingDir);
-        assertThat(pathToFile.getFileName().toString()).matches(UUIDPattern);
+        assertThat(pathToFile.getFileName().toString()).matches(VALID_UUID);
 
         service.deleteFile(nonExistingDir);
 
