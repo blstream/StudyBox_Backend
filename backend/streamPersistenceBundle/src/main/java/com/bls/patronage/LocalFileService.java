@@ -1,7 +1,7 @@
 package com.bls.patronage;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -24,7 +24,7 @@ class LocalFileService implements StorageService {
 
             Files.copy(stream, path);
         } catch (IOException e) {
-            throw (StorageException) new StorageException().initCause(e);
+            throw new StorageException(e);
         }
 
         return path;
@@ -35,7 +35,7 @@ class LocalFileService implements StorageService {
             try {
                 Files.createDirectory(location);
             } catch (IOException e) {
-                throw (StorageException) new StorageException().initCause(e);
+                throw new StorageException(e);
             }
         }
 
@@ -47,16 +47,16 @@ class LocalFileService implements StorageService {
         try {
             Files.delete(location);
         } catch (IOException e) {
-            throw (StorageException) new StorageException().initCause(e);
+            throw new StorageException(e);
         }
     }
 
     @Override
-    public InputStream getFile(Path filePath) throws StorageException {
+    public FileOutputStream getFile(Path filePath) throws StorageException {
         try {
-            return new FileInputStream(filePath.toFile());
+            return new FileOutputStream(filePath.toFile());
         } catch (FileNotFoundException e) {
-            throw (StorageException) new StorageException().initCause(e);
+            throw new StorageException(e);
         }
     }
 }
