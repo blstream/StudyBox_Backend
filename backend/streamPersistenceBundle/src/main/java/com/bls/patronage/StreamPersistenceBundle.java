@@ -20,7 +20,7 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     @Override
     public void run(E configuration, Environment environment) throws Exception {
-        streamService = LocalFileService.getInstance();
+        streamService = LocalFileService.getInstance(getStoragePath(configuration));
         serviceURI = getServiceURI(configuration);
     }
 
@@ -29,6 +29,8 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
     }
 
     abstract public URI getServiceURI(E configuration);
+
+    abstract public Path getStoragePath(E configuration);
 
     public Path persistStream(InputStream stream, UUID userId) throws StorageException {
         return streamService.persistStream(stream, userId);

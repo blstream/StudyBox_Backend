@@ -28,7 +28,7 @@ public class StudyBoxConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    private Path filesBaseLocation;
+    private Path fileContentBaseLocation;
 
     @Valid
     @NotNull

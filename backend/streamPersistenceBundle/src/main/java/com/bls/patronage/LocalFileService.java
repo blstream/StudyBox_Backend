@@ -12,14 +12,16 @@ import java.util.UUID;
 class LocalFileService implements StorageService {
 
     private static final LocalFileService LOCAL_FILE_SERVICE = new LocalFileService();
+    private static Path STORAGE_PATH;
 
-    public static LocalFileService getInstance() {
+    public static LocalFileService getInstance(Path storagePath) {
+        LocalFileService.STORAGE_PATH = storagePath;
         return LOCAL_FILE_SERVICE;
     }
 
     @Override
     public Path persistStream(InputStream stream, UUID userId) throws StorageException {
-        Path path = Paths.get("./storage", userId.toString());
+        Path path = Paths.get(STORAGE_PATH.toString(), userId.toString());
         try {
             path = createPathToFile(path);
             Files.copy(stream, path);

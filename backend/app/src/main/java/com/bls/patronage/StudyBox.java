@@ -38,6 +38,7 @@ import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
 
 import java.net.URI;
+import java.nio.file.Path;
 
 public class StudyBox extends Application<StudyBoxConfiguration> {
 
@@ -49,6 +50,12 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         public URI getServiceURI(final StudyBoxConfiguration configuration) {
             //Return CV server URI
             return configuration.getCvServerURI();
+        }
+
+        @Override
+        public Path getStoragePath(StudyBoxConfiguration configuration) {
+            //Return local storage path
+            return configuration.getFileContentBaseLocation();
         }
     };
 
