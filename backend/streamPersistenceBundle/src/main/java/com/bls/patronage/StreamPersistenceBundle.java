@@ -31,7 +31,7 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
         return streamService.persistStream(stream, location);
     }
 
-    public Response informService(Message message) {
+    public Response informService(Object message) {
         return listenerInformer.inform(message);
     }
 

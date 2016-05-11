@@ -21,7 +21,7 @@ class RestInformer implements HTTPInformer {
     }
 
     @Override
-    public Response inform(final Message message) {
+    public Response inform(final Object message) {
         return client
                 .request()
                 .buildPost(Entity.json(message))
