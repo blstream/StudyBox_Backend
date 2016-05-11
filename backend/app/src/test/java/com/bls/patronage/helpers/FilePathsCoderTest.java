@@ -18,10 +18,10 @@ public class FilePathsCoderTest {
     private UUID userId = UUID.randomUUID();
     private UUID fileId = UUID.randomUUID();
 
-    private String encoded = UriBuilder
+    private String encoded = String.format(UriBuilder
             .fromResource(StorageResource.class)
             .build(userId)
-            .toString() + "/" + fileId;
+            .toString(), "/", fileId);
     private Path decoded = Paths.get(baseLocation, userId.toString(), fileId.toString());
 
     @Test
