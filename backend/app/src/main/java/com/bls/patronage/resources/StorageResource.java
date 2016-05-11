@@ -25,16 +25,16 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
 
-@Path("/users/{userId}/files")
+@Path("/users/{userId}/storage")
 @Produces(MediaType.APPLICATION_JSON)
-public class FilesResource {
+public class StorageResource {
 
     private final java.nio.file.Path baseLocation;
     private final FlashcardDAO flashcardDAO;
     private final DeckDAO deckDAO;
     private final FileHelper fileHelper;
 
-    public FilesResource(FileHelper fileHelper, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
+    public StorageResource(FileHelper fileHelper, java.nio.file.Path baseLocation, DeckDAO deckDAO, FlashcardDAO flashcardDAO) {
         this.fileHelper = fileHelper;
         this.deckDAO = deckDAO;
         this.baseLocation = baseLocation;

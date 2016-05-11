@@ -1,6 +1,6 @@
 package com.bls.patronage.helpers;
 
-import com.bls.patronage.resources.FilesResource;
+import com.bls.patronage.resources.StorageResource;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.MalformedURLException;
@@ -17,7 +17,7 @@ public class FilePathsCoder {
         UUID fileId = UUID.fromString(filePath.getFileName().toString());
         UUID userId = UUID.fromString(filePath.getParent().getFileName().toString());
         URI uri = UriBuilder
-                .fromResource(FilesResource.class).path(fileId.toString())
+                .fromResource(StorageResource.class).path(fileId.toString())
                 .build(userId);
         return uri;
     }
