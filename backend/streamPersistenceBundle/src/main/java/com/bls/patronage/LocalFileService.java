@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,7 +53,7 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public FileOutputStream getFile(Path filePath) throws StorageException {
+    public OutputStream getFile(Path filePath) throws StorageException {
         try {
             return new FileOutputStream(filePath.toFile());
         } catch (FileNotFoundException e) {
