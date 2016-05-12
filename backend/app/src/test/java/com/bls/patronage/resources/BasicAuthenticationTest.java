@@ -3,6 +3,7 @@ package com.bls.patronage.resources;
 import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.bls.patronage.db.dao.AuditDAO;
 =======
 >>>>>>> parent of 766818e... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
@@ -15,7 +16,11 @@ import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
 >>>>>>> parent of 766818e... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
 import com.bls.patronage.db.model.User;
+=======
+import com.bls.patronage.db.dao.*;
+>>>>>>> parent of 9454ad7... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
+import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
@@ -30,7 +35,9 @@ import javax.ws.rs.core.Response;
 import java.util.Base64;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class BasicAuthenticationTest {
     protected static final UserDAO userDAO = mock(UserDAO.class);

@@ -3,6 +3,7 @@ package com.bls.patronage;
 import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.bls.patronage.db.dao.AuditDAO;
 =======
 >>>>>>> parent of 766818e... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
@@ -28,6 +29,12 @@ import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
 import com.bls.patronage.resources.UsersResource;
+=======
+import com.bls.patronage.db.dao.*;
+import com.bls.patronage.mapper.DataAccessExceptionMapper;
+import com.bls.patronage.db.model.User;
+import com.bls.patronage.resources.*;
+>>>>>>> parent of 9454ad7... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
