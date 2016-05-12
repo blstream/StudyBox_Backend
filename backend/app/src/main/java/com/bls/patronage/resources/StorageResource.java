@@ -3,12 +3,12 @@ package com.bls.patronage.resources;
 import com.bls.patronage.FilePathsCoder;
 import com.bls.patronage.StorageException;
 import com.bls.patronage.StreamPersistenceBundle;
+import com.bls.patronage.cv.CVRequest;
+import com.bls.patronage.cv.CVResponse;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;
-import com.bls.patronage.helpers.CVRequest;
-import com.bls.patronage.helpers.CVResponse;
 import io.dropwizard.auth.Auth;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

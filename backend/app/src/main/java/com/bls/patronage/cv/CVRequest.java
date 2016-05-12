@@ -1,4 +1,4 @@
-package com.bls.patronage.helpers;
+package com.bls.patronage.cv;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

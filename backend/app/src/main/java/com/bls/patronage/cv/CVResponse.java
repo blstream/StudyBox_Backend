@@ -1,4 +1,4 @@
-package com.bls.patronage.helpers;
+package com.bls.patronage.cv;
 
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.fasterxml.jackson.annotation.JsonProperty;
