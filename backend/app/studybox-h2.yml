@@ -15,10 +15,6 @@ server:
     type: http
     port: 2000
 
-resetPasswordUrl: "http://exampleFrontendUrl.com"
-
-resetPasswordUrl: "http://exampleFrontendUrl.com"
-
 resetPasswordConfig:
   resetPasswordUrl: "http://exampleFrontendUrl.com"
   mail:
