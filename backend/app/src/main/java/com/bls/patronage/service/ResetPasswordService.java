@@ -11,7 +11,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.core.UriBuilder;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
@@ -26,29 +27,21 @@ public class ResetPasswordService implements TokenService {
 
     @Override
     public ResetPasswordToken generate(String userEmail) {
-        final Date date = computeExpirationDate();
-        return new ResetPasswordToken(UUID.randomUUID(), userEmail, date, true);
-    }
-
-    private Date computeExpirationDate() {
-        final Date date = new Date();
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, 1);
-        return calendar.getTime();
+        return new ResetPasswordToken(UUID.randomUUID(), userEmail, Date.from(Instant.now()
+                .plus(1, ChronoUnit.DAYS)), true);
     }
 
     @Override
     public void sendMessage(String email, UUID token) {
 
-        Properties properties = configMail();
-        Session session = authenticate(properties);
+        final Properties properties = configMail();
+        final Session session = authenticate(properties);
         sendMail(session, email, token);
     }
 
     private Properties configMail() {
 
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.put("mail.smtp.auth", config.getMail().getEnableAuth());
         properties.put("mail.smtp.starttls.enable", config.getMail().getEnableTls());
         properties.put("mail.smtp.host", config.getMail().getHost());
@@ -71,7 +64,7 @@ public class ResetPasswordService implements TokenService {
     private void sendMail(Session session, String address, UUID token) {
         try {
 
-            Message message = new MimeMessage(session);
+            final Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(config.getMail().getFromAddress()));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(address));
