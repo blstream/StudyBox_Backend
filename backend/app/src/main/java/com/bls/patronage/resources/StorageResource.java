@@ -16,7 +16,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.UUID;
 
-@Path("/storage/{storageId}")
+@Path("/storage/{userId}/{storageId}")
 @Produces(MediaType.APPLICATION_JSON)
 public class StorageResource {
 
