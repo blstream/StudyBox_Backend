@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -21,14 +22,14 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
     @Override
     public void run(E configuration, Environment environment) throws Exception {
         streamService = new LocalFileService(getStoragePath(configuration));
-        serviceURI = getServiceURI(configuration);
+        serviceURI = getServiceURL(configuration).toURI();
     }
 
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
     }
 
-    abstract public URI getServiceURI(E configuration);
+    abstract public URL getServiceURL(E configuration);
 
     abstract public Path getStoragePath(E configuration);
 

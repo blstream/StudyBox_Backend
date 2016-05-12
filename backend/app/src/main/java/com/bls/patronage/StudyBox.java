@@ -37,7 +37,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
 
-import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 
 public class StudyBox extends Application<StudyBoxConfiguration> {
@@ -47,9 +47,9 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
 
     private final StreamPersistenceBundle<StudyBoxConfiguration> streamPersistenceBundle = new StreamPersistenceBundle<StudyBoxConfiguration>() {
         @Override
-        public URI getServiceURI(final StudyBoxConfiguration configuration) {
+        public URL getServiceURL(final StudyBoxConfiguration configuration) {
             //Return CV server URI
-            return configuration.getCvServerURI();
+            return configuration.getCvServerURL();
         }
 
         @Override
