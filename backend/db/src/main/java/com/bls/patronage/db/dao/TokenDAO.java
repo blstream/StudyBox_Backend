@@ -23,6 +23,10 @@ abstract public class TokenDAO {
     @SqlUpdate("insert into passwordTokens values (:token, :isActive, :email, :expirationDate)")
     abstract void insert(@BindBean ResetPasswordToken token);
 
+    @SqlUpdate("delete from passwordTokens " +
+            "where isActive = 'false' or expirationDate <= NOW()")
+    public abstract void deleteExpired();
+
     @SqlQuery("select token,isActive,email,expirationDate from passwordTokens " +
             "where email = :email and isActive = 'true'")
     public abstract ResetPasswordToken findByEmail(@Bind("email") String email);

@@ -21,6 +21,7 @@ import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
 import com.bls.patronage.resources.UsersResource;
+import com.bls.patronage.task.TokenExpirationTask;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -96,5 +97,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
 
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(PreAuthenticationFilter.class);
+        environment.admin().addTask(new TokenExpirationTask(jdbi.onDemand(TokenDAO.class)));
+
     }
 }
