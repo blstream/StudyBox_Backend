@@ -1,7 +1,6 @@
 package com.bls.patronage.resources;
 
 import com.bls.patronage.api.DeckRepresentation;
-import com.bls.patronage.db.dao.AuditDAO;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;
@@ -33,11 +32,9 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DecksResource {
     private final DeckDAO decksDAO;
-    private final AuditDAO auditDAO;
 
-    public DecksResource(DeckDAO decksDAO, AuditDAO auditDAO) {
+    public DecksResource(DeckDAO decksDAO) {
         this.decksDAO = decksDAO;
-        this.auditDAO = auditDAO;
     }
 
     @POST
@@ -46,9 +43,8 @@ public class DecksResource {
 
         final User user = (User) context.getUserPrincipal();
 
-        final UUID id = UUID.randomUUID();
-        decksDAO.createDeck(deckBuilder.withId(id).build().map(), user.getId());
-        auditDAO.createAudit(id, user.getId(), "decks");
+        decksDAO.createDeck(deckBuilder.withId(UUID.randomUUID()).build().map(), user.getId());
+
         return Response.ok(deckBuilder.build()).status(Response.Status.CREATED).build();
     }
 

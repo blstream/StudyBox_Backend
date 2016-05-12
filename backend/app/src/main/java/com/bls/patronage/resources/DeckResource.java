@@ -1,7 +1,6 @@
 package com.bls.patronage.resources;
 
 import com.bls.patronage.api.DeckRepresentation;
-import com.bls.patronage.db.dao.AuditDAO;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.Auth;
@@ -22,11 +21,9 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class DeckResource {
     private final DeckDAO decksDAO;
-    private final AuditDAO auditDAO;
 
-    public DeckResource(DeckDAO decksDAO, AuditDAO auditDAO) {
+    public DeckResource(DeckDAO decksDAO) {
         this.decksDAO = decksDAO;
-        this.auditDAO = auditDAO;
     }
 
     @GET
@@ -60,7 +57,6 @@ public class DeckResource {
 
         decksDAO.getDeckById(deckId.get(), user.getId());
         decksDAO.update(deckBuilder.withId(deckId.get()).build().map());
-        auditDAO.updateAudit(deckId.get(), user.getId(), "decks");
         return deckBuilder.build();
     }
 
@@ -74,7 +70,5 @@ public class DeckResource {
                 decksDAO.getDeckById(deckId.get(), user.getId())
                         .setIsPublic(access.get())
         );
-        auditDAO.updateAudit(deckId.get(), user.getId(), "decks");
-
     }
 }
