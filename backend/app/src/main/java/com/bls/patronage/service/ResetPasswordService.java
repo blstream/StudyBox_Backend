@@ -69,13 +69,16 @@ public class ResetPasswordService implements TokenService {
             message.setFrom(new InternetAddress(config.getMail().getFromAddress()));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(address));
-            message.setSubject("Studybox password reset.");
-            message.setText(
+            message.setSubject("StudyBox password reset.");
+            message.setText("Hi,\n\n" +
+                    "If you want to reset your StudyBox account password click at link below:\n" +
                     UriBuilder.fromPath(config.getResetPasswordUrl())
                     .queryParam("token", token.toString())
                     .queryParam("email", address.trim())
                     .build()
-                    .toString()
+                    .toString() +
+                    "\nThis will direct you to our Password Reset Change Service. Your token is valid for 24 hours." +
+                    "\n\nRegards,\nStudyBox Team"
             );
 
             Transport.send(message);
