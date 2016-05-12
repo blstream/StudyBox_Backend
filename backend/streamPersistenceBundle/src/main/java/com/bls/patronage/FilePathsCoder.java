@@ -7,11 +7,11 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 public class FilePathsCoder {
-    public static Path resolvePathToFile(final Path storagePath, final UUID userId, final UUID fileId) {
+    public static Path resolvePathToFile(final Path storagePath, final UUID fileId, final UUID userId) {
         return storagePath.resolve(userId.toString()).resolve(fileId.toString());
     }
 
-    public static URI resolveURIToFile(final Class resourceClass, final UUID userId, final UUID fileId) {
+    public static URI resolveURIToFile(final Class resourceClass, final UUID fileId, final UUID userId) {
         String uri = new StringBuilder(
                 UriBuilder
                         .fromResource(resourceClass)

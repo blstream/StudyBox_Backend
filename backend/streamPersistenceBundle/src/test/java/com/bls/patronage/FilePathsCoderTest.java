@@ -27,15 +27,15 @@ public class FilePathsCoderTest {
     private Path decoded = Paths.get(baseLocation, userId.toString(), fileId.toString());
 
     @Test
-    public void testEncode() throws MalformedURLException {
+    public void testURIToFile() throws MalformedURLException {
         URI uri = FilePathsCoder.resolveURIToFile(ResourceImitation.class, decoded);
 
         assertThat(uri.toString()).isEqualTo(encoded);
     }
 
     @Test
-    public void testDecode() {
-        Path path = new FilePathsCoder().resolvePathToFile(Paths.get(baseLocation), fileId, userId);
+    public void testPathToFile() {
+        Path path = FilePathsCoder.resolvePathToFile(Paths.get(baseLocation), fileId, userId);
 
         assertThat(path).isEqualTo(decoded);
     }
