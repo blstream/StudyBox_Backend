@@ -50,7 +50,7 @@ public class StorageResource {
     @Path("/{fileId}")
     public StreamingOutput getFile(@Auth User user,
                                    @PathParam("fileId") UUID fileId) throws StorageException {
-        StreamingOutput output = new StreamingOutput() {
+        return new StreamingOutput() {
             @Override
             public void write(OutputStream os) throws IOException,
                     WebApplicationException {
@@ -58,8 +58,6 @@ public class StorageResource {
                 writer.flush();
             }
         };
-
-        return output;
     }
 
     @POST

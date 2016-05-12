@@ -18,6 +18,5 @@ public class StorageExceptionMapper implements ExceptionMapper<StorageException>
         return Response.status(Response.Status.fromStatusCode(502))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(storageException.getJSONMessage()).build();
-
     }
 }
