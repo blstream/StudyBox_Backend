@@ -1,6 +1,7 @@
 package com.bls.patronage.service;
 
 import com.bls.patronage.db.model.ResetPasswordToken;
+import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -17,13 +18,10 @@ import java.util.UUID;
 
 public class ResetPasswordService implements TokenService {
 
-    private static final String USERNAME = "studybox.test@gmail.com";
-    private static final String PASSWORD = "KqcyQEktd29xnzqu";
-    private static final String FROM_ADDRESS = "no.reply@studybox.com";
-    private final String resetPasswordUri;
+    private final ResetPasswordConfiguration config;
 
-    public ResetPasswordService(String uri) {
-        this.resetPasswordUri = uri;
+    public ResetPasswordService(ResetPasswordConfiguration config) {
+        this.config = config;
     }
 
     @Override
@@ -51,10 +49,10 @@ public class ResetPasswordService implements TokenService {
     private Properties configMail() {
 
         Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", config.getMail().getEnableAuth());
+        properties.put("mail.smtp.starttls.enable", config.getMail().getEnableTls());
+        properties.put("mail.smtp.host", config.getMail().getHost());
+        properties.put("mail.smtp.port", config.getMail().getPort());
 
         return properties;
     }
@@ -63,7 +61,9 @@ public class ResetPasswordService implements TokenService {
         return Session.getInstance(properties,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(USERNAME, PASSWORD);
+                        return new PasswordAuthentication(
+                                config.getMail().getUsername(),
+                                config.getMail().getPassword());
                     }
                 });
     }
@@ -72,12 +72,12 @@ public class ResetPasswordService implements TokenService {
         try {
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(FROM_ADDRESS));
+            message.setFrom(new InternetAddress(config.getMail().getFromAddress()));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(address));
             message.setSubject("Studybox password reset.");
             message.setText(
-                    UriBuilder.fromPath(resetPasswordUri)
+                    UriBuilder.fromPath(config.getResetPasswordUrl())
                     .queryParam("token", token.toString())
                     .queryParam("email", address.trim())
                     .build()

@@ -76,7 +76,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new UserResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new UsersResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new ResetPasswordResource(jdbi.onDemand(UserDAO.class),
-                jdbi.onDemand(TokenDAO.class), configuration.getResetPasswordUrl()));
+                jdbi.onDemand(TokenDAO.class), configuration.getResetPasswordConfig()));
         environment.jersey().register(new TipResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),

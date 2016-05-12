@@ -3,6 +3,7 @@ package com.bls.patronage;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
 import com.google.common.cache.CacheBuilder;
 
 import io.dropwizard.Configuration;
@@ -16,11 +17,11 @@ public class StudyBoxConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    private String resetPasswordUrl;
+    private DataSourceFactory database = new DataSourceFactory();
 
     @Valid
     @NotNull
-    private DataSourceFactory database = new DataSourceFactory();
+    private ResetPasswordConfiguration resetPasswordConfig = new ResetPasswordConfiguration();
 
     public DataSourceFactory getDatabase() {
         return database;
@@ -30,8 +31,7 @@ public class StudyBoxConfiguration extends Configuration {
         return CacheBuilder.from(DEFAULT_AUTH_CACHE_SPEC);
     }
 
-    public String getResetPasswordUrl() {
-        return resetPasswordUrl;
+    public ResetPasswordConfiguration getResetPasswordConfig() {
+        return resetPasswordConfig;
     }
-
 }
