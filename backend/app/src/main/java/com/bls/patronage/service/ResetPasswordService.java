@@ -1,6 +1,8 @@
 package com.bls.patronage.service;
 
 import com.bls.patronage.db.model.ResetPasswordToken;
+import com.bls.patronage.exception.PasswordResetException;
+import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -10,51 +12,41 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.core.UriBuilder;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
 
 public class ResetPasswordService implements TokenService {
 
-    private static final String USERNAME = "studybox.test@gmail.com";
-    private static final String PASSWORD = "KqcyQEktd29xnzqu";
-    private static final String FROM_ADDRESS = "no.reply@studybox.com";
-    private final String resetPasswordUri;
+    private final ResetPasswordConfiguration config;
 
-    public ResetPasswordService(String uri) {
-        this.resetPasswordUri = uri;
+    public ResetPasswordService(ResetPasswordConfiguration config) {
+        this.config = config;
     }
 
     @Override
     public ResetPasswordToken generate(String userEmail) {
-        final Date date = computeExpirationDate();
-        return new ResetPasswordToken(UUID.randomUUID(), userEmail, date, true);
-    }
-
-    private Date computeExpirationDate() {
-        final Date date = new Date();
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, 1);
-        return calendar.getTime();
+        return new ResetPasswordToken(UUID.randomUUID(), userEmail, Date.from(Instant.now()
+                .plus(1, ChronoUnit.DAYS)), true);
     }
 
     @Override
     public void sendMessage(String email, UUID token) {
 
-        Properties properties = configMail();
-        Session session = authenticate(properties);
+        final Properties properties = configMail();
+        final Session session = authenticate(properties);
         sendMail(session, email, token);
     }
 
     private Properties configMail() {
 
-        Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
+        final Properties properties = new Properties();
+        properties.put("mail.smtp.auth", config.getMail().getEnableAuth());
+        properties.put("mail.smtp.starttls.enable", config.getMail().getEnableTls());
+        properties.put("mail.smtp.host", config.getMail().getHost());
+        properties.put("mail.smtp.port", config.getMail().getPort());
 
         return properties;
     }
@@ -63,31 +55,36 @@ public class ResetPasswordService implements TokenService {
         return Session.getInstance(properties,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(USERNAME, PASSWORD);
+                        return new PasswordAuthentication(
+                                config.getMail().getUsername(),
+                                config.getMail().getPassword());
                     }
                 });
     }
 
-    private void sendMail(Session session, String address, UUID token) {
+    private void sendMail(Session session, String address, UUID token) throws PasswordResetException {
         try {
 
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(FROM_ADDRESS));
+            final Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(config.getMail().getFromAddress()));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(address));
-            message.setSubject("Studybox password reset.");
-            message.setText(
-                    UriBuilder.fromPath(resetPasswordUri)
+            message.setSubject("StudyBox password reset.");
+            message.setText("Hi,\n\n" +
+                    "If you want to reset your StudyBox account password click at link below:\n" +
+                    UriBuilder.fromPath(config.getResetPasswordUrl())
                     .queryParam("token", token.toString())
                     .queryParam("email", address.trim())
                     .build()
-                    .toString()
+                    .toString() +
+                    "\nThis will direct you to our Password Reset Change Service. Your token is valid for 24 hours." +
+                    "\n\nRegards,\nStudyBox Team"
             );
 
             Transport.send(message);
 
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new PasswordResetException("Unable to send email message.");
         }
     }
 }

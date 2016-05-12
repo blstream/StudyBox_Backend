@@ -8,6 +8,7 @@ import com.bls.patronage.db.model.ResetPasswordToken;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.service.ResetPasswordService;
 import com.bls.patronage.service.TokenService;
+import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -26,12 +27,12 @@ import static com.bls.patronage.auth.BasicAuthenticator.generateSafeHash;
 public class ResetPasswordResource {
     private final UserDAO userDAO;
     private final TokenDAO tokenDAO;
-    private final String resetPasswordUri;
+    private final ResetPasswordConfiguration resetPasswordConfig;
 
-    public ResetPasswordResource(UserDAO userDAO, TokenDAO tokenDAO, String resetPasswordUri) {
+    public ResetPasswordResource(UserDAO userDAO, TokenDAO tokenDAO, ResetPasswordConfiguration resetPasswordConfig) {
         this.userDAO = userDAO;
         this.tokenDAO = tokenDAO;
-        this.resetPasswordUri = resetPasswordUri;
+        this.resetPasswordConfig = resetPasswordConfig;
     }
 
     @POST
@@ -39,7 +40,7 @@ public class ResetPasswordResource {
     public Response recoverPassword(@Valid EmailRepresentation email) {
 
         userDAO.getUserByEmail(email.getEmail());
-        TokenService tokenService = new ResetPasswordService(resetPasswordUri);
+        TokenService tokenService = new ResetPasswordService(resetPasswordConfig);
         ResetPasswordToken token = tokenService.generate(email.getEmail());
         tokenDAO.createToken(token);
         tokenService.sendMessage(email.getEmail(), token.getToken());

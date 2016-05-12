@@ -10,6 +10,7 @@ import com.bls.patronage.db.dao.TokenDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
+import com.bls.patronage.mapper.PasswordResetExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
@@ -20,6 +21,7 @@ import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
 import com.bls.patronage.resources.UsersResource;
+import com.bls.patronage.task.TokenExpirationTask;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -76,12 +78,13 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new UserResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new UsersResource(jdbi.onDemand(UserDAO.class)));
         environment.jersey().register(new ResetPasswordResource(jdbi.onDemand(UserDAO.class),
-                jdbi.onDemand(TokenDAO.class), configuration.getResetPasswordUrl()));
+                jdbi.onDemand(TokenDAO.class), configuration.getResetPasswordConfig()));
         environment.jersey().register(new TipResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
         environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
                 jdbi.onDemand(ResultDAO.class)));
         environment.jersey().register(new DataAccessExceptionMapper());
+        environment.jersey().register(new PasswordResetExceptionMapper());
 
         final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
         final CachingAuthenticator cachingAuthenticator = new CachingAuthenticator(environment.metrics(), basicAuthenticator,
@@ -94,5 +97,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
 
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(PreAuthenticationFilter.class);
+        environment.admin().addTask(new TokenExpirationTask(jdbi.onDemand(TokenDAO.class)));
+
     }
 }
