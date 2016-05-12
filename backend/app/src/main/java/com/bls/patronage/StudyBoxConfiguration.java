@@ -18,10 +18,6 @@ public class StudyBoxConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    private String resetPasswordUrl;
-
-    @Valid
-    @NotNull
     private URL cvServerURL;
 
     @Valid
@@ -55,9 +51,4 @@ public class StudyBoxConfiguration extends Configuration {
     public Path getFileContentBaseLocation() {
         return fileContentBaseLocation;
     }
-
-    public String getResetPasswordUrl() {
-        return resetPasswordUrl;
-    }
-
 }
