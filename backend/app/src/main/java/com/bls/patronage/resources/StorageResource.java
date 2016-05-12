@@ -1,13 +1,14 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.FilePathsCoder;
 import com.bls.patronage.StorageException;
 import com.bls.patronage.StreamPersistenceBundle;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.User;
+import com.bls.patronage.helpers.CVRequest;
 import com.bls.patronage.helpers.CVResponse;
-import com.bls.patronage.helpers.FilePathsCoder;
 import io.dropwizard.auth.Auth;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -28,7 +29,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -50,13 +50,11 @@ public class StorageResource {
     @Path("/{fileId}")
     public StreamingOutput getFile(@Auth User user,
                                    @PathParam("fileId") UUID fileId) throws StorageException {
-        java.nio.file.Path filePath = FilePathsCoder.decodeFilePath(user.getId(), fileId);
-
         StreamingOutput output = new StreamingOutput() {
             @Override
             public void write(OutputStream os) throws IOException,
                     WebApplicationException {
-                Writer writer = new BufferedWriter(new OutputStreamWriter(bundle.getFile(filePath)));
+                Writer writer = new BufferedWriter(new OutputStreamWriter(bundle.getFile(fileId, user.getId())));
                 writer.flush();
             }
         };
@@ -72,15 +70,18 @@ public class StorageResource {
 
         final Deck deck = new Deck(UUID.randomUUID());
 
-        java.nio.file.Path filePath = bundle.persistStream(uploadedInputStream, user.getId());
+        UUID dataId = bundle.persistStream(uploadedInputStream, user.getId());
 
-        URI uri = FilePathsCoder.encodeFilePath(filePath);
+        CVRequest message = new CVRequest(
+                FilePathsCoder.resolveURIToFile(StorageResource.class, dataId, user.getId()),
+                "ImageToFlashcard"
+        );
 
-        Response response = bundle.informService(uri);
+        Response response = bundle.informService(message);
 
         saveFlashcardsFromResponse(response, deck, user.getId());
 
-        bundle.deleteFile(filePath);
+        bundle.deleteFile(dataId, user.getId());
 
         return Response.ok().status(Response.Status.CREATED).build();
     }

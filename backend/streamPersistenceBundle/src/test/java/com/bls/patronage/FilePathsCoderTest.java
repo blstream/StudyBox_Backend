@@ -1,9 +1,7 @@
-package com.bls.patronage.helpers;
+package com.bls.patronage;
 
-import com.bls.patronage.resources.StorageResource;
 import org.junit.Test;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Path;
@@ -19,7 +17,10 @@ public class FilePathsCoderTest {
     private UUID fileId = UUID.randomUUID();
 
     private String encoded = new StringBuilder()
-            .append(UriBuilder.fromResource(StorageResource.class).build(userId).toString())
+            .append("/users")
+            .append("/")
+            .append(userId)
+            .append("/files")
             .append("/")
             .append(fileId)
             .toString();
@@ -27,15 +28,19 @@ public class FilePathsCoderTest {
 
     @Test
     public void testEncode() throws MalformedURLException {
-        URI uri = FilePathsCoder.encodeFilePath(decoded);
+        URI uri = FilePathsCoder.resolveURIToFile(ResourceImitation.class, decoded);
 
         assertThat(uri.toString()).isEqualTo(encoded);
     }
 
     @Test
     public void testDecode() {
-        Path path = FilePathsCoder.decodeFilePath(userId, fileId);
+        Path path = new FilePathsCoder().resolvePathToFile(Paths.get(baseLocation), fileId, userId);
 
         assertThat(path).isEqualTo(decoded);
+    }
+
+    @javax.ws.rs.Path("/users/{userId}/files")
+    private class ResourceImitation {
     }
 }

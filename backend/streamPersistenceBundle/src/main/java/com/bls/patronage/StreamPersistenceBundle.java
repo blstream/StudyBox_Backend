@@ -32,8 +32,8 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
 
     abstract public Path getStoragePath(E configuration);
 
-    public Path persistStream(InputStream stream, UUID userId) throws StorageException {
-        return streamService.persistStream(stream, userId);
+    public UUID persistStream(InputStream stream, UUID userId) throws StorageException {
+        return streamService.create(stream, userId);
     }
 
     public Response informService(Object message) {
@@ -45,11 +45,11 @@ public abstract class StreamPersistenceBundle<E extends Configuration> implement
                 .invoke();
     }
 
-    public void deleteFile(Path location) throws StorageException {
-        streamService.deleteFile(location);
+    public void deleteFile(UUID dataId, UUID userId) throws StorageException {
+        streamService.delete(dataId, userId);
     }
 
-    public OutputStream getFile(Path filePath) throws StorageException {
-        return streamService.getFile(filePath);
+    public OutputStream getFile(UUID dataId, UUID userId) throws StorageException {
+        return streamService.get(dataId, userId);
     }
 }

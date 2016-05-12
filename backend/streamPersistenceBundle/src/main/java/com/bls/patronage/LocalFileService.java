@@ -19,19 +19,21 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public Path persistStream(InputStream stream, UUID userId) throws StorageException {
+    public UUID create(InputStream stream, UUID userId) throws StorageException {
         Path path = Paths.get(STORAGE_PATH.toString(), userId.toString());
+        UUID dataId = UUID.randomUUID();
         try {
-            path = createPathToFile(path);
+            createPathToFile(path);
+            path.resolve(dataId.toString());
             Files.copy(stream, path);
         } catch (IOException e) {
             throw new StorageException(e);
         }
 
-        return path;
+        return dataId;
     }
 
-    public Path createPathToFile(Path location) throws StorageException {
+    public void createPathToFile(Path location) throws StorageException {
         if (!Files.exists(location)) {
             try {
                 Files.createDirectory(location);
@@ -39,23 +41,21 @@ class LocalFileService implements StorageService {
                 throw new StorageException(e);
             }
         }
-
-        return location.resolve(UUID.randomUUID().toString());
     }
 
     @Override
-    public void deleteFile(Path location) throws StorageException {
+    public void delete(UUID dataId, UUID userId) throws StorageException {
         try {
-            Files.delete(location);
+            Files.delete(FilePathsCoder.resolvePathToFile(STORAGE_PATH, dataId, userId));
         } catch (IOException e) {
             throw new StorageException(e);
         }
     }
 
     @Override
-    public OutputStream getFile(Path filePath) throws StorageException {
+    public OutputStream get(UUID dataId, UUID userId) throws StorageException {
         try {
-            return new FileOutputStream(filePath.toFile());
+            return new FileOutputStream(FilePathsCoder.resolvePathToFile(STORAGE_PATH, dataId, userId).toFile());
         } catch (FileNotFoundException e) {
             throw new StorageException(e);
         }

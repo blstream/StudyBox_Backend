@@ -2,13 +2,12 @@ package com.bls.patronage;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.util.UUID;
 
 public interface StorageService {
-    Path persistStream(InputStream stream, UUID userId) throws StorageException;
+    UUID create(InputStream stream, UUID userId) throws StorageException;
 
-    void deleteFile(Path location) throws StorageException;
+    void delete(UUID dataId, UUID userId) throws StorageException;
 
-    OutputStream getFile(Path filePath) throws StorageException;
+    OutputStream get(UUID dataId, UUID userId) throws StorageException;
 }
