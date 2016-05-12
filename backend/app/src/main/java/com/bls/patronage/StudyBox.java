@@ -4,7 +4,10 @@ import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.bls.patronage.db.dao.AuditDAO;
+=======
+>>>>>>> parent of 766818e... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
 =======
 >>>>>>> parent of 766818e... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
 import com.bls.patronage.db.dao.DeckDAO;
@@ -12,6 +15,7 @@ import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
+<<<<<<< HEAD
 <<<<<<< HEAD
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
@@ -35,6 +39,19 @@ import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.resources.*;
 >>>>>>> parent of 9454ad7... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
+=======
+import com.bls.patronage.mapper.DataAccessExceptionMapper;
+import com.bls.patronage.db.model.User;
+import com.bls.patronage.resources.DeckResource;
+import com.bls.patronage.resources.DecksResource;
+import com.bls.patronage.resources.FlashcardResource;
+import com.bls.patronage.resources.FlashcardsResource;
+import com.bls.patronage.resources.ResultsResource;
+import com.bls.patronage.resources.TipResource;
+import com.bls.patronage.resources.TipsResource;
+import com.bls.patronage.resources.UserResource;
+import com.bls.patronage.resources.UsersResource;
+>>>>>>> parent of 766818e... 	modified:   backend/app/src/main/java/com/bls/patronage/StudyBox.java
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
