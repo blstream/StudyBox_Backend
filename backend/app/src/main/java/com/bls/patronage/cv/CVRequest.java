@@ -14,6 +14,13 @@ public class CVRequest {
         this.action = action;
     }
 
+    public static CVRequest createRecognizeRequest(final URI publicURLToUploadedFile) {
+        return new CVRequest(
+                publicURLToUploadedFile,
+                "ImageToFlashcard"
+        );
+    }
+
     @JsonProperty
     public URI getLocation() {
         return location;

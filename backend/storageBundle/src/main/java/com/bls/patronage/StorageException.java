@@ -18,7 +18,7 @@ public class StorageException extends IOException {
     public Map<String, String> getJSONMessage() {
         return ImmutableMap.<String, String>builder()
                 .put("code", "502")
-                .put("message", "Storage exception: " + getCause() != null ? getCause().getMessage() : " No cause provided")
+                .put("message", getCause().getMessage())
                 .build();
     }
 }

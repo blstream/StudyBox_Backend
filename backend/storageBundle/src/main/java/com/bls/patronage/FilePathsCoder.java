@@ -6,7 +6,8 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.UUID;
 
-public class FilePathsCoder {
+class FilePathsCoder {
+
     public static Path resolvePathToFile(final Path storagePath, final UUID fileId, final UUID userId) {
         return storagePath.resolve(userId.toString()).resolve(fileId.toString());
     }

@@ -13,12 +13,12 @@ import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.mapper.PasswordResetExceptionMapper;
 import com.bls.patronage.mapper.StorageExceptionMapper;
 import com.bls.patronage.resources.DeckResource;
+import com.bls.patronage.resources.DecksCvMagicResource;
 import com.bls.patronage.resources.DecksResource;
 import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import com.bls.patronage.resources.ResetPasswordResource;
 import com.bls.patronage.resources.ResultsResource;
-import com.bls.patronage.resources.StorageResource;
 import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
@@ -37,9 +37,10 @@ import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.client.JerseyWebTarget;
 import org.skife.jdbi.v2.DBI;
 
-import java.net.URL;
 import java.nio.file.Path;
 
 public class StudyBox extends Application<StudyBoxConfiguration> {
@@ -47,13 +48,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
     private static final String APP_NAME = "backend";
     private static final String HEALTH_CHECK_DATABASE_NAME = "database";
 
-    private final StreamPersistenceBundle<StudyBoxConfiguration> streamPersistenceBundle = new StreamPersistenceBundle<StudyBoxConfiguration>() {
-        @Override
-        public URL getServiceURL(final StudyBoxConfiguration configuration) {
-            //Return CV server URI
-            return configuration.getCvServerURL();
-        }
-
+    private final StorageBundle<StudyBoxConfiguration> storageBundle = new StorageBundle<StudyBoxConfiguration>() {
         @Override
         public Path getStoragePath(StudyBoxConfiguration configuration) {
             //Return local storage path
@@ -87,43 +82,57 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
             }
         });
 
-        bootstrap.addBundle(streamPersistenceBundle);
+        bootstrap.addBundle(storageBundle);
         bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override
     public void run(StudyBoxConfiguration configuration, Environment environment) throws Exception {
+
         final DBI jdbi = new DBIFactory().build(environment, configuration.getDatabase(), HEALTH_CHECK_DATABASE_NAME);
-        environment.jersey().register(new DeckResource(jdbi.onDemand(DeckDAO.class)));
-        environment.jersey().register(new DecksResource(jdbi.onDemand(DeckDAO.class)));
-        environment.jersey().register(new FlashcardResource(jdbi.onDemand(FlashcardDAO.class)));
-        environment.jersey().register(new FlashcardsResource(jdbi.onDemand(FlashcardDAO.class)));
-        environment.jersey().register(new UserResource(jdbi.onDemand(UserDAO.class)));
-        environment.jersey().register(new UsersResource(jdbi.onDemand(UserDAO.class)));
-        environment.jersey().register(new ResetPasswordResource(jdbi.onDemand(UserDAO.class),
-                jdbi.onDemand(TokenDAO.class), configuration.getResetPasswordConfig()));
-        environment.jersey().register(new TipResource(jdbi.onDemand(TipDAO.class)));
-        environment.jersey().register(new TipsResource(jdbi.onDemand(TipDAO.class)));
-        environment.jersey().register(new ResultsResource(jdbi.onDemand(FlashcardDAO.class),
-                jdbi.onDemand(ResultDAO.class)));
-        environment.jersey().register(new StorageResource(streamPersistenceBundle,
-                jdbi.onDemand(DeckDAO.class), jdbi.onDemand(FlashcardDAO.class)));
+
+        // DAOs
+        final FlashcardDAO flashcardDAO = jdbi.onDemand(FlashcardDAO.class);
+        final DeckDAO decksDAO = jdbi.onDemand(DeckDAO.class);
+        final UserDAO userDAO = jdbi.onDemand(UserDAO.class);
+        final TokenDAO tokenDAO = jdbi.onDemand(TokenDAO.class);
+        final TipDAO tipDAO = jdbi.onDemand(TipDAO.class);
+        final ResultDAO resultDAO = jdbi.onDemand(ResultDAO.class);
+
+        // Jersey clients
+        final JerseyWebTarget cvServer = JerseyClientBuilder.createClient().target(configuration.getCvServerURL().toString());
+
+        // services
+        final StorageService storageService = storageBundle.createStorageService();
+
+        // resources
+        environment.jersey().register(new DeckResource(decksDAO));
+        environment.jersey().register(new DecksResource(decksDAO));
+        environment.jersey().register(new FlashcardResource(flashcardDAO));
+        environment.jersey().register(new FlashcardsResource(flashcardDAO));
+        environment.jersey().register(new UserResource(userDAO));
+        environment.jersey().register(new UsersResource(userDAO));
+        environment.jersey().register(new ResetPasswordResource(userDAO, tokenDAO, configuration.getResetPasswordConfig()));
+        environment.jersey().register(new TipResource(tipDAO));
+        environment.jersey().register(new TipsResource(tipDAO));
+        environment.jersey().register(new ResultsResource(flashcardDAO, resultDAO));
+        environment.jersey().register(new DecksCvMagicResource(storageService, decksDAO, flashcardDAO, cvServer));
+
+        // Exception mappers
         environment.jersey().register(new DataAccessExceptionMapper());
         environment.jersey().register(new PasswordResetExceptionMapper());
         environment.jersey().register(new StorageExceptionMapper());
 
-        final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(jdbi.onDemand(UserDAO.class));
-        final CachingAuthenticator cachingAuthenticator = new CachingAuthenticator(environment.metrics(), basicAuthenticator,
-                configuration.getAuthCacheBuilder());
-
-        environment.jersey().register(new AuthDynamicFeature(
-                new BasicCredentialAuthFilter.Builder<User>()
-                        .setAuthenticator(cachingAuthenticator)
-                        .buildAuthFilter()));
+        // authentication
+        environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+                .setAuthenticator(new CachingAuthenticator(environment.metrics(),
+                        new BasicAuthenticator(userDAO), configuration.getAuthCacheBuilder()))
+                .buildAuthFilter()));
 
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(PreAuthenticationFilter.class);
-        environment.admin().addTask(new TokenExpirationTask(jdbi.onDemand(TokenDAO.class)));
 
+        // tasks
+        environment.admin().addTask(new TokenExpirationTask(tokenDAO));
     }
 }
