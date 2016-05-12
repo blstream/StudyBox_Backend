@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.bls.patronage</groupId>
-            <artifactId>streamPersistenceBundle</artifactId>
+            <artifactId>storageBundle</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

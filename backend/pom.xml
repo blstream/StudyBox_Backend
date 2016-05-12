@@ -12,7 +12,7 @@
     <modules>
         <module>app</module>
         <module>db</module>
-        <module>streamPersistenceBundle</module>
+        <module>storageBundle</module>
     </modules>
 
     <properties>
