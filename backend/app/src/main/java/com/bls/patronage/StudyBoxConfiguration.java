@@ -1,19 +1,32 @@
 package com.bls.patronage;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
 import com.google.common.cache.CacheBuilder;
-
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.net.URL;
+import java.nio.file.Path;
 
 public class StudyBoxConfiguration extends Configuration {
 
     public static final int PW_HASH_SECURITY_LEVEL = 12;
 
     private static final String DEFAULT_AUTH_CACHE_SPEC = "maximumSize=1000,expireAfterAccess=1h";
+
+    @Valid
+    @NotNull
+    private String resetPasswordUrl;
+
+    @Valid
+    @NotNull
+    private URL cvServerURL;
+
+    @Valid
+    @NotNull
+    private Path fileContentBaseLocation;
 
     @Valid
     @NotNull
@@ -34,4 +47,17 @@ public class StudyBoxConfiguration extends Configuration {
     public ResetPasswordConfiguration getResetPasswordConfig() {
         return resetPasswordConfig;
     }
+
+    public URL getCvServerURL() {
+        return cvServerURL;
+    }
+
+    public Path getFileContentBaseLocation() {
+        return fileContentBaseLocation;
+    }
+
+    public String getResetPasswordUrl() {
+        return resetPasswordUrl;
+    }
+
 }

@@ -4,6 +4,9 @@ database:
   password: sa
   url: jdbc:h2:./studybox
 
+cvServerURL: "http://www.example.com/api/flashcards"
+fileContentBaseLocation: "./storage"
+
 server:
   type: simple
   applicationContextPath: /
@@ -11,6 +14,10 @@ server:
   connector:
     type: http
     port: 2000
+
+resetPasswordUrl: "http://exampleFrontendUrl.com"
+
+resetPasswordUrl: "http://exampleFrontendUrl.com"
 
 resetPasswordConfig:
   resetPasswordUrl: "http://exampleFrontendUrl.com"
