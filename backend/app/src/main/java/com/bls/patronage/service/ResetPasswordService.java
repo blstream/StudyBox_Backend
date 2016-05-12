@@ -1,6 +1,7 @@
 package com.bls.patronage.service;
 
 import com.bls.patronage.db.model.ResetPasswordToken;
+import com.bls.patronage.exception.PasswordResetException;
 import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
 
 import javax.mail.Message;
@@ -61,7 +62,7 @@ public class ResetPasswordService implements TokenService {
                 });
     }
 
-    private void sendMail(Session session, String address, UUID token) {
+    private void sendMail(Session session, String address, UUID token) throws PasswordResetException {
         try {
 
             final Message message = new MimeMessage(session);
@@ -80,7 +81,7 @@ public class ResetPasswordService implements TokenService {
             Transport.send(message);
 
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new PasswordResetException("Unable to send email message.");
         }
     }
 }
