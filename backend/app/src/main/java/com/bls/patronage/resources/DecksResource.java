@@ -171,6 +171,7 @@ public class DecksResource {
             tempDecks.addAll(decks.stream()
                     .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
                             .withFlashcardsCount(numberIterator.next())
+                            .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
                             .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
                     .build())
                     .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,

@@ -75,10 +75,12 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         deck = new DeckRepresentation.DeckRepresentationBuilder("foo", false)
                 .withId(UUID.randomUUID())
                 .withCreationDate("2016-04-21 08:23:11.0")
+                .withCreatorEmail("test@mail.com")
                 .build();
         deck2 = new DeckRepresentation.DeckRepresentationBuilder("bar", false)
                 .withId(UUID.randomUUID())
                 .withCreationDate("2016-05-29 08:23:11.0")
+                .withCreatorEmail("test@mail.com")
                 .build();
         decksRepresentations = new ArrayList<>();
         decksRepresentations.add(deck);
@@ -122,6 +124,8 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         when(deckDao.getRandomDeck(user.getId())).thenReturn(deck.map());
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         when(userDAO.getUserById(user.getId())).thenReturn(user);
+        when(deckDao.getCreatorEmailFromDeckId(deck.map().getId())).thenReturn(deck.getCreatorEmail());
+        when(deckDao.getCreatorEmailFromDeckId(deck2.map().getId())).thenReturn(deck2.getCreatorEmail());
     }
 
     @Test
