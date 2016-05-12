@@ -167,5 +167,28 @@
             <column name="creationDate" type="TIMESTAMP"/>
         </loadUpdateData>
     </changeSet>
+    <changeSet id="14" author="arka">
+        <addColumn tableName="decks">
+            <column name="createdAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="decks">
+            <column name="modifiedAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="decks">
+            <column name="createdBy" type="UUID"/>
+        </addColumn>
+        <addColumn tableName="decks">
+            <column name="modifiedBy" type="UUID"/>
+        </addColumn>
+        <loadUpdateData primaryKey="id" tableName="decks" file="initialData/decksWithAudits.csv">
+            <column name="id" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="isPublic" type="BOOLEAN"/>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="modifiedAt" type="TIMESTAMP"/>
+            <column name="createdBy" type="STRING"/>
+            <column name="modifiedBy" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
 </databaseChangeLog>
 

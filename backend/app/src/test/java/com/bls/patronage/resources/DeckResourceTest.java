@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -117,7 +118,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
                 encodedCredentials);
 
         final DeckRepresentation updatedDeck = response.readEntity(DeckRepresentation.class);
-        verify(deckDao).update(updatedDeck.map());
+        verify(deckDao).updateDeck(updatedDeck.map(), user.getId());
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(updatedDeck.getId()).isEqualTo(deckId);
         assertThat(updatedDeck.getName()).isEqualTo(deck.getName());
@@ -130,7 +131,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
                 encodedCredentials);
 
         verify(deckDao).getDeckById(fakeId, user.getId());
-        verify(deckDao, never()).update(any(Deck.class));
+        verify(deckDao, never()).updateDeck(any(Deck.class), eq(user.getId()));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -140,7 +141,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
                 new DeckRepresentation.DeckRepresentationBuilder("", false).build(),
                 encodedCredentials);
 
-        verify(deckDao, never()).update(any(Deck.class));
+        verify(deckDao, never()).updateDeck(any(Deck.class), eq(user.getId()));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 
@@ -153,7 +154,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = getPostResponse(testURI, encodedCredentials);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
-        verify(deckDao).update(deckCaptor.capture());
+        verify(deckDao).updateDeck(deckCaptor.capture(), eq(user.getId()));
         assertThat(deckCaptor.getValue().getIsPublic()).isTrue();
     }
 
@@ -165,7 +166,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = getPostResponse(testURI, encodedCredentials);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
-        verify(deckDao).update(deckCaptor.capture());
+        verify(deckDao).updateDeck(deckCaptor.capture(), eq(user.getId()));
         assertThat(deckCaptor.getValue().getIsPublic()).isFalse();
     }
 

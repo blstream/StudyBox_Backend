@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/decks/{deckId: [0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}}")
 @Produces(MediaType.APPLICATION_JSON)
-public class DeckResource {
+public class DeckResource{
     private final DeckDAO decksDAO;
 
     public DeckResource(DeckDAO decksDAO) {
@@ -56,7 +56,7 @@ public class DeckResource {
             @Valid DeckRepresentation.DeckRepresentationBuilder deckBuilder) {
 
         decksDAO.getDeckById(deckId.get(), user.getId());
-        decksDAO.update(deckBuilder.withId(deckId.get()).build().map());
+        decksDAO.updateDeck(deckBuilder.withId(deckId.get()).build().map(), user.getId());
         return deckBuilder.build();
     }
 
@@ -66,9 +66,10 @@ public class DeckResource {
                              @Valid @PathParam("deckId") UUIDParam deckId,
                              @Valid @PathParam("access") BooleanParam access) {
 
-        decksDAO.update(
+        decksDAO.updateDeck(
                 decksDAO.getDeckById(deckId.get(), user.getId())
-                        .setIsPublic(access.get())
+                        .setIsPublic(access.get()), user.getId()
         );
     }
+
 }

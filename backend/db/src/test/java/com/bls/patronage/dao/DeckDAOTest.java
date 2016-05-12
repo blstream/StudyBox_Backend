@@ -113,7 +113,7 @@ public class DeckDAOTest extends DAOTest {
     public void updateDeck() throws Exception {
         Deck deck = getDecksFromDatabase().get(0);
         Deck updatedDeck = new Deck(deck.getId(), "foo", true);
-        dao.update(updatedDeck);
+        dao.updateDeck(updatedDeck, defaultUserUUID);
 
         assertThat(getDecksFromDatabase()).doesNotContain(deck);
         assertThat(getDecksFromDatabase()).contains(updatedDeck);
