@@ -46,11 +46,11 @@ public class DeckDAOTest extends DAOTest {
         super.tearDown();
     }
 
-    public void getAllDecks() throws Exception {
+    public void getPublicDecks() throws Exception {
         List<Deck> decksFromDatabase = getDecksFromDatabase();
         List<Deck> decks = decksFromDatabase.stream().filter(Deck::getIsPublic).collect(Collectors.toList());
 
-        assertThat(dao.getAllDecks()).isSubsetOf(decks);
+        assertThat(dao.getAllDecks(defaultUserUUID)).isSubsetOf(decks);
     }
 
 
@@ -85,12 +85,17 @@ public class DeckDAOTest extends DAOTest {
 
     public void getDeckByName() throws Exception {
         Deck deck = getDecksFromDatabase().get(3);
-        assertThat(dao.getDecksByName(deck.getName())).containsOnly(deck);
+        assertThat(dao.getDecksByName(deck.getName(), defaultUserUUID)).containsOnly(deck);
+    }
+
+    public void getOwnDeckByName() throws Exception {
+        Deck deck = getDecksFromDatabase().get(0);
+        assertThat(dao.getDecksByName(deck.getName(), defaultUserUUID)).isEmpty();
     }
 
     public void getDeckByPartOfTheName() throws Exception {
         Deck deck = getDecksFromDatabase().get(3);
-        assertThat(dao.getDecksByName(deck.getName().substring(0,2))).contains(deck);
+        assertThat(dao.getDecksByName(deck.getName().substring(0,2), defaultUserUUID)).contains(deck);
     }
 
     public void getRandomDeck() throws Exception {
