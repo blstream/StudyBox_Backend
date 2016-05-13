@@ -4,6 +4,9 @@ database:
   password: sa
   url: jdbc:h2:./studybox
 
+cvServerURL: "http://www.example.com/api/flashcards"
+fileContentBaseLocation: "./storage"
+
 server:
   type: simple
   applicationContextPath: /
