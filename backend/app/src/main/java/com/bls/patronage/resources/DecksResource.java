@@ -131,7 +131,7 @@ public class DecksResource {
         public Collection<DeckRepresentation> build() {
             //pre-building deckCollection tasks
             if (filteredName.isPresent()) {
-                deckCollection = decksDAO.getDecksByName(filteredName.get());
+                deckCollection = decksDAO.getDecksByName(filteredName.get(), userId);
                 deckCollection.addAll(
                         includeOwn ? decksDAO.getUserDecksByName(filteredName.get(), userId) : Collections.emptyList()
                 );
@@ -139,7 +139,7 @@ public class DecksResource {
 
             //end of building phase. If none of the above worked, collection is created now
             boolean wasPrebuild = Optional.ofNullable(deckCollection).isPresent();
-            deckCollection = wasPrebuild ? deckCollection : decksDAO.getAllDecks();
+            deckCollection = wasPrebuild ? deckCollection : decksDAO.getAllDecks(userId);
 
             //now the other tasks are run;
             if (includeOwn) {
