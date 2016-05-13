@@ -376,11 +376,13 @@ If anything fails, a suitable error code with description will be returned.
         
 # Group File import
 
-## Images [/decks/cv]
+## Image and Text files[/decks/cv{?fileType}]
 
-### Flashcards from Image [POST]
+### Flashcards from File [POST]
 
 This resource is used to transform image to flashcards in database.
++ Parameters
+    + fileType: `image` (string, required) - Type of file passed to server. Can be either `image` or `text`
 
 + Request (multipart/form-data; boundary=---BOUNDARY)
 
