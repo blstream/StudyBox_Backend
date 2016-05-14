@@ -138,6 +138,27 @@ public class DeckRepresentation implements DbMappable<Deck> {
             return this;
         }
 
+        public DeckRepresentationBuilder withcreatedAt(Timestamp createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public DeckRepresentationBuilder withmodifiedAt(Timestamp modifiedAt) {
+            this.modifiedAt = modifiedAt;
+            return this;
+        }
+
+        public DeckRepresentationBuilder withcreatedBy(UUID createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public DeckRepresentationBuilder withModifiedBy(UUID modifiedBy) {
+            this.modifiedBy = modifiedBy;
+            return this;
+        }
+
+
         public DeckRepresentationBuilder withAuditFields(AuditableEntity auditableEntity) {
             this.createdAt=auditableEntity.getCreatedAt();
             this.modifiedAt=auditableEntity.getModifiedAt();

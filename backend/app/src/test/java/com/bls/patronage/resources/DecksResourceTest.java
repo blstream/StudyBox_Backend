@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.exception.DataAccessException;
+import com.bls.patronage.db.model.AuditableEntity;
 import com.bls.patronage.db.model.Deck;
 import com.bls.patronage.db.model.DeckWithFlashcardsNumber;
 import com.google.common.collect.ImmutableList;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,6 +55,13 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     private String userDecksURI;
     private String randomDeckURI;
     private String randomDeckWithFlashcardsCountURI;
+    private AuditableEntity auditEntity;
+    private AuditableEntity auditEntity2;
+    private AuditableEntity userDeckAuditEntity;
+    private UUID deckId;
+    private UUID deck2Id;
+    private UUID userDeckId;
+
 
     static private Response postDeck(String uri, String name, Boolean isPublic, String encodedUserInfo) {
         return authResources.client().target(uri)
@@ -72,13 +81,28 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Before
     public void setUp() {
         super.setUp();
+        deckId=UUID.randomUUID();
+        deck2Id=UUID.randomUUID();
+        userDeckId=UUID.randomUUID();
+        auditEntity = new AuditableEntity(deckId,
+                new Timestamp(new Long("1461219791000")),
+                new Timestamp(new Long("1463234622000")),
+                user.getId().toString(),
+                user.getId().toString());
+        auditEntity2 = new AuditableEntity(deck2Id,
+                new Timestamp(new Long("1464502991000")),
+                new Timestamp(new Long("1464592375000")),
+                user.getId().toString(),
+                user.getId().toString());
         deck = new DeckRepresentation.DeckRepresentationBuilder("foo", false)
                 .withId(UUID.randomUUID())
                 .withCreationDate("2016-04-21 08:23:11.0")
+                .withAuditFields(auditEntity)
                 .build();
         deck2 = new DeckRepresentation.DeckRepresentationBuilder("bar", false)
                 .withId(UUID.randomUUID())
                 .withCreationDate("2016-05-29 08:23:11.0")
+                .withAuditFields(auditEntity2)
                 .build();
         decksRepresentations = new ArrayList<>();
         decksRepresentations.add(deck);
@@ -86,8 +110,14 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         decks = new ArrayList<>();
         decks.add(deck.map());
         decks.add(deck2.map());
+        userDeckAuditEntity = new AuditableEntity(userDeckId,
+                new Timestamp(new Long("1462185942000")),
+                new Timestamp(new Long("1462293942000")),
+                user.getId().toString(),
+                user.getId().toString());
         userDeck = new DeckRepresentation.DeckRepresentationBuilder("baz", false)
                 .withId(UUID.randomUUID())
+                .withAuditFields(userDeckAuditEntity)
                 .build();
         userDecksRepresentations = Collections.singletonList(userDeck);
         userDecks = Collections.singletonList(userDeck.map());
@@ -122,6 +152,9 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         when(deckDao.getRandomDeck(user.getId())).thenReturn(deck.map());
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         when(userDAO.getUserById(user.getId())).thenReturn(user);
+        when(deckDao.getAuditFields(deck.getId())).thenReturn(auditEntity);
+        when(deckDao.getAuditFields(deck2.getId())).thenReturn(auditEntity2);
+        when(deckDao.getAuditFields(userDeck.getId())).thenReturn(userDeckAuditEntity);
     }
 
     @Test
@@ -216,6 +249,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         final ImmutableList<DeckRepresentation> decks
                 = ImmutableList.of(new DeckRepresentation.DeckRepresentationBuilder(deckExample)
                 .withFlashcardsCount(deckExample.getCount())
+                .withAuditFields(userDeckAuditEntity)
                 .build());
         final Response response = getResponseWithCredentials(userDecksWithFlashcardNumberURI, encodedCredentials);
         final List<DeckRepresentation> decksInResponse = response

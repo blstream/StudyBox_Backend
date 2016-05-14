@@ -35,6 +35,7 @@ public class DeckResource{
         return new DeckRepresentation.DeckRepresentationBuilder(decksDAO.getDeckById(deckId.get(), user.getId()))
                 .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deckId.get()))
                 .withCreationDate(decksDAO.getDeckCreationDate(deckId.get()))
+                .withAuditFields(decksDAO.getAuditFields(deckId.get()))
                 .build();
     }
 
