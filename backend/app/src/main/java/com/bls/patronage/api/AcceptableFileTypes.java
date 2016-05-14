@@ -2,13 +2,12 @@ package com.bls.patronage.api;
 
 import io.dropwizard.validation.ValidationMethod;
 
-public class AcceptableFileTypes {
-    public static final String IMAGE = "image";
-    public static final String TEXT = "text";
+public enum AcceptableFileTypes {
+    IMAGE("image"), TEXT("text");
 
     private final String fileType;
 
-    public AcceptableFileTypes(String fileType) {
+    AcceptableFileTypes(String fileType) {
         this.fileType = fileType;
     }
 
