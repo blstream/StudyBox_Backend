@@ -48,16 +48,10 @@ public class DecksCvMagicResource {
                                @FormDataParam("file") InputStream inputStream,
                                @QueryParam("fileType") AcceptableFileTypes type) throws StorageException {
 
-        if (!type.isValidType())
-            return Response
-                    .status(400)
-                    .entity(Entity.json(type.getGivenType() + " is not a valid file type!"))
-                    .build();
-
         final UUID dataId = storageService.create(inputStream, user.getId());
         final URI publicURLToUploadedFile = storageService.createPublicURL(StorageResource.class, dataId, user.getId());
 
-        final Response flashcards = recoginzeFlashcards(publicURLToUploadedFile, type.getGivenType());
+        final Response flashcards = recoginzeFlashcards(publicURLToUploadedFile, type.getFileType());
         save(flashcards, user.getId());
 
         storageService.delete(dataId, user.getId());
@@ -65,10 +59,10 @@ public class DecksCvMagicResource {
                 .status(Response.Status.CREATED).build();
     }
 
-    private Response recoginzeFlashcards(final URI publicURLToUploadedFile, String givenType) {
+    private Response recoginzeFlashcards(final URI publicURLToUploadedFile, String fileType) {
         return cvServer
                 .request()
-                .buildPost(Entity.json(CVRequest.createRecognizeRequest(publicURLToUploadedFile, givenType)))
+                .buildPost(Entity.json(CVRequest.createRecognizeRequest(publicURLToUploadedFile, fileType)))
                 .invoke();
     }
 

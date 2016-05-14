@@ -15,10 +15,10 @@ public class CVRequest {
         this.action = action;
     }
 
-    public static CVRequest createRecognizeRequest(final URI publicURLToUploadedFile, String givenType) {
+    public static CVRequest createRecognizeRequest(final URI publicURLToUploadedFile, String fileType) {
         return new CVRequest(
                 publicURLToUploadedFile,
-                givenType.equals(AcceptableFileTypes.IMAGE) ? "ImageToFlashcard" : "TextToFlashcard"
+                fileType.equals(AcceptableFileTypes.IMAGE) ? "ImageToFlashcard" : "TextToFlashcard"
         );
     }
 
