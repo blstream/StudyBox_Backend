@@ -34,6 +34,10 @@ Prerequisites:
 
         java -jar backend/app/target/app-1.0-SNAPSHOT.jar server backend/app/studybox-pg.yml
 
+## Sending a file with curl:
+
+    curl -F file=@myFooFileName.jpg http://localhost:2000/decks/cv?fileType=image
+
 
 [Oracle jdk download link]:http://www.oracle.com/technetwork/java/javase/downloads/index.html
 [Maven download link]: http://maven.apache.org/download.cgi?Preferred=ftp://mirror.reverse.net/pub/apache
