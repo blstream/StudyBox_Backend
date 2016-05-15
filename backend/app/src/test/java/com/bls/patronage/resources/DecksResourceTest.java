@@ -98,11 +98,13 @@ public class DecksResourceTest extends BasicAuthenticationTest {
                 .withId(UUID.randomUUID())
                 .withCreationDate("2016-04-21 08:23:11.0")
                 .withAuditFields(auditEntity)
+                .withCreatorEmail("test@mail.com")
                 .build();
         deck2 = new DeckRepresentation.DeckRepresentationBuilder("bar", false)
                 .withId(UUID.randomUUID())
                 .withCreationDate("2016-05-29 08:23:11.0")
                 .withAuditFields(auditEntity2)
+                .withCreatorEmail("test@mail.com")
                 .build();
         decksRepresentations = new ArrayList<>();
         decksRepresentations.add(deck);
@@ -141,20 +143,22 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         userDecksURI = UriBuilder.fromResource(DecksResource.class).build().toString()
                 + UriBuilder.fromMethod(DecksResource.class, "listMyDecks").build().toString();
 
-        when(deckDao.getAllDecks()).thenReturn(decks);
+        when(deckDao.getAllDecks(user.getId())).thenReturn(decks);
         when(deckDao.getDeckCreationDate(deck.getId())).thenReturn(deck.getCreationDate());
         when(deckDao.getDeckCreationDate(deck2.getId())).thenReturn(deck2.getCreationDate());
         when(deckDao.getAllUserDecks(user.getId())).thenReturn(userDecks);
         when(deckDao.getDeckById(deck.getId(), user.getId())).thenReturn(deck.map());
         when(deckDao.getDeckById(userDeck.getId(), user.getId())).thenReturn(userDeck.map());
         when(deckDao.getUserDecksByName(any(String.class), eq(userDeck.getId()))).thenReturn(userDecks);
-        when(deckDao.getDecksByName(deck.getName())).thenReturn(decks);
+        when(deckDao.getDecksByName(deck.getName(), user.getId())).thenReturn(decks);
         when(deckDao.getRandomDeck(user.getId())).thenReturn(deck.map());
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         when(userDAO.getUserById(user.getId())).thenReturn(user);
         when(deckDao.getAuditFields(deck.getId())).thenReturn(auditEntity);
         when(deckDao.getAuditFields(deck2.getId())).thenReturn(auditEntity2);
         when(deckDao.getAuditFields(userDeck.getId())).thenReturn(userDeckAuditEntity);
+        when(deckDao.getCreatorEmailFromDeckId(deck.map().getId())).thenReturn(deck.getCreatorEmail());
+        when(deckDao.getCreatorEmailFromDeckId(deck2.map().getId())).thenReturn(deck2.getCreatorEmail());
     }
 
     @Test
@@ -195,7 +199,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     public void listDecks() {
         final List<DeckRepresentation> response = getListFromResponse(decksURI, encodedCredentials);
 
-        verify(deckDao).getAllDecks();
+        verify(deckDao).getAllDecks(user.getId());
         assertThat(response).containsAll(decksRepresentations);
         decksRepresentations
                 .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
@@ -207,7 +211,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         when(deckDao.getDeckCreationDate(deck.getId())).thenReturn(null);
         final List<DeckRepresentation> response = getListFromResponse(decksURI, encodedCredentials);
 
-        verify(deckDao).getAllDecks();
+        verify(deckDao).getAllDecks(user.getId());
         assertThat(response).isNotNull();
     }
 
@@ -215,7 +219,7 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     public void listDecksByNames() {
         final List<DeckRepresentation> response = getListFromResponse(decksByNameURI, encodedCredentials);
 
-        verify(deckDao).getDecksByName(deck.getName());
+        verify(deckDao).getDecksByName(deck.getName(), user.getId());
         assertThat(response).containsAll(decksRepresentations);
         decksRepresentations
                 .sort(Comparator.comparing(DeckRepresentation::getCreationDate, Comparator.reverseOrder()));
@@ -224,19 +228,19 @@ public class DecksResourceTest extends BasicAuthenticationTest {
 
     @Test
     public void listDecksByNamesWhenThereIsBadNameTyped() {
-        when(deckDao.getDecksByName("anotherThing")).thenThrow(new DataAccessException(""));
+        when(deckDao.getDecksByName("anotherThing", user.getId())).thenThrow(new DataAccessException(""));
 
         final Response response = getResponseWithCredentials(decksByBadNameURI, encodedCredentials);
-        verify(deckDao).getDecksByName("anotherThing");
+        verify(deckDao).getDecksByName("anotherThing", user.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
     @Test
     public void listDecksByNamesWhenThereIsNoNameTyped() {
-        when(deckDao.getDecksByName("")).thenThrow(new DataAccessException(""));
+        when(deckDao.getDecksByName("", user.getId())).thenThrow(new DataAccessException(""));
 
         final Response response = getResponseWithCredentials(decksByEmptyNameURI, encodedCredentials);
-        verify(deckDao).getDecksByName("");
+        verify(deckDao).getDecksByName("", user.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 

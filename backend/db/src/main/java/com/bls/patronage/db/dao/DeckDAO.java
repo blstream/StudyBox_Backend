@@ -48,16 +48,21 @@ public abstract class DeckDAO extends AuditDAO{
     @SqlQuery("select email from users where id = :id")
     abstract String getCreatorEmailFromUserId(@Bind("id") UUID id);
 
-    @SqlQuery("select id, name, isPublic from decks where name like :name and isPublic='true'")
-    abstract List<Deck> getDecksUsingName(@Bind("name") String name);
+    @SqlQuery("select id, name, isPublic from decks " +
+            "join usersDecks on decks.id = usersDecks.deckId " +
+            "where decks.name like :name and decks.isPublic='true' " +
+            "and usersDecks.userId != :id")
+    abstract List<Deck> getDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
 
     @SqlQuery("select id, name, isPublic from decks " +
             "inner join usersDecks on decks.id = usersDecks.deckId " +
-            "where decks.name like :name and usersDecks.userId = :id and decks.isPublic='false'")
+            "where decks.name like :name and usersDecks.userId = :id")
     abstract List<Deck> getUserDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
 
-    @SqlQuery("select id, name, isPublic from decks where isPublic='true'")
-    abstract Collection<Deck> getDecks();
+    @SqlQuery("select id, name, isPublic from decks " +
+            "join usersDecks on decks.id = usersDecks.deckId " +
+            "where decks.isPublic = 'true' and usersDecks.userId != :id")
+    abstract Collection<Deck> getDecks(@Bind("id") UUID userId);
 
     @SqlQuery("select decks.id, decks.name, decks.isPublic from decks " +
             "join usersDecks on usersDecks.deckId = decks.id " +
@@ -96,8 +101,8 @@ public abstract class DeckDAO extends AuditDAO{
         return deck;
     }
 
-    public Collection<Deck> getDecksByName(String name) {
-        List<Deck> decks = getDecksUsingName(String.format("%%%s%%", name));
+    public Collection<Deck> getDecksByName(String name, UUID userId) {
+        List<Deck> decks = getDecksUsingName(String.format("%%%s%%", name), userId);
         return decks;
     }
 
@@ -106,8 +111,8 @@ public abstract class DeckDAO extends AuditDAO{
         return decks;
     }
 
-    public Collection<Deck> getAllDecks() {
-        Collection<Deck> decks = getDecks();
+    public Collection<Deck> getAllDecks(UUID userId) {
+        Collection<Deck> decks = getDecks(userId);
         return decks;
     }
 

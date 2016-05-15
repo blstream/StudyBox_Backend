@@ -1,5 +1,6 @@
 package com.bls.patronage.auth;
 
+import com.bls.patronage.resources.ResetPasswordResource;
 import com.bls.patronage.resources.UsersResource;
 import org.glassfish.jersey.internal.util.Base64;
 
@@ -30,7 +31,8 @@ public class PreAuthenticationFilter implements ContainerRequestFilter {
             final boolean isPostingUser =
                     request.getMethod() == "POST" &&
                             request.getUriInfo().getMatchedResources().size() > 0 &&
-                            request.getUriInfo().getMatchedResources().get(0) instanceof UsersResource;
+                            (request.getUriInfo().getMatchedResources().get(0) instanceof UsersResource ||
+                                    request.getUriInfo().getMatchedResources().get(0) instanceof ResetPasswordResource);
 
             if (request.getMethod() != "GET" && !isPostingUser) {
                 request.abortWith(Response.noContent().status(Response.Status.FORBIDDEN).build());

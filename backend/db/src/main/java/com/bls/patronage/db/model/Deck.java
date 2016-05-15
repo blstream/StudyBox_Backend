@@ -10,6 +10,10 @@ public class Deck extends AuditableEntity {
     public Deck() {
     }
 
+    public Deck(UUID id) {
+        super(id);
+    }
+
     public Deck(UUID id, String name) {
         super(id);
         this.name = name;

@@ -4,6 +4,9 @@ database:
   password: sa
   url: jdbc:h2:./studybox
 
+cvServerURL: "http://www.example.com/api/flashcards"
+fileContentBaseLocation: "./storage"
+
 server:
   type: simple
   applicationContextPath: /
@@ -11,3 +14,14 @@ server:
   connector:
     type: http
     port: 2000
+
+resetPasswordConfig:
+  resetPasswordUrl: "http://exampleFrontendUrl.com"
+  mail:
+    username: "studybox.test@gmail.com"
+    password: "KqcyQEktd29xnzqu"
+    port: "587"
+    host: "smtp.gmail.com"
+    enableAuth: true
+    enableTls: true
+    fromAddress: "no.reply@studybox.com"
