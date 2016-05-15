@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.DeckRepresentation;
 import com.bls.patronage.db.exception.DataAccessException;
+import com.bls.patronage.db.model.AuditableEntity;
 import com.bls.patronage.db.model.Deck;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +15,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.any;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,6 +35,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
     private UUID fakeId;
     private String deckURI;
     private String fakeURI;
+    private AuditableEntity auditEntity;
 
     static private Response getPutResponse(String uri,
                                            DeckRepresentation deck,
@@ -55,13 +59,19 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         super.setUp();
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
-        deck = new DeckRepresentation.DeckRepresentationBuilder("biology", false).withId(deckId).build();
+        auditEntity = new AuditableEntity(deckId,
+                new Timestamp(new Long("1461219791000")),
+                new Timestamp(new Long("1463234622000")),
+                user.getId().toString(),
+                user.getId().toString());
+        deck = new DeckRepresentation.DeckRepresentationBuilder("biology", false).withId(deckId).withAuditFields(auditEntity).build();
         deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();
 
         when(deckDao.getDeckById(deckId, user.getId())).thenReturn(deck.map());
         when(deckDao.getDeckById(fakeId, user.getId())).thenThrow(new DataAccessException(""));
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
+        when(deckDao.getAuditFields(deckId)).thenReturn(auditEntity);
     }
 
     @Test
@@ -82,7 +92,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
     @Test
     public void getNonAccessibleDeck() {
         when(deckDao.getDeckById(deckId, user.getId()))
-                .thenThrow(new DataAccessException("",Response.Status.FORBIDDEN.getStatusCode()));
+                .thenThrow(new DataAccessException("", Response.Status.FORBIDDEN.getStatusCode()));
 
         final Response response = getResponseWithCredentials(deckURI, encodedCredentials);
 
@@ -117,7 +127,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
                 encodedCredentials);
 
         final DeckRepresentation updatedDeck = response.readEntity(DeckRepresentation.class);
-        verify(deckDao).update(updatedDeck.map());
+        verify(deckDao).updateDeck(updatedDeck.map(), user.getId());
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         assertThat(updatedDeck.getId()).isEqualTo(deckId);
         assertThat(updatedDeck.getName()).isEqualTo(deck.getName());
@@ -130,7 +140,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
                 encodedCredentials);
 
         verify(deckDao).getDeckById(fakeId, user.getId());
-        verify(deckDao, never()).update(any(Deck.class));
+        verify(deckDao, never()).updateDeck(any(Deck.class), eq(user.getId()));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -140,7 +150,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
                 new DeckRepresentation.DeckRepresentationBuilder("", false).build(),
                 encodedCredentials);
 
-        verify(deckDao, never()).update(any(Deck.class));
+        verify(deckDao, never()).updateDeck(any(Deck.class), eq(user.getId()));
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(422);
     }
 
@@ -153,7 +163,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = getPostResponse(testURI, encodedCredentials);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
-        verify(deckDao).update(deckCaptor.capture());
+        verify(deckDao).updateDeck(deckCaptor.capture(), eq(user.getId()));
         assertThat(deckCaptor.getValue().getIsPublic()).isTrue();
     }
 
@@ -165,7 +175,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         final Response response = getPostResponse(testURI, encodedCredentials);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
-        verify(deckDao).update(deckCaptor.capture());
+        verify(deckDao).updateDeck(deckCaptor.capture(), eq(user.getId()));
         assertThat(deckCaptor.getValue().getIsPublic()).isFalse();
     }
 

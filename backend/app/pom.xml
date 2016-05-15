@@ -27,16 +27,6 @@
             <artifactId>jBCrypt</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
-        </dependency>
-        <dependency>
             <groupId>com.bls.patronage</groupId>
             <artifactId>storageBundle</artifactId>
             <version>${project.version}</version>
@@ -45,11 +35,6 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.bls.patronage</groupId>
-            <artifactId>storageBundle</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

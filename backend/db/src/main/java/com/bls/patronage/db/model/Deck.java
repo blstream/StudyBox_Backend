@@ -1,8 +1,9 @@
 package com.bls.patronage.db.model;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
-public class Deck extends IdentifiableEntity {
+public class Deck extends AuditableEntity {
     private String name;
     private Boolean isPublic;
 
@@ -27,6 +28,12 @@ public class Deck extends IdentifiableEntity {
 
     public Deck(UUID id, String name, Boolean isPublic) {
         super(id);
+        this.name = name;
+        this.isPublic = isPublic;
+    }
+
+    public Deck(UUID id, String name, Boolean isPublic, Timestamp createdAt, Timestamp modifiedAt, UUID createdBy, UUID modifiedBy) {
+        super(id, createdAt, modifiedAt, createdBy, modifiedBy);
         this.name = name;
         this.isPublic = isPublic;
     }
