@@ -1,5 +1,6 @@
 package com.bls.patronage.cv;
 
+import com.bls.patronage.api.AcceptableFileTypes;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.net.URI;
@@ -14,10 +15,10 @@ public class CVRequest {
         this.action = action;
     }
 
-    public static CVRequest createRecognizeRequest(final URI publicURLToUploadedFile) {
+    public static CVRequest createRecognizeRequest(final URI publicURLToUploadedFile, String fileType) {
         return new CVRequest(
                 publicURLToUploadedFile,
-                "ImageToFlashcard"
+                fileType.equals(AcceptableFileTypes.IMAGE) ? "ImageToFlashcard" : "TextToFlashcard"
         );
     }
 

@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.StorageException;
 import com.bls.patronage.StorageService;
+import com.bls.patronage.api.AcceptableFileTypes;
 import com.bls.patronage.cv.CVRequest;
 import com.bls.patronage.cv.CVResponse;
 import com.bls.patronage.db.dao.DeckDAO;
@@ -16,6 +17,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -43,12 +45,13 @@ public class DecksCvMagicResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@Auth User user,
-                               @FormDataParam("file") InputStream inputStream) throws StorageException {
+                               @FormDataParam("file") InputStream inputStream,
+                               @QueryParam("fileType") AcceptableFileTypes type) throws StorageException {
 
         final UUID dataId = storageService.create(inputStream, user.getId());
         final URI publicURLToUploadedFile = storageService.createPublicURL(StorageResource.class, dataId, user.getId());
 
-        final Response flashcards = recoginzeFlashcards(publicURLToUploadedFile);
+        final Response flashcards = recoginzeFlashcards(publicURLToUploadedFile, type.getFileType());
         save(flashcards, user.getId());
 
         storageService.delete(dataId, user.getId());
@@ -56,10 +59,10 @@ public class DecksCvMagicResource {
                 .status(Response.Status.CREATED).build();
     }
 
-    private Response recoginzeFlashcards(final URI publicURLToUploadedFile) {
+    private Response recoginzeFlashcards(final URI publicURLToUploadedFile, String fileType) {
         return cvServer
                 .request()
-                .buildPost(Entity.json(CVRequest.createRecognizeRequest(publicURLToUploadedFile)))
+                .buildPost(Entity.json(CVRequest.createRecognizeRequest(publicURLToUploadedFile, fileType)))
                 .invoke();
     }
 
