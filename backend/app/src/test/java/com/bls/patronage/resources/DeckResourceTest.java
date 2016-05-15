@@ -21,7 +21,9 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeckResourceTest extends BasicAuthenticationTest {
@@ -90,7 +92,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
     @Test
     public void getNonAccessibleDeck() {
         when(deckDao.getDeckById(deckId, user.getId()))
-                .thenThrow(new DataAccessException("",Response.Status.FORBIDDEN.getStatusCode()));
+                .thenThrow(new DataAccessException("", Response.Status.FORBIDDEN.getStatusCode()));
 
         final Response response = getResponseWithCredentials(deckURI, encodedCredentials);
 
