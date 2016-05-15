@@ -15,11 +15,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -73,7 +73,7 @@ public class DeckResourceTest extends BasicAuthenticationTest {
     }
 
     @Test
-    public void getDeckSuccess() throws IOException {
+    public void getDeckSuccess() {
         final Response response = getResponseWithCredentials(deckURI, encodedCredentials);
         final DeckRepresentation found = response.readEntity(DeckRepresentation.class);
 

@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/decks/{deckId: [0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}}")
 @Produces(MediaType.APPLICATION_JSON)
-public class DeckResource{
+public class DeckResource {
     private final DeckDAO decksDAO;
 
     public DeckResource(DeckDAO decksDAO) {

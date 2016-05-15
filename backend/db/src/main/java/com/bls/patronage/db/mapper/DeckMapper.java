@@ -11,12 +11,6 @@ import java.util.UUID;
 public class DeckMapper implements ResultSetMapper<Deck> {
 
     public Deck map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        return new Deck((UUID) r.getObject("id"),
-                r.getString("name"),
-                r.getBoolean("isPublic")/*,
-                r.getTimestamp("createdAt"),
-                r.getTimestamp("modifiedAt"),
-                (UUID) r.getObject("createdBy"),
-                (UUID) r.getObject("modifiedBy")*/);
+        return new Deck((UUID) r.getObject("id"), r.getString("name"), r.getBoolean("isPublic"));
     }
 }

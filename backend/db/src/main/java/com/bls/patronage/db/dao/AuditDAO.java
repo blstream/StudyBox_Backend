@@ -10,7 +10,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import java.util.Date;
 import java.util.UUID;
 
-@RegisterMapper(AuditableEntityMapper.class)
 abstract public class AuditDAO {
 
     @SqlUpdate("update decks set createdAt = :date, modifiedAt = :date, createdBy = :userId, modifiedBy = :userId where id = :id")
@@ -24,13 +23,4 @@ abstract public class AuditDAO {
     @SqlQuery("select createdAt, modifiedAt, createdBy, modifiedBy from decks where id = :id")
     public abstract AuditableEntity getAuditFields(@Bind("id") UUID id);
 
-    /*
-    public void setAudit(UUID id, UUID userId, String table) {
-        updateAudit(table, id, new Date(), userId);
-    }
-
-    public void saveAudit(UUID id, UUID userId, String table) {
-        createAudit(table, id, new Date(), userId);
-    }
-*/
 }

@@ -115,7 +115,6 @@ public class DeckRepresentation implements DbMappable<Deck> {
             this.id = deck.getId();
             this.name = deck.getName();
             this.isPublic = deck.getIsPublic();
-
         }
 
         public DeckRepresentationBuilder withId(UUID id) {
@@ -170,8 +169,6 @@ public class DeckRepresentation implements DbMappable<Deck> {
         public DeckRepresentation build() {
             return new DeckRepresentation(this);
         }
-
-
     }
 
     @Override
