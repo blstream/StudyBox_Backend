@@ -107,6 +107,7 @@ public class DecksResource {
                 .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
                         .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
                         .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                        .withAuditFields(decksDAO.getAuditFields(deck.getId()))
                         .build())
                 .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,
                         Comparator.nullsLast(Comparator.reverseOrder())))
