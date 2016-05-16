@@ -20,9 +20,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TipsResourceTest {
@@ -40,7 +44,7 @@ public class TipsResourceTest {
 
     @Before
     public void setUp() {
-        tip = new Tip("12345678-9012-3456-7890-123456789012", "Like a blue", 4, "8ad4b503-5bfc-4d8a-a761-0908374892b1", "68d7fd99-4bd9-45f6-85bb-86331f5c274d");
+        tip = new Tip(UUID.fromString("12345678-9012-3456-7890-123456789012"), "Like a blue", 4, UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), UUID.fromString("68d7fd99-4bd9-45f6-85bb-86331f5c274d"));
         tipRepresentation = new TipRepresentation("Im testing", 2);
         tipsURI = UriBuilder.fromResource(TipsResource.class).build(tip.getDeckId(), tip.getFlashcardId()).toString();
     }

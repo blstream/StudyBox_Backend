@@ -11,9 +11,6 @@ public class Tip extends IdentifiableEntity {
     private UUID deckId;
     private String essenceImageURL;
 
-    public Tip(){
-    }
-
     public Tip(UUID id, String essence, int difficult, UUID flashcardId, UUID deckId){
         super(id);
         this.essence=essence;
@@ -22,61 +19,14 @@ public class Tip extends IdentifiableEntity {
         this.deckId=deckId;
     }
 
-    public Tip(String id, String essence, int difficult, UUID flashcardId, UUID deckId){
+    public Tip(UUID id, String essence, int difficult, UUID flashcardId, UUID deckId, String essenceImageURL) {
         super(id);
-        this.essence=essence;
-        this.difficult=difficult;
-        this.flashcardId=flashcardId;
-        this.deckId=deckId;
+        this.essence = essence;
+        this.difficult = difficult;
+        this.flashcardId = flashcardId;
+        this.deckId = deckId;
+        this.essenceImageURL = essenceImageURL;
     }
-    public Tip(UUID id, String essence, int difficult, String flashcardId, UUID deckId){
-        super(id);
-        this.essence=essence;
-        this.difficult=difficult;
-        this.flashcardId=UUID.fromString(flashcardId);
-        this.deckId=deckId;
-    }
-
-    public Tip(String id, String essence, int difficult, String flashcardId, UUID deckId){
-        super(id);
-        this.essence=essence;
-        this.difficult=difficult;
-        this.flashcardId=UUID.fromString(flashcardId);
-        this.deckId=deckId;
-    }
-
-    public Tip(UUID id, String essence, int difficult, UUID flashcardId, String deckId){
-        super(id);
-        this.essence=essence;
-        this.difficult=difficult;
-        this.flashcardId=flashcardId;
-        this.deckId=UUID.fromString(deckId);
-    }
-
-    public Tip(String id, String essence, int difficult, UUID flashcardId, String deckId){
-        super(id);
-        this.essence=essence;
-        this.difficult=difficult;
-        this.flashcardId=flashcardId;
-        this.deckId=UUID.fromString(deckId);
-    }
-    public Tip(UUID id, String essence, int difficult, String flashcardId, String deckId){
-        super(id);
-        this.essence=essence;
-        this.difficult=difficult;
-        this.flashcardId=UUID.fromString(flashcardId);
-        this.deckId=UUID.fromString(deckId);
-    }
-
-    public Tip(String id, String essence, int difficult, String flashcardId, String deckId){
-        super(id);
-        this.essence=essence;
-        this.difficult=difficult;
-        this.flashcardId=UUID.fromString(flashcardId);
-        this.deckId=UUID.fromString(deckId);
-    }
-
-
 
     public String getEssence() {
         return essence;

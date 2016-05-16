@@ -43,7 +43,7 @@ public class TipResourceTest {
 
     @Before
     public void setUp(){
-        tip = new Tip("12345678-9012-3456-7890-123456789012", "Like sky", 9, "8ad4b503-5bfc-4d8a-a761-0908374892b1", "68d7fd99-4bd9-45f6-85bb-86331f5c274d");
+        tip = new Tip(UUID.fromString("12345678-9012-3456-7890-123456789012"), "Like sky", 9, UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), UUID.fromString("68d7fd99-4bd9-45f6-85bb-86331f5c274d"));
         tipRepresentation = new TipRepresentation("Testing", 2);
         tipURI= UriBuilder.fromResource(TipResource.class).build(tip.getDeckId(), tip.getFlashcardId(), tip.getId()).toString();
     }
