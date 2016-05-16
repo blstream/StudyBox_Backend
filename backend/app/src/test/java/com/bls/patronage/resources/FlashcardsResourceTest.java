@@ -23,6 +23,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -49,8 +50,8 @@ public class FlashcardsResourceTest {
 
     @Before
     public void setUp() {
-        flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes",
-                "8ad4b503-5bfc-4d8a-a761-0908374892b1", false);
+        flashcard = new Flashcard(UUID.fromString("12345678-9012-3456-7890-123456789012"), "Are you ok?", "Yes",
+                UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), false);
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok", false);
         flashcardsURI = UriBuilder.fromResource(FlashcardsResource.class).build(flashcard.getDeckId()).toString();
         flashcardsWithTipsURI = UriBuilder.fromResource(FlashcardsResource.class)

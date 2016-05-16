@@ -19,20 +19,22 @@ public class Flashcard extends IdentifiableEntity {
         this.isHidden = null;
     }
 
-    public Flashcard(String id, String question, String answer, String deckId, Boolean isHidden) {
-        super(id);
-        this.question = question;
-        this.answer = answer;
-        this.deckId = UUID.fromString(deckId);
-        this.isHidden = isHidden;
-    }
-
     public Flashcard(UUID id, String question, String answer, UUID deckId, Boolean isHidden) {
         super(id);
         this.question = question;
         this.answer = answer;
         this.deckId = deckId;
         this.isHidden = isHidden;
+    }
+
+    public Flashcard(UUID id, String question, String answer, UUID deckId, Boolean isHidden, String questionImageURL, Boolean answerImageURL) {
+        super(id);
+        this.question = question;
+        this.answer = answer;
+        this.deckId = deckId;
+        this.isHidden = isHidden;
+        this.questionImageURL = questionImageURL;
+        this.answerImageURL = answerImageURL;
     }
 
     public String getQuestion() {
