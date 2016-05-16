@@ -1,5 +1,6 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageService;
 import com.bls.patronage.api.TipRepresentation;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.model.Tip;
@@ -29,10 +30,11 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class TipResourceTest {
     private static final TipDAO dao = mock(TipDAO.class);
+    private static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new TipResource((dao)))
+            .addResource(new TipResource(dao, storageService))
             .build();
 
     @Captor

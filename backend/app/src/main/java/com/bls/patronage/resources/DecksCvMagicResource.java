@@ -49,8 +49,8 @@ public class DecksCvMagicResource {
                                @FormDataParam("file") InputStream inputStream,
                                @QueryParam("fileType") AcceptableFileTypes type) throws StorageException {
 
-        final UUID dataId = storageService.create(inputStream, user.getId());
-        final URI publicURLToUploadedFile = storageService.createPublicURL(StorageResource.class, user.getId(), StorageContexts.CV, dataId);
+        final UUID dataId = storageService.create(inputStream, StorageContexts.CV, user.getId());
+        final URI publicURLToUploadedFile = storageService.createPublicURI(StorageResource.class, user.getId(), StorageContexts.CV, dataId);
 
         final Response flashcards = recoginzeFlashcards(publicURLToUploadedFile, type.getFileType());
         save(flashcards, user.getId());

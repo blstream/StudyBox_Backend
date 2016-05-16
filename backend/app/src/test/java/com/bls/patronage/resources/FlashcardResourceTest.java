@@ -1,5 +1,6 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageService;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Flashcard;
@@ -29,10 +30,11 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class FlashcardResourceTest {
     private static final FlashcardDAO dao = mock(FlashcardDAO.class);
+    private static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new FlashcardResource(dao))
+            .addResource(new FlashcardResource(dao, storageService))
             .build();
     @Captor
     private ArgumentCaptor<Flashcard> flashcardCaptor;

@@ -108,12 +108,12 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         // resources
         environment.jersey().register(new DeckResource(decksDAO));
         environment.jersey().register(new DecksResource(decksDAO));
-        environment.jersey().register(new FlashcardResource(flashcardDAO));
+        environment.jersey().register(new FlashcardResource(flashcardDAO, storageService));
         environment.jersey().register(new FlashcardsResource(flashcardDAO));
         environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new UsersResource(userDAO));
         environment.jersey().register(new ResetPasswordResource(userDAO, tokenDAO, configuration.getResetPasswordConfig()));
-        environment.jersey().register(new TipResource(tipDAO));
+        environment.jersey().register(new TipResource(tipDAO, storageService));
         environment.jersey().register(new TipsResource(tipDAO));
         environment.jersey().register(new ResultsResource(flashcardDAO, resultDAO));
         environment.jersey().register(new DecksCvMagicResource(storageService, decksDAO, flashcardDAO, cvServer));
