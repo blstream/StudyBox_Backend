@@ -18,27 +18,27 @@ import java.util.UUID;
 @RegisterMapper(FlashcardMapper.class)
 abstract public class FlashcardDAO {
 
-    @SqlQuery("select id,question,answer,deckId,isHidden from flashcards where id = :id")
+    @SqlQuery("select id, question, answer, deckId, isHidden, questionImageURL, answerImageURL from flashcards where id = :id")
     abstract Flashcard get(@Bind("id") UUID id);
 
-    @SqlQuery("select id,question,answer,deckId,isHidden from flashcards where deckId = :deckId")
+    @SqlQuery("select id, question, answer, deckId, isHidden, questionImageURL, answerImageURL from flashcards where deckId = :deckId")
     public abstract List<Flashcard> getAllFlashcards(@Bind("deckId") UUID deckId);
 
     @SqlQuery("select id from flashcards where deckId = :deckId")
     public abstract List<String> getFlashcardsIdFromSelectedDeck(@Bind("deckId") UUID deckId);
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into flashcards values (:id, :question, :answer, :deckId, :isHidden)")
+    @SqlUpdate("insert into flashcards values (:id, :question, :answer, :deckId, :isHidden, :questionImageURL, :answerImageURL)")
     public abstract UUID createFlashcard(@BindBean Flashcard flashcard);
 
-    @SqlUpdate("update flashcards set question = :question, answer = :answer, isHidden = :isHidden where id = :id")
+    @SqlUpdate("update flashcards set question = :question, answer = :answer, isHidden = :isHidden,questionImageURL = :questionImageURL,answerImageURL = :answerImageURL where id = :id")
     public abstract void updateFlashcard(@BindBean Flashcard flashcard);
 
     @SqlUpdate("delete from flashcards where id = :id")
     public abstract void deleteFlashcard(@Bind("id") UUID id);
 
     //  Temporary solution for getting random flashcards
-    @SqlQuery("select id,question,answer,deckId,isHidden from flashcards where deckId = :deckId limit 1 " +
+    @SqlQuery("select id, question, answer, deckId, isHidden, questionImageURL, answerImageURL from flashcards where deckId = :deckId limit 1 " +
             "offset floor(:random*:number)")
     abstract Flashcard getRandomFlashcard(@Bind("random") Double random, @Bind("number") Integer number, @Bind("deckId") UUID deckId);
 
