@@ -44,18 +44,18 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public void delete(UUID dataId, UUID userId) throws StorageException {
+    public void delete(UUID userId, StorageContexts context, UUID dataId) throws StorageException {
         try {
-            Files.delete(FilePathsCoder.resolvePathToFile(STORAGE_PATH, dataId, userId));
+            Files.delete(FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId));
         } catch (IOException e) {
             throw new StorageException(e);
         }
     }
 
     @Override
-    public OutputStream get(UUID dataId, UUID userId) throws StorageException {
+    public OutputStream get(UUID userId, StorageContexts context, UUID dataId) throws StorageException {
         try {
-            return new FileOutputStream(FilePathsCoder.resolvePathToFile(STORAGE_PATH, dataId, userId).toFile());
+            return new FileOutputStream(FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId).toFile());
         } catch (FileNotFoundException e) {
             throw new StorageException(e);
         }

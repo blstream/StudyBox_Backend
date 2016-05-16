@@ -9,13 +9,11 @@ public interface StorageService {
 
     UUID create(InputStream stream, UUID userId) throws StorageException;
 
-    default URI createPublicURL(final Class<?> storageResourceClass, UUID dataId, UUID userId) {
-        return FilePathsCoder.resolveURIToFile(storageResourceClass, dataId, userId);
+    default URI createPublicURL(final Class<?> storageResourceClass, UUID dataId, StorageContexts context, UUID userId) {
+        return FilePathsCoder.resolveURIToFile(storageResourceClass, userId, context, dataId);
     }
 
-    ;
+    void delete(UUID userId, StorageContexts context, UUID dataId) throws StorageException;
 
-    void delete(UUID dataId, UUID userId) throws StorageException;
-
-    OutputStream get(UUID dataId, UUID userId) throws StorageException;
+    OutputStream get(UUID userId, StorageContexts context, UUID dataId) throws StorageException;
 }
