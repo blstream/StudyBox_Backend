@@ -12,15 +12,16 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TipRepresentation implements DbMappable<Tip> {
+    @NotEmpty
+    @Length(max = 1000)
+    private final String essence;
+    @NotNull
+    @Range(min = 0, max = 10)
+    private final Integer difficult;
     private UUID id;
     private UUID flashcardId;
     private UUID deckId;
-    @NotEmpty
-    @Length(max=1000)
-    private final String essence;
-    @NotNull
-    @Range(min=0, max=10)
-    private final Integer difficult;
+    private String essenceImageURL;
 
 
     public TipRepresentation(@JsonProperty("essence") String essence,
@@ -35,6 +36,7 @@ public class TipRepresentation implements DbMappable<Tip> {
         this.deckId = tip.getDeckId();
         this.flashcardId = tip.getFlashcardId();
         this.id = tip.getId();
+        this.essenceImageURL = tip.getEssenceImageURL();
     }
 
     @Override
@@ -74,6 +76,15 @@ public class TipRepresentation implements DbMappable<Tip> {
 
     public TipRepresentation setId(UUID id) {
         this.id = id;
+        return this;
+    }
+
+    public String getEssenceImageURL() {
+        return essenceImageURL;
+    }
+
+    public TipRepresentation setEssenceImageURL(String essenceImageURL) {
+        this.essenceImageURL = essenceImageURL;
         return this;
     }
 }

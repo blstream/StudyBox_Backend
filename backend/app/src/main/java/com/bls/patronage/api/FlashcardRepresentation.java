@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FlashcardRepresentation implements DbMappable<Flashcard> {
-    private UUID id;
     @NotEmpty
     @Length(max = 1000)
     private final String question;
@@ -21,8 +20,11 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
     private final String answer;
     @NotNull
     private final Boolean isHidden;
+    private UUID id;
     private UUID deckId;
     private Integer tipsCount;
+    private String questionImageURL;
+    private String answerImageURL;
 
     public FlashcardRepresentation(@JsonProperty("question") String question,
                                    @JsonProperty("answer") String answer,
@@ -38,11 +40,13 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         this.answer = flashcard.getAnswer();
         this.deckId = flashcard.getDeckId();
         this.isHidden = flashcard.getIsHidden();
+        this.questionImageURL = flashcard.getQuestionImageURL();
+        this.answerImageURL = flashcard.getAnswerImageURL();
     }
 
     @Override
     public Flashcard map() {
-        return new Flashcard(id, question, answer, deckId, isHidden);
+        return new Flashcard(id, question, answer, deckId, isHidden, questionImageURL, answerImageURL);
     }
 
     public String getQuestion() {
@@ -57,17 +61,17 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return id;
     }
 
+    public FlashcardRepresentation setId(UUID id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getTipsCount() {
         return tipsCount;
     }
 
     public FlashcardRepresentation setTipsCount(int tipsCount) {
         this.tipsCount = tipsCount;
-        return this;
-    }
-
-    public FlashcardRepresentation setId(UUID id) {
-        this.id = id;
         return this;
     }
 
@@ -84,21 +88,41 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return isHidden;
     }
 
+    public String getQuestionImageURL() {
+        return questionImageURL;
+    }
+
+    public FlashcardRepresentation setQuestionImageURL(String questionImageURL) {
+        this.questionImageURL = questionImageURL;
+        return this;
+    }
+
+    public String getAnswerImageURL() {
+        return answerImageURL;
+    }
+
+    public FlashcardRepresentation setAnswerImageURL(String answerImageURL) {
+        this.answerImageURL = answerImageURL;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlashcardRepresentation that = (FlashcardRepresentation) o;
-        return Objects.equals(question, that.question) &&
-                Objects.equals(answer, that.answer) &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(deckId, that.deckId) &&
-                Objects.equals(isHidden, that.isHidden) &&
-                Objects.equals(tipsCount, that.tipsCount);
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getQuestion(), that.getQuestion()) &&
+                Objects.equals(getAnswer(), that.getAnswer()) &&
+                Objects.equals(getIsHidden(), that.getIsHidden()) &&
+                Objects.equals(getDeckId(), that.getDeckId()) &&
+                Objects.equals(getTipsCount(), that.getTipsCount()) &&
+                Objects.equals(getQuestionImageURL(), that.getQuestionImageURL()) &&
+                Objects.equals(getAnswerImageURL(), that.getAnswerImageURL());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(question, answer, id, deckId, isHidden, tipsCount);
+        return Objects.hash(getId(), getQuestion(), getAnswer(), getIsHidden(), getDeckId(), getTipsCount(), getQuestionImageURL(), getAnswerImageURL());
     }
 }
