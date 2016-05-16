@@ -2,7 +2,6 @@ package com.bls.patronage.db.model;
 
 
 import java.util.UUID;
-import com.google.common.base.Objects;
 
 public class Tip extends IdentifiableEntity {
 
@@ -10,6 +9,7 @@ public class Tip extends IdentifiableEntity {
     private int difficult;
     private UUID flashcardId;
     private UUID deckId;
+    private String essenceImageURL;
 
     public Tip(){
     }
@@ -110,36 +110,40 @@ public class Tip extends IdentifiableEntity {
         this.deckId = deckId;
     }
 
+    public String getEssenceImageURL() {
+        return essenceImageURL;
+    }
+
+    public Tip setEssenceImageURL(String essenceImageURL) {
+        this.essenceImageURL = essenceImageURL;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Tip tip = (Tip) o;
-
-        if (!getId().equals(tip.getId())) return false;
-        if (getDifficult()!=tip.getDifficult()) return false;
-        if (!getFlashcardId().equals(tip.getFlashcardId())) return false;
-        if (!getDeckId().equals(tip.getDeckId())) return false;
-        return getEssence().equals(tip.getEssence());
+        return getDifficult() == tip.getDifficult() &&
+                java.util.Objects.equals(getEssence(), tip.getEssence()) &&
+                java.util.Objects.equals(getFlashcardId(), tip.getFlashcardId()) &&
+                java.util.Objects.equals(getDeckId(), tip.getDeckId()) &&
+                java.util.Objects.equals(getEssenceImageURL(), tip.getEssenceImageURL());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getEssence(), getDifficult(), getFlashcardId(), getDeckId());
+        return java.util.Objects.hash(getEssence(), getDifficult(), getFlashcardId(), getDeckId(), getEssenceImageURL());
     }
 
     @Override
     public String toString() {
         return "Tip{" +
                 "essence='" + essence + '\'' +
-                ", difficult='" + difficult + '\'' +
-                ", flashcardId=" + flashcardId + '\'' +
+                ", difficult=" + difficult +
+                ", flashcardId=" + flashcardId +
                 ", deckId=" + deckId +
+                ", essenceImageURL='" + essenceImageURL + '\'' +
                 '}';
     }
-
-
-
 }
