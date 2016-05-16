@@ -11,6 +11,8 @@ import java.util.UUID;
 public class TipMapper implements ResultSetMapper<Tip> {
     @Override
     public Tip map(int i, ResultSet resultSet, StatementContext statementContext) throws SQLException {
-        return new Tip((UUID) resultSet.getObject("id"), resultSet.getString("essence"), resultSet.getInt("difficult"), (UUID) resultSet.getObject("flashcardId"), (UUID) resultSet.getObject("deckId"));
+        return new Tip((UUID) resultSet.getObject("id"), resultSet.getString("essence"),
+                resultSet.getInt("difficult"), (UUID) resultSet.getObject("flashcardId"),
+                (UUID) resultSet.getObject("deckId"), resultSet.getString("essenceImageURL"));
     }
 }
