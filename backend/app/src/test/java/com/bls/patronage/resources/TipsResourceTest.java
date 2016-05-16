@@ -72,11 +72,11 @@ public class TipsResourceTest {
         final ImmutableList<Tip> tips = ImmutableList.of(tip);
         when(dao.getAllTips(tip.getFlashcardId())).thenReturn(tips);
 
-        final List<Tip> response = resources.client().target(tipsURI)
-                .request().get(new GenericType<List<Tip>>() {
+        final List<TipRepresentation> response = resources.client().target(tipsURI)
+                .request().get(new GenericType<List<TipRepresentation>>() {
                 });
 
         verify(dao).getAllTips(tip.getFlashcardId());
-        assertThat(response).containsAll(tips);
+        assertThat(response).containsOnly(new TipRepresentation(tip));
     }
 }

@@ -75,12 +75,12 @@ public class TipResourceTest {
     @Test
     public void getTip() {
         when(dao.getTipById(any(UUID.class))).thenReturn(tip);
-        final Tip recievedTip = resources.client().target(tipURI)
+        final TipRepresentation recievedTip = resources.client().target(tipURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .get(Tip.class);
+                .get(TipRepresentation.class);
 
         verify(dao).getTipById(tip.getId());
-        assertThat(recievedTip).isEqualTo(tip);
+        assertThat(recievedTip).isEqualTo(new TipRepresentation(tip));
     }
 
 }

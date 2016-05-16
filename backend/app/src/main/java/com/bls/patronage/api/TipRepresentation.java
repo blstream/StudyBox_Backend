@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -86,5 +87,23 @@ public class TipRepresentation implements DbMappable<Tip> {
     public TipRepresentation setEssenceImageURL(String essenceImageURL) {
         this.essenceImageURL = essenceImageURL;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TipRepresentation that = (TipRepresentation) o;
+        return Objects.equals(getEssence(), that.getEssence()) &&
+                Objects.equals(getDifficult(), that.getDifficult()) &&
+                Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getFlashcardId(), that.getFlashcardId()) &&
+                Objects.equals(getDeckId(), that.getDeckId()) &&
+                Objects.equals(getEssenceImageURL(), that.getEssenceImageURL());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEssence(), getDifficult(), getId(), getFlashcardId(), getDeckId(), getEssenceImageURL());
     }
 }
