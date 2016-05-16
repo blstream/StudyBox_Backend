@@ -183,5 +183,16 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="15" author="lupi">
+        <addColumn tableName="flashcards">
+            <column name="questionImageURL" type="text"/>
+        </addColumn>
+        <addColumn tableName="flashcards">
+            <column name="answerImageURL" type="text"/>
+        </addColumn>
+        <addColumn tableName="tips">
+            <column name="essenceImageURL" type="text"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
