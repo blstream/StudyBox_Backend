@@ -9,7 +9,7 @@ public class Flashcard extends IdentifiableEntity {
     private final UUID deckId;
     private final Boolean isHidden;
     private String questionImageURL;
-    private Boolean answerImageURL;
+    private String answerImageURL;
 
     public Flashcard() {
         super();
@@ -27,7 +27,7 @@ public class Flashcard extends IdentifiableEntity {
         this.isHidden = isHidden;
     }
 
-    public Flashcard(UUID id, String question, String answer, UUID deckId, Boolean isHidden, String questionImageURL, Boolean answerImageURL) {
+    public Flashcard(UUID id, String question, String answer, UUID deckId, Boolean isHidden, String questionImageURL, String answerImageURL) {
         super(id);
         this.question = question;
         this.answer = answer;
@@ -62,11 +62,11 @@ public class Flashcard extends IdentifiableEntity {
         return this;
     }
 
-    public Boolean getAnswerImageURL() {
+    public String getAnswerImageURL() {
         return answerImageURL;
     }
 
-    public Flashcard setAnswerImageURL(Boolean answerImageURL) {
+    public Flashcard setAnswerImageURL(String answerImageURL) {
         this.answerImageURL = answerImageURL;
         return this;
     }
