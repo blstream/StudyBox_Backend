@@ -270,6 +270,49 @@ All GET requests on every endpoint are anonymous-acceptable, although no other r
 + Response 200 (application/json)
     + Attributes (FlashcardCollection)
 
+### Add image as question [POST /decks/{deckId}/flashcards{flashcardId}/questionImage]
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="file"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ Response 200 (application/json)
+
+    This response is returned when question image was added.
+    
+    + Attributes (Flashcard)
+    
+### Add image as answer [POST /decks/{deckId}/flashcards{flashcardId}/answerImage]
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="file"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ Response 200 (application/json)
+
+    This response is returned when answer image was added.
+    
+    + Attributes (Flashcard)
+
+
 # Group User
 
 ## Users [/users]
@@ -374,9 +417,9 @@ If anything fails, a suitable error code with description will be returned.
             "message":"Reset password failed."
         }
         
-# Group File import
+# Group Flashcard import
 
-## Image and Text files[/decks/cv{?fileType}]
+## Image and Text files [/decks/cv{?fileType}]
 
 ### Flashcards from File [POST]
 
@@ -400,12 +443,12 @@ This resource is used to transform image to flashcards in database.
 
 + Response 201 (application/json)
 
-# Group CV
+# Group Storage
 
-## Resources for CV server [/storage/{userId}/{fileId}]
+## Download or delete file in specific context [/storage/{userId}/{context}/{fileId}
 
-### Get file[GET]
-This resource returns file from storage using userId and fileId
+### Get file [GET]
+This resource gets selectred file from storage using userId and fileId
 
 + Response 200 (application/json)
 
@@ -421,7 +464,11 @@ This resource returns file from storage using userId and fileId
         AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
         -----BOUNDARY
 
+### Delete file [DELETE]
+This resource deletes selected file from storage using userId and fileId
 
++ Response 200 (application/json)
+       
 
 # Group Tip
 
@@ -438,7 +485,7 @@ This resource returns file from storage using userId and fileId
     This response is returned when tip was created.
 
     + Attributes (Tip)
-
+    
 ### Get Tip by ID [GET /decks/{deckId}/flashcards/{flashcardId}/tips/{tipId}]
 
 + Response 200 (application/json)
@@ -464,6 +511,28 @@ This resource returns file from storage using userId and fileId
 + Response 200 (application/json)
 
     This response is returned when tip was updated.
+    
+    + Attributes (Tip)
+    
+### Add image as essence [POST /decks/{deckId}/flashcards/{flashcardId}/tips/{tipId}/essenceImage]
+
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="file"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ Response 200 (application/json)
+
+    This response is returned when essence image was added.
     
     + Attributes (Tip)
 
@@ -594,6 +663,8 @@ This resource returns file from storage using userId and fileId
 ### Flashcard (FlashcardWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - Flashcard UUID, 36 chars, 8-4-4-4-12 chars
 + deckId: `291acb97-6f50-4522-8049-aee0b4e16b42` (string, required) - Deck UUID, 36 chars, 8-4-4-4-12 chars
++ questionImageURL: `http://www.sourcecertain.com/img/Example.png` (string, optional) - URL to image attached to this flashcard
++ answerImageURL: `http://www.sourcecertain.com/img/Example.png` (string, optional) - URL to image attached to this flashcard
 
 ### TipWithoutId (object)
 + essence: `Sample content` (string, required) - content of a Tip
@@ -601,6 +672,7 @@ This resource returns file from storage using userId and fileId
 
 ### Tip (TipWithoutId)
 + id: `12345678-9012-3456-7890-123456789012` (string, required) - tip UUID, 36 chars, 8-4-4-4-12 chars
++ essenceImageURL: `http://www.sourcecertain.com/img/Example.png` (string, optional) - URL to image attached to this flashcard
 
 ### TagWithoutId (object)
 + name: `Sample tag name` (string) - name attribute for Tag
