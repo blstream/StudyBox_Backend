@@ -19,12 +19,13 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public UUID create(InputStream stream, UUID userId) throws StorageException {
+    public UUID create(InputStream stream, StorageContexts contexts, UUID userId) throws StorageException {
         Path path = Paths.get(STORAGE_PATH.toString(), userId.toString());
         UUID dataId = UUID.randomUUID();
         try {
             createPathToFile(path);
-            path.resolve(dataId.toString());
+            path = path.resolve(contexts.toString());
+            path = path.resolve(dataId.toString());
             Files.copy(stream, path);
         } catch (IOException e) {
             throw new StorageException(e);
