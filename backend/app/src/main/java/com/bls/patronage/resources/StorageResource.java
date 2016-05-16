@@ -1,5 +1,6 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageContexts;
 import com.bls.patronage.StorageException;
 import com.bls.patronage.StorageService;
 import com.bls.patronage.db.model.User;
@@ -16,7 +17,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.UUID;
 
-@Path("/storage/{userId}/{storageId}")
+@Path("/storage/{userId}/{context}/{storageId}")
 @Produces(MediaType.APPLICATION_JSON)
 public class StorageResource {
 
@@ -29,6 +30,7 @@ public class StorageResource {
     @GET
     public StreamingOutput getFile(@Auth User user,
                                    @PathParam("userId") UUID userId,
+                                   @PathParam("context") StorageContexts context,
                                    @PathParam("storageId") UUID storageId) throws StorageException {
 
         assert user.getId().equals(userId);
@@ -36,7 +38,7 @@ public class StorageResource {
         return os -> {
             final Writer writer = new BufferedWriter(
                     new OutputStreamWriter(
-                            storageService.get(storageId, userId)));
+                            storageService.get(userId, context, storageId)));
             writer.flush();
         };
     }
