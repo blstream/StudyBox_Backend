@@ -4,6 +4,7 @@ import com.bls.patronage.StorageContexts;
 import com.bls.patronage.StorageException;
 import com.bls.patronage.StorageService;
 import com.bls.patronage.api.TipRepresentation;
+import com.bls.patronage.db.dao.StorageDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.model.Tip;
 import com.bls.patronage.db.model.User;
@@ -30,11 +31,13 @@ import java.util.UUID;
 public class TipResource {
     private final TipDAO tipDAO;
     private final StorageService storageService;
+    private final StorageDAO storageDAO;
 
 
-    public TipResource(TipDAO tipDAO, StorageService storageService) {
+    public TipResource(TipDAO tipDAO, StorageService storageService, StorageDAO storageDAO) {
         this.tipDAO = tipDAO;
         this.storageService = storageService;
+        this.storageDAO = storageDAO;
     }
 
     @GET
@@ -43,9 +46,16 @@ public class TipResource {
     }
 
     @DELETE
-    public void deleteTip(@Valid @PathParam("tipId") UUIDParam tipId){
-        tipDAO.getTipById(tipId.get());
+    public void deleteTip(
+            @Auth User user,
+            @Valid @PathParam("tipId") UUIDParam tipId) throws StorageException {
+        Tip tip = tipDAO.getTipById(tipId.get());
         tipDAO.deleteTip(tipId.get());
+        if (tip.getEssenceImageURL() != null) {
+            UUID dataId = storageDAO.getDataIdsFromEntityId(tipId.get()).get(0);
+
+            storageService.delete(user.getId(), StorageContexts.TIPS, dataId);
+        }
     }
 
     @PUT
@@ -80,6 +90,7 @@ public class TipResource {
         Tip result = tipDAO.getTipById(tipId.get()).setEssenceImageURL(essenceImageURI.toString());
         tipDAO.updateTip(result);
 
+        storageDAO.createEntry(tipId.get(), essenceImageId);
         return new TipRepresentation(result);
     }
 }

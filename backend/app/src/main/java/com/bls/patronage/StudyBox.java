@@ -5,6 +5,7 @@ import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
+import com.bls.patronage.db.dao.StorageDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.TokenDAO;
 import com.bls.patronage.db.dao.UserDAO;
@@ -19,6 +20,7 @@ import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import com.bls.patronage.resources.ResetPasswordResource;
 import com.bls.patronage.resources.ResultsResource;
+import com.bls.patronage.resources.StorageResource;
 import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
@@ -98,6 +100,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         final TokenDAO tokenDAO = jdbi.onDemand(TokenDAO.class);
         final TipDAO tipDAO = jdbi.onDemand(TipDAO.class);
         final ResultDAO resultDAO = jdbi.onDemand(ResultDAO.class);
+        final StorageDAO storageDAO = jdbi.onDemand(StorageDAO.class);
 
         // Jersey clients
         final JerseyWebTarget cvServer = JerseyClientBuilder.createClient().target(configuration.getCvServerURL().toString());
@@ -108,15 +111,16 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         // resources
         environment.jersey().register(new DeckResource(decksDAO));
         environment.jersey().register(new DecksResource(decksDAO));
-        environment.jersey().register(new FlashcardResource(flashcardDAO, storageService));
+        environment.jersey().register(new FlashcardResource(flashcardDAO, storageService, storageDAO));
         environment.jersey().register(new FlashcardsResource(flashcardDAO));
         environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new UsersResource(userDAO));
         environment.jersey().register(new ResetPasswordResource(userDAO, tokenDAO, configuration.getResetPasswordConfig()));
-        environment.jersey().register(new TipResource(tipDAO, storageService));
+        environment.jersey().register(new TipResource(tipDAO, storageService, storageDAO));
         environment.jersey().register(new TipsResource(tipDAO));
         environment.jersey().register(new ResultsResource(flashcardDAO, resultDAO));
         environment.jersey().register(new DecksCvMagicResource(storageService, decksDAO, flashcardDAO, cvServer));
+        environment.jersey().register(new StorageResource(storageService));
 
         // Exception mappers
         environment.jersey().register(new DataAccessExceptionMapper());

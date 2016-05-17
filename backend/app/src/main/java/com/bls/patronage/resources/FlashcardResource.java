@@ -5,6 +5,7 @@ import com.bls.patronage.StorageException;
 import com.bls.patronage.StorageService;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.dao.StorageDAO;
 import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.Auth;
@@ -30,10 +31,12 @@ import java.util.UUID;
 public class FlashcardResource {
     private final FlashcardDAO flashcardDAO;
     private final StorageService storageService;
+    private final StorageDAO storageDAO;
 
-    public FlashcardResource(FlashcardDAO flashcardDAO, StorageService storageService) {
+    public FlashcardResource(FlashcardDAO flashcardDAO, StorageService storageService, StorageDAO storageDAO) {
         this.flashcardDAO = flashcardDAO;
         this.storageService = storageService;
+        this.storageDAO = storageDAO;
     }
 
     @GET
@@ -47,10 +50,16 @@ public class FlashcardResource {
 
     @DELETE
     public void deleteFlashcard(
-            @Valid @PathParam("flashcardId") UUIDParam flashcardId) {
+            @Auth User user,
+            @Valid @PathParam("flashcardId") UUIDParam flashcardId) throws StorageException {
 
-        flashcardDAO.getFlashcardById(flashcardId.get());
+        Flashcard flashcard = flashcardDAO.getFlashcardById(flashcardId.get());
         flashcardDAO.deleteFlashcard(flashcardId.get());
+        if (flashcard.getAnswerImageURL() != null || flashcard.getQuestionImageURL() != null) {
+            for (UUID id : storageDAO.getDataIdsFromEntityId(flashcardId.get())) {
+                storageService.delete(user.getId(), StorageContexts.FLASHCARDS, id);
+            }
+        }
     }
 
     @PUT
@@ -82,6 +91,7 @@ public class FlashcardResource {
         Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setQuestionImageURL(questionImageURI.toString());
         flashcardDAO.updateFlashcard(result);
 
+        storageDAO.createEntry(flashcardId.get(), questionImageId);
         return new FlashcardRepresentation(result);
     }
 
@@ -100,6 +110,7 @@ public class FlashcardResource {
         Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setAnswerImageURL(answerImageURI.toString());
         flashcardDAO.updateFlashcard(result);
 
+        storageDAO.createEntry(flashcardId.get(), answerImageId);
         return new FlashcardRepresentation(result);
     }
 }
