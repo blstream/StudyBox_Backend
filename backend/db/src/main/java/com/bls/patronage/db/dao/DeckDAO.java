@@ -11,6 +11,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -97,30 +98,20 @@ public abstract class DeckDAO {
     }
 
     public Collection<Deck> getDecksByName(String name, UUID userId) {
-        List<Deck> decks = getDecksUsingName(String.format("%%%s%%", name), userId);
-        List<Deck> filteredDecks = decks
-                .stream()
-                .filter(deck -> deck.getName().equals(name))
-                .collect(Collectors.toList());
-
-        if(filteredDecks.isEmpty()) {
-            return decks;
+        List<Deck> decks;
+        if((decks = getDecksUsingName(name, userId)).isEmpty()) {
+            return getDecksUsingName(String.format("%%%s%%", name), userId);
         } else {
-            return filteredDecks;
+            return decks;
         }
     }
 
     public Collection<Deck> getUserDecksByName(String name, UUID userId) {
-        List<Deck> decks = getUserDecksUsingName(String.format("%%%s%%", name), userId);
-        List<Deck> filteredDecks = decks
-                .stream()
-                .filter(deck -> deck.getName().equals(name))
-                .collect(Collectors.toList());
-
-        if(filteredDecks.isEmpty()) {
-            return decks;
+        List<Deck> decks;
+        if((decks = getUserDecksUsingName(name, userId)).isEmpty()) {
+            return getUserDecksUsingName(String.format("%%%s%%", name), userId);
         } else {
-            return filteredDecks;
+            return decks;
         }
     }
 
