@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RegisterMapper(DeckMapper.class)
 @UseStringTemplate3StatementLocator
@@ -97,12 +98,30 @@ public abstract class DeckDAO {
 
     public Collection<Deck> getDecksByName(String name, UUID userId) {
         List<Deck> decks = getDecksUsingName(String.format("%%%s%%", name), userId);
-        return decks;
+        List<Deck> filteredDecks = decks
+                .stream()
+                .filter(deck -> deck.getName().equals(name))
+                .collect(Collectors.toList());
+
+        if(filteredDecks.isEmpty()) {
+            return decks;
+        } else {
+            return filteredDecks;
+        }
     }
 
     public Collection<Deck> getUserDecksByName(String name, UUID userId) {
         List<Deck> decks = getUserDecksUsingName(String.format("%%%s%%", name), userId);
-        return decks;
+        List<Deck> filteredDecks = decks
+                .stream()
+                .filter(deck -> deck.getName().equals(name))
+                .collect(Collectors.toList());
+
+        if(filteredDecks.isEmpty()) {
+            return decks;
+        } else {
+            return filteredDecks;
+        }
     }
 
     public Collection<Deck> getAllDecks(UUID userId) {
