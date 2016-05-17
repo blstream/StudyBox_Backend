@@ -3,6 +3,7 @@ package com.bls.patronage.resources;
 import com.bls.patronage.StorageService;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
+import com.bls.patronage.db.dao.StorageDAO;
 import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -30,12 +31,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlashcardResourceTest {
-    private static final FlashcardDAO dao = mock(FlashcardDAO.class);
+    private static final FlashcardDAO flashcardDAO = mock(FlashcardDAO.class);
+    private static final StorageDAO storageDAO = mock(StorageDAO.class);
     private static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new FlashcardResource(dao, storageService))
+            .addResource(new FlashcardResource(flashcardDAO, storageService, storageDAO))
             .addProvider(MultiPartFeature.class)
             .build();
     @Captor
@@ -55,7 +57,7 @@ public class FlashcardResourceTest {
 
     @After
     public void tearDown() {
-        reset(dao);
+        reset(flashcardDAO);
     }
 
     @Test
@@ -65,7 +67,7 @@ public class FlashcardResourceTest {
                 .put(Entity.entity(flashcardRepresentation, MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
-        verify(dao).updateFlashcard(flashcardCaptor.capture());
+        verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
         assertThat(flashcardCaptor.getValue().getId()).isEqualTo(flashcard.getId());
         assertThat(flashcardCaptor.getValue().getQuestion()).isEqualTo(flashcardRepresentation.getQuestion());
         assertThat(flashcardCaptor.getValue().getAnswer()).isEqualTo(flashcardRepresentation.getAnswer());
@@ -74,7 +76,7 @@ public class FlashcardResourceTest {
 
     @Test
     public void deleteFlashcard() {
-        when(dao.getFlashcardById(flashcard.getId())).thenReturn(flashcard);
+        when(flashcardDAO.getFlashcardById(flashcard.getId())).thenReturn(flashcard);
         final Response response = resources.client().target(flashcardURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .delete();
@@ -84,12 +86,12 @@ public class FlashcardResourceTest {
 
     @Test
     public void getFlashcard() {
-        when(dao.getFlashcardById(any(UUID.class))).thenReturn(flashcard);
+        when(flashcardDAO.getFlashcardById(any(UUID.class))).thenReturn(flashcard);
         final FlashcardRepresentation receivedFlashcard = resources.client().target(flashcardURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get(FlashcardRepresentation.class);
 
-        verify(dao).getFlashcardById(flashcard.getId());
+        verify(flashcardDAO).getFlashcardById(flashcard.getId());
         assertThat(receivedFlashcard).isEqualTo(new FlashcardRepresentation(flashcard));
     }
 }

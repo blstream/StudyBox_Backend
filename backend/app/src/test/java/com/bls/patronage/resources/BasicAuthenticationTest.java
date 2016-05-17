@@ -6,6 +6,7 @@ import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
+import com.bls.patronage.db.dao.StorageDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
@@ -35,6 +36,7 @@ public class BasicAuthenticationTest {
     protected static final ResultDAO resultDAO = mock(ResultDAO.class);
     protected static final FlashcardDAO flashcardDAO = mock(FlashcardDAO.class);
     protected static final TipDAO tipDAO = mock(TipDAO.class);
+    protected static final StorageDAO storageDAO = mock(StorageDAO.class);
     protected static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
@@ -51,8 +53,8 @@ public class BasicAuthenticationTest {
             .addResource(new UserResource(userDAO))
             .addResource(new DecksResource(deckDao))
             .addResource(new DeckResource(deckDao))
-            .addResource(new TipResource(tipDAO, storageService))
-            .addResource(new FlashcardResource(flashcardDAO, storageService))
+            .addResource(new TipResource(tipDAO, storageService, storageDAO))
+            .addResource(new FlashcardResource(flashcardDAO, storageService, storageDAO))
             .addResource(new StorageResource(storageService))
             .addResource(new ResultsResource(flashcardDAO, resultDAO))
             .build();
