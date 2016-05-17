@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.StorageService;
 import com.bls.patronage.api.TipRepresentation;
+import com.bls.patronage.db.dao.StorageDAO;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.model.Tip;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -30,12 +31,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TipResourceTest {
-    private static final TipDAO dao = mock(TipDAO.class);
+    private static final TipDAO tipDAO = mock(TipDAO.class);
+    private static final StorageDAO storageDAO = mock(StorageDAO.class);
     private static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new TipResource(dao, storageService))
+            .addResource(new TipResource(tipDAO, storageService, storageDAO))
             .addProvider(MultiPartFeature.class)
             .build();
 
@@ -54,7 +56,7 @@ public class TipResourceTest {
 
     @After
     public void tearDown(){
-        reset(dao);
+        reset(tipDAO);
     }
 
     @Test
@@ -68,7 +70,7 @@ public class TipResourceTest {
 
     @Test
     public void deleteTip() {
-        when(dao.getTipById(tip.getId())).thenReturn(tip);
+        when(tipDAO.getTipById(tip.getId())).thenReturn(tip);
         final Response response = resources.client().target(tipURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .delete();
@@ -78,12 +80,12 @@ public class TipResourceTest {
 
     @Test
     public void getTip() {
-        when(dao.getTipById(any(UUID.class))).thenReturn(tip);
+        when(tipDAO.getTipById(any(UUID.class))).thenReturn(tip);
         final TipRepresentation recievedTip = resources.client().target(tipURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get(TipRepresentation.class);
 
-        verify(dao).getTipById(tip.getId());
+        verify(tipDAO).getTipById(tip.getId());
         assertThat(recievedTip).isEqualTo(new TipRepresentation(tip));
     }
 }
