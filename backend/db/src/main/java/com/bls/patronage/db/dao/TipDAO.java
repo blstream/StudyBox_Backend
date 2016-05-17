@@ -3,7 +3,11 @@ package com.bls.patronage.db.dao;
 import com.bls.patronage.db.exception.DataAccessException;
 import com.bls.patronage.db.mapper.TipMapper;
 import com.bls.patronage.db.model.Tip;
-import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.BindBean;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -13,17 +17,17 @@ import java.util.UUID;
 @RegisterMapper(TipMapper.class)
 public abstract class TipDAO {
 
-    @SqlQuery("select id, essence, difficult, flashcardId, deckId from tips where id = :id")
+    @SqlQuery("select id, essence, difficult, flashcardId, deckId, essenceImageURL from tips where id = :id")
     abstract Tip getTip(@Bind("id") UUID id);
 
-    @SqlQuery("select id, essence, difficult, flashcardId, deckId from tips where flashcardId = :flashcardId")
+    @SqlQuery("select id, essence, difficult, flashcardId, deckId, essenceImageURL from tips where flashcardId = :flashcardId")
     public abstract List<Tip> getAllTips(@Bind("flashcardId") UUID flashcardId);
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into tips values (:id, :essence, :difficult, :flashcardId, :deckId)")
+    @SqlUpdate("insert into tips values (:id, :essence, :difficult, :flashcardId, :deckId, :essenceImageURL)")
     public abstract UUID createTip(@BindBean Tip tip);
 
-    @SqlUpdate("update tips set essence = :essence, difficult = :difficult where id = :id")
+    @SqlUpdate("update tips set essence = :essence, difficult = :difficult,essenceImageURL = :essenceImageURL  where id = :id")
     public abstract void updateTip(@BindBean Tip tip);
 
     @SqlUpdate("delete from tips where id = :id")

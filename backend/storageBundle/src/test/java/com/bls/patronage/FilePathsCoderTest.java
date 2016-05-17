@@ -15,32 +15,34 @@ public class FilePathsCoderTest {
     private String baseLocation = "./storage";
     private UUID userId = UUID.randomUUID();
     private UUID fileId = UUID.randomUUID();
+    private StorageContexts context = StorageContexts.FLASHCARDS;
 
     private String encoded = new StringBuilder()
             .append("/users")
             .append("/")
             .append(userId)
-            .append("/files")
+            .append("/")
+            .append(context.getContext())
             .append("/")
             .append(fileId)
             .toString();
-    private Path decoded = Paths.get(baseLocation, userId.toString(), fileId.toString());
+    private Path decoded = Paths.get(baseLocation, userId.toString(), context.getContext(), fileId.toString());
 
     @Test
     public void testURIToFile() throws MalformedURLException {
-        URI uri = FilePathsCoder.resolveURIToFile(ResourceImitation.class, decoded);
+        URI uri = FilePathsCoder.resolveURIToFile(ResourceImitation.class, userId, context, fileId);
 
         assertThat(uri.toString()).isEqualTo(encoded);
     }
 
     @Test
     public void testPathToFile() {
-        Path path = FilePathsCoder.resolvePathToFile(Paths.get(baseLocation), fileId, userId);
+        Path path = FilePathsCoder.resolvePathToFile(Paths.get(baseLocation), userId, context, fileId);
 
         assertThat(path).isEqualTo(decoded);
     }
 
-    @javax.ws.rs.Path("/users/{userId}/files")
+    @javax.ws.rs.Path("/users/{userId}")
     private class ResourceImitation {
     }
 }

@@ -1,9 +1,11 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageService;
 import com.bls.patronage.api.TipRepresentation;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.model.Tip;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -29,10 +31,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class TipResourceTest {
     private static final TipDAO dao = mock(TipDAO.class);
+    private static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new TipResource((dao)))
+            .addResource(new TipResource(dao, storageService))
+            .addProvider(MultiPartFeature.class)
             .build();
 
     @Captor
@@ -43,7 +47,7 @@ public class TipResourceTest {
 
     @Before
     public void setUp(){
-        tip = new Tip("12345678-9012-3456-7890-123456789012", "Like sky", 9, "8ad4b503-5bfc-4d8a-a761-0908374892b1", "68d7fd99-4bd9-45f6-85bb-86331f5c274d");
+        tip = new Tip(UUID.fromString("12345678-9012-3456-7890-123456789012"), "Like sky", 9, UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), UUID.fromString("68d7fd99-4bd9-45f6-85bb-86331f5c274d"));
         tipRepresentation = new TipRepresentation("Testing", 2);
         tipURI= UriBuilder.fromResource(TipResource.class).build(tip.getDeckId(), tip.getFlashcardId(), tip.getId()).toString();
     }
@@ -75,12 +79,11 @@ public class TipResourceTest {
     @Test
     public void getTip() {
         when(dao.getTipById(any(UUID.class))).thenReturn(tip);
-        final Tip recievedTip = resources.client().target(tipURI)
+        final TipRepresentation recievedTip = resources.client().target(tipURI)
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .get(Tip.class);
+                .get(TipRepresentation.class);
 
         verify(dao).getTipById(tip.getId());
-        assertThat(recievedTip).isEqualTo(tip);
+        assertThat(recievedTip).isEqualTo(new TipRepresentation(tip));
     }
-
 }

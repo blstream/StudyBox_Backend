@@ -1,5 +1,6 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageContexts;
 import com.bls.patronage.StorageException;
 import com.bls.patronage.StorageService;
 import com.bls.patronage.api.AcceptableFileTypes;
@@ -48,13 +49,13 @@ public class DecksCvMagicResource {
                                @FormDataParam("file") InputStream inputStream,
                                @QueryParam("fileType") AcceptableFileTypes type) throws StorageException {
 
-        final UUID dataId = storageService.create(inputStream, user.getId());
-        final URI publicURLToUploadedFile = storageService.createPublicURL(StorageResource.class, dataId, user.getId());
+        final UUID dataId = storageService.create(inputStream, StorageContexts.CV, user.getId());
+        final URI publicURLToUploadedFile = storageService.createPublicURI(StorageResource.class, user.getId(), StorageContexts.CV, dataId);
 
         final Response flashcards = recoginzeFlashcards(publicURLToUploadedFile, type.getFileType());
         save(flashcards, user.getId());
 
-        storageService.delete(dataId, user.getId());
+        storageService.delete(user.getId(), StorageContexts.CV, dataId);
         return Response.ok()
                 .status(Response.Status.CREATED).build();
     }

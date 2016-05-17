@@ -1,9 +1,11 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageService;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -29,10 +31,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class FlashcardResourceTest {
     private static final FlashcardDAO dao = mock(FlashcardDAO.class);
+    private static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new FlashcardResource(dao))
+            .addResource(new FlashcardResource(dao, storageService))
+            .addProvider(MultiPartFeature.class)
             .build();
     @Captor
     private ArgumentCaptor<Flashcard> flashcardCaptor;
@@ -42,8 +46,8 @@ public class FlashcardResourceTest {
 
     @Before
     public void setUp() {
-        flashcard = new Flashcard("12345678-9012-3456-7890-123456789012", "Are you ok?", "Yes",
-                "8ad4b503-5bfc-4d8a-a761-0908374892b1", false);
+        flashcard = new Flashcard(UUID.fromString("12345678-9012-3456-7890-123456789012"), "Are you ok?", "Yes",
+                UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), false);
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok", true);
         flashcardURI = UriBuilder.fromResource(FlashcardResource.class).build(flashcard.getDeckId(),
                 flashcard.getId()).toString();
