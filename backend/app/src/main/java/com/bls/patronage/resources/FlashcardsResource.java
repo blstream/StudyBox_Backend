@@ -3,6 +3,8 @@ package com.bls.patronage.resources;
 import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Amount;
+import com.bls.patronage.db.model.User;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
@@ -13,8 +15,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,11 +33,14 @@ public class FlashcardsResource {
         this.flashcardDAO = flashcardDAO;
     }
 
-
     @POST
-    public Response createFlashcard(@Valid FlashcardRepresentation flashcard,
-                                    @Valid @PathParam("deckId") UUIDParam id) {
-        flashcardDAO.createFlashcard(flashcard.setId(UUID.randomUUID()).setDeckId(id.get()).map());
+    public Response createFlashcard(@Auth @Valid FlashcardRepresentation flashcard,
+                                    @Valid @PathParam("deckId") UUIDParam id,
+                                    @Context SecurityContext context) {
+
+        final User user = (User) context.getUserPrincipal();
+
+        flashcardDAO.createFlashcard(flashcard.setId(UUID.randomUUID()).setDeckId(id.get()).map(), user.getId());
 
         return Response.ok(flashcard).status(Response.Status.CREATED).build();
     }
@@ -48,8 +55,9 @@ public class FlashcardsResource {
                     .stream()
                     .map(flashcard -> ((tipsCount == null || !tipsCount ) ?
                             new FlashcardRepresentation(flashcard) :
-                            new FlashcardRepresentation(flashcard).setTipsCount(
-                                    flashcardDAO.getTipsCount(flashcard.getId()))))
+                            new FlashcardRepresentation(flashcard)
+                                    .setTipsCount(flashcardDAO.getTipsCount(flashcard.getId()))
+                                    .setAuditFields(flashcardDAO.getFlashcardAuditFields(flashcard.getId()))))
                     .collect(Collectors.toList());
         } else {
             return flashcardDAO.getRandomFlashcards(amount.getValue(), id.get())
@@ -57,7 +65,8 @@ public class FlashcardsResource {
                     .map(flashcard -> ((tipsCount == null || !tipsCount ) ?
                             new FlashcardRepresentation(flashcard) :
                             new FlashcardRepresentation(flashcard).setTipsCount(
-                                    flashcardDAO.getTipsCount(flashcard.getId()))))
+                                    flashcardDAO.getTipsCount(flashcard.getId()))
+                                    .setAuditFields(flashcardDAO.getFlashcardAuditFields(flashcard.getId()))))
                     .collect(Collectors.toList());
         }
     }

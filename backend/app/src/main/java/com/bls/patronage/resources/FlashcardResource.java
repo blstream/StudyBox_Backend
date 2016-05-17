@@ -20,7 +20,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.UUID;
@@ -54,14 +56,16 @@ public class FlashcardResource {
     }
 
     @PUT
-    public FlashcardRepresentation updateFlashcard(
+    public FlashcardRepresentation updateFlashcard(@Auth
             @Valid @PathParam("flashcardId") UUIDParam flashcardId,
             @Valid FlashcardRepresentation flashcard,
-            @Valid @PathParam("deckId") UUIDParam deckId) {
+            @Valid @PathParam("deckId") UUIDParam deckId,
+            @Context SecurityContext context) {
 
+        final User user = (User) context.getUserPrincipal();
 
         flashcardDAO.getFlashcardById(flashcardId.get());
-        flashcardDAO.updateFlashcard(flashcard.setId(flashcardId.get()).setDeckId(deckId.get()).map());
+        flashcardDAO.updateFlashcard(flashcard.setId(flashcardId.get()).setDeckId(deckId.get()).map(), user.getId());
 
 
         return flashcard;
@@ -80,7 +84,7 @@ public class FlashcardResource {
         URI questionImageURI = storageService.createPublicURI(StorageResource.class, questionImageId, StorageContexts.FLASHCARDS, user.getId());
 
         Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setQuestionImageURL(questionImageURI.toString());
-        flashcardDAO.updateFlashcard(result);
+        flashcardDAO.updateFlashcard(result, user.getId());
 
         return new FlashcardRepresentation(result);
     }
@@ -98,7 +102,7 @@ public class FlashcardResource {
         URI answerImageURI = storageService.createPublicURI(StorageResource.class, answerImageId, StorageContexts.FLASHCARDS, user.getId());
 
         Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setAnswerImageURL(answerImageURI.toString());
-        flashcardDAO.updateFlashcard(result);
+        flashcardDAO.updateFlashcard(result, user.getId());
 
         return new FlashcardRepresentation(result);
     }

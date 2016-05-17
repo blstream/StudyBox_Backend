@@ -5,16 +5,16 @@ import com.bls.patronage.db.mapper.UserMapper;
 import com.bls.patronage.db.model.User;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
-import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
 @RegisterMapper(UserMapper.class)
-abstract public class UserDAO {
+abstract public class UserDAO extends AuditDAO{
 
     @SqlQuery("select id,email,name,password from users where id = :id")
     abstract User get(@Bind("id") UUID id);
@@ -22,23 +22,27 @@ abstract public class UserDAO {
     @SqlQuery("select id,email,name,password from users where email = :email")
     abstract User getByEmail(@Bind("email") String email);
 
-    @GetGeneratedKeys
-    @SqlUpdate("insert into users values (:id, :email, :name, :password)")
-    abstract UUID create(@BindBean User user);
+    @SqlUpdate("insert into users (id, email, name, password) values (:id, :email, :name, :password)")
+    abstract void create(@BindBean User user);
 
     @SqlUpdate("update users set password = :password where id = :id")
-    public abstract void updatePassword(@BindBean User user);
+    abstract void update(@BindBean User user);
 
     public User getUserById(UUID id) {
         Optional<User> user = Optional.ofNullable(get(id));
         return user.orElseThrow(() -> new DataAccessException("There is no user with specified id"));
     }
 
-    public UUID createUser(User user) {
+    public void createUser(User user) {
         Optional<User> userOptional = Optional.ofNullable(getByEmail(user.getEmail()));
         if (userOptional.isPresent()) throw new DataAccessException("There is already user with specified email");
-        return create(user);
+        create(user);
+        createUserAudit(user.getId(), new Date(), user.getId());
+    }
 
+    public void updatePassword(User user){
+        update(user);
+        updateUserAudit(user.getId(), new Date(), user.getId());
     }
 
     public User getUserByEmail(String email) {

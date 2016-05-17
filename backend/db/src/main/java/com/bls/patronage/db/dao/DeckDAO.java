@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RegisterMapper(DeckMapper.class)
 @UseStringTemplate3StatementLocator
-public abstract class DeckDAO {
+public abstract class DeckDAO extends AuditDAO {
 
     @SqlQuery("select decks.id, decks.name, decks.isPublic from decks join usersDecks on usersDecks.deckId = decks.id " +
             "where usersDecks.userId = :userId group by decks.id")
@@ -34,7 +34,7 @@ public abstract class DeckDAO {
     abstract void insertUsersDeck(@BindBean Deck deck, @Bind("userId") UUID userId, @Bind("date") Date date);
 
     @SqlUpdate("update decks set name = :name, isPublic = :isPublic where id = :id")
-    public abstract void update(@BindBean Deck deck);
+    abstract void update(@BindBean Deck deck);
 
     @SqlUpdate("delete from decks where id = :id")
     public abstract void deleteDeck(@Bind("id") UUID id);
@@ -82,6 +82,12 @@ public abstract class DeckDAO {
     public void createDeck(Deck deck, UUID userId) {
         insertDeck(deck);
         insertUsersDeck(deck, userId, new Date());
+        createDeckAudit("decks", deck.getId(), new Date(), userId);
+    }
+
+    public void updateDeck(Deck deck, UUID userId){
+        update(deck);
+        updateDeckAudit("decks", deck.getId(), new Date(), userId);
     }
 
     public Deck getDeckById(UUID deckId, UUID userId) {

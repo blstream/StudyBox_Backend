@@ -42,6 +42,8 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     private ArgumentCaptor<Tip> tipCaptor;
     @Captor
     private ArgumentCaptor<Flashcard> flashcardCaptor;
+    @Captor
+    private ArgumentCaptor<UUID> uuidCaptor;
 
     @Before
     public void setUpClass() throws Exception {
@@ -90,7 +92,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
         Response response = postMultipart(tipEssenceImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(tipDAO).updateTip(tipCaptor.capture());
+        verify(tipDAO).updateTip(tipCaptor.capture(), uuidCaptor.capture());
         assertThat(tipCaptor.getValue().getEssenceImageURL()).isEqualTo(dataURI.toString());
     }
 
@@ -104,7 +106,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
         Response response = postMultipart(flashcardQuestionImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
+        verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture(), uuidCaptor.capture());
         assertThat(flashcardCaptor.getValue().getQuestionImageURL()).isEqualTo(dataURI.toString());
     }
 
@@ -118,7 +120,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
         Response response = postMultipart(flashcardAnswerImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
+        verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture(), uuidCaptor.capture());
         assertThat(flashcardCaptor.getValue().getAnswerImageURL()).isEqualTo(dataURI.toString());
     }
 }

@@ -77,7 +77,7 @@ public class DecksCvMagicResource {
                     .stream()
                     .filter(Objects::nonNull)
                     .map(flashcardRepresentation -> flashcardRepresentation.setDeckId(deck.getId()).map())
-                    .forEach(flashcard -> flashcardDAO.createFlashcard(flashcard));
+                    .forEach(flashcard -> flashcardDAO.createFlashcard(flashcard, userId));
         }
     }
 

@@ -194,5 +194,117 @@
             <column name="essenceImageURL" type="text"/>
         </addColumn>
     </changeSet>
+    <changeSet id="16" author="arka">
+        <addColumn tableName="decks">
+            <column name="createdAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="decks">
+            <column name="modifiedAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="decks">
+            <column name="createdBy" type="UUID"/>
+        </addColumn>
+        <addColumn tableName="decks">
+            <column name="modifiedBy" type="UUID"/>
+        </addColumn>
+        <loadUpdateData primaryKey="id" tableName="decks" file="initialData/decksWithAudits.csv">
+            <column name="id" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="isPublic" type="BOOLEAN"/>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="modifiedAt" type="TIMESTAMP"/>
+            <column name="createdBy" type="STRING"/>
+            <column name="modifiedBy" type="STRING"/>
+        </loadUpdateData>
+        <addColumn tableName="tips">
+            <column name="createdAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="tips">
+            <column name="modifiedAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="tips">
+            <column name="createdBy" type="UUID"/>
+        </addColumn>
+        <addColumn tableName="tips">
+            <column name="modifiedBy" type="UUID"/>
+        </addColumn>
+        <loadUpdateData primaryKey="id" tableName="tips" file="initialData/tipsWithAudits.csv">
+            <column name="id" type="STRING"/>
+            <column name="essence" type="STRING"/>
+            <column name="difficult" type="NUMERIC"/>
+            <column name="flashcardId" type="STRING"/>
+            <column name="deckId" type="STRING"/>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="modifiedAt" type="TIMESTAMP"/>
+            <column name="createdBy" type="STRING"/>
+            <column name="modifiedBy" type="STRING"/>
+        </loadUpdateData>
+        <addColumn tableName="flashcards">
+            <column name="createdAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="flashcards">
+            <column name="modifiedAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="flashcards">
+            <column name="createdBy" type="UUID"/>
+        </addColumn>
+        <addColumn tableName="flashcards">
+            <column name="modifiedBy" type="UUID"/>
+        </addColumn>
+        <loadUpdateData primaryKey="id" tableName="flashcards" file="initialData/flashcardsWithAudits.csv">
+            <column name="id" type="STRING"/>
+            <column name="question" type="STRING"/>
+            <column name="answer" type="STRING"/>
+            <column name="deckId" type="STRING"/>
+            <column name="isHidden" type="BOOLEAN"/>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="modifiedAt" type="TIMESTAMP"/>
+            <column name="createdBy" type="STRING"/>
+            <column name="modifiedBy" type="STRING"/>
+        </loadUpdateData>
+        <addColumn tableName="results">
+            <column name="createdAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="results">
+            <column name="modifiedAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="results">
+            <column name="createdBy" type="UUID"/>
+        </addColumn>
+        <addColumn tableName="results">
+            <column name="modifiedBy" type="UUID"/>
+        </addColumn>
+        <loadUpdateData primaryKey="flashcardId" tableName="results" file="initialData/resultsWithUsersAndAudits.csv">
+            <column name="flashcardId" type="STRING"/>
+            <column name="correctAnswers" type="NUMERIC"/>
+            <column name="userId" type="STRING"/>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="modifiedAt" type="TIMESTAMP"/>
+            <column name="createdBy" type="STRING"/>
+            <column name="modifiedBy" type="STRING"/>
+        </loadUpdateData>
+        <addColumn tableName="users">
+            <column name="createdAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="modifiedAt" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="createdBy" type="UUID"/>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="modifiedBy" type="UUID"/>
+        </addColumn>
+        <loadUpdateData primaryKey="id" tableName="users" file="initialData/usersWithAudits.csv">
+            <column name="id" type="STRING"/>
+            <column name="email" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="password" type="STRING"/>
+            <column name="createdAt" type="TIMESTAMP"/>
+            <column name="modifiedAt" type="TIMESTAMP"/>
+            <column name="createdBy" type="STRING"/>
+            <column name="modifiedBy" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
 </databaseChangeLog>
 

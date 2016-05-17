@@ -1,10 +1,12 @@
 package com.bls.patronage.api;
 
+import com.bls.patronage.db.model.AuditableEntity;
 import com.bls.patronage.db.model.Result;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -16,6 +18,10 @@ public class ResultRepresentation implements DbMappable<Result> {
 
     private Boolean isCorrectAnswer;
     private Integer correctAnswers;
+    private Date createdAt;
+    private Date modifiedAt;
+    private UUID createdBy;
+    private UUID modifiedBy;
 
     public ResultRepresentation() {
     }
@@ -79,6 +85,30 @@ public class ResultRepresentation implements DbMappable<Result> {
         return this;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public UUID getCreatedBy() {
+        return createdBy;
+    }
+
+    public UUID getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public ResultRepresentation setAuditFields(AuditableEntity auditableEntity) {
+        this.createdAt=auditableEntity.getCreatedAt();
+        this.modifiedAt=auditableEntity.getModifiedAt();
+        this.createdBy=auditableEntity.getCreatedBy();
+        this.modifiedBy=auditableEntity.getModifiedBy();
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,11 +117,15 @@ public class ResultRepresentation implements DbMappable<Result> {
         return isCorrectAnswer == that.isCorrectAnswer &&
                 correctAnswers == that.correctAnswers &&
                 Objects.equals(flashcardId, that.flashcardId) &&
-                Objects.equals(userId, that.userId);
+                Objects.equals(userId, that.userId)&&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(modifiedAt, that.modifiedAt) &&
+                Objects.equals(createdBy, that.createdBy) &&
+                Objects.equals(modifiedBy, that.modifiedBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flashcardId, isCorrectAnswer, correctAnswers, userId);
+        return Objects.hash(flashcardId, isCorrectAnswer, correctAnswers, userId, createdAt, modifiedAt, createdBy, modifiedBy);
     }
 }

@@ -17,12 +17,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TipDAOTest extends DAOTest {
 
     private TipDAO tipDAO;
+    private UUID defaultUserUUID;
 
     @Override
     @BeforeTest
     public void buildDatabase() {
         super.buildDatabase();
         tipDAO = dbi.onDemand(TipDAO.class);
+        defaultUserUUID = UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e");
     }
 
     @Override
@@ -53,7 +55,7 @@ public class TipDAOTest extends DAOTest {
 
     public void createTip() throws Exception {
         final Tip tip = new Tip(UUID.randomUUID(), "foos", 3, UUID.randomUUID(), UUID.randomUUID());
-        tipDAO.createTip(tip);
+        tipDAO.createTip(tip, defaultUserUUID);
         assertThat(getTipsFromDatabase()).contains(tip);
     }
 
@@ -66,7 +68,7 @@ public class TipDAOTest extends DAOTest {
     public void updateTip() throws Exception {
         final Tip tip = getTipsFromDatabase().get(0);
         final Tip newTip = new Tip(tip.getId(), "goos", 1, tip.getFlashcardId(), tip.getDeckId());
-        tipDAO.updateTip(newTip);
+        tipDAO.updateTip(newTip, defaultUserUUID);
         assertThat(getTipsFromDatabase()).doesNotContain(tip);
         assertThat(getTipsFromDatabase()).contains(newTip);
     }

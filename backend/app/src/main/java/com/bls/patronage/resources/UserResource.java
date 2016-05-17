@@ -2,6 +2,7 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.UserRepresentation;
 import com.bls.patronage.db.dao.UserDAO;
+import com.bls.patronage.db.model.AuditableEntity;
 import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
@@ -33,6 +34,10 @@ public class UserResource {
     @Path("/me")
     @GET
     public UserRepresentation logInUser(@Auth User user) {
-        return new UserRepresentation(user);
+        AuditableEntity audit = userDAO.getUserAuditFields(user.getId());
+        if(audit!=null)
+            return new UserRepresentation(user).setAuditFields(audit);
+        else
+            return new UserRepresentation(user);
     }
 }
