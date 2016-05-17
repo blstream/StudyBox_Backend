@@ -194,7 +194,7 @@
             <column name="essenceImageURL" type="text"/>
         </addColumn>
     </changeSet>
-    <changeSet id="15" author="toja">
+    <changeSet id="16" author="toja">
         <loadUpdateData primaryKey="id" tableName="decks" file="initialData/decksUpdated.csv">
             <column name="id" type="STRING"/>
             <column name="name" type="STRING"/>
