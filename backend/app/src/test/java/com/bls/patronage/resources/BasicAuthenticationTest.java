@@ -1,17 +1,20 @@
 package com.bls.patronage.resources;
 
+import com.bls.patronage.StorageService;
 import com.bls.patronage.auth.BasicAuthenticator;
 import com.bls.patronage.auth.PreAuthenticationFilter;
 import com.bls.patronage.db.dao.DeckDAO;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.dao.ResultDAO;
+import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.dao.UserDAO;
-import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.db.model.User;
+import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.junit.After;
 import org.junit.Before;
@@ -31,6 +34,8 @@ public class BasicAuthenticationTest {
     protected static final DeckDAO deckDao = mock(DeckDAO.class);
     protected static final ResultDAO resultDAO = mock(ResultDAO.class);
     protected static final FlashcardDAO flashcardDAO = mock(FlashcardDAO.class);
+    protected static final TipDAO tipDAO = mock(TipDAO.class);
+    protected static final StorageService storageService = mock(StorageService.class);
 
     @ClassRule
     public static final ResourceTestRule authResources = ResourceTestRule
@@ -42,9 +47,13 @@ public class BasicAuthenticationTest {
             .addProvider(RolesAllowedDynamicFeature.class)
             .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
             .addProvider(PreAuthenticationFilter.class)
+            .addProvider(MultiPartFeature.class)
             .addResource(new UserResource(userDAO))
             .addResource(new DecksResource(deckDao))
             .addResource(new DeckResource(deckDao))
+            .addResource(new TipResource(tipDAO, storageService))
+            .addResource(new FlashcardResource(flashcardDAO, storageService))
+            .addResource(new StorageResource(storageService))
             .addResource(new ResultsResource(flashcardDAO, resultDAO))
             .build();
 

@@ -5,6 +5,7 @@ import com.bls.patronage.api.TipRepresentation;
 import com.bls.patronage.db.dao.TipDAO;
 import com.bls.patronage.db.model.Tip;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -35,6 +36,7 @@ public class TipResourceTest {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new TipResource(dao, storageService))
+            .addProvider(MultiPartFeature.class)
             .build();
 
     @Captor
@@ -84,5 +86,4 @@ public class TipResourceTest {
         verify(dao).getTipById(tip.getId());
         assertThat(recievedTip).isEqualTo(new TipRepresentation(tip));
     }
-
 }

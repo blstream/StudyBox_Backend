@@ -5,6 +5,7 @@ import com.bls.patronage.api.FlashcardRepresentation;
 import com.bls.patronage.db.dao.FlashcardDAO;
 import com.bls.patronage.db.model.Flashcard;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -35,6 +36,7 @@ public class FlashcardResourceTest {
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new FlashcardResource(dao, storageService))
+            .addProvider(MultiPartFeature.class)
             .build();
     @Captor
     private ArgumentCaptor<Flashcard> flashcardCaptor;
