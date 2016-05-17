@@ -194,5 +194,15 @@
             <column name="essenceImageURL" type="text"/>
         </addColumn>
     </changeSet>
+    <changeSet id="16" author="lupi">
+        <createTable tableName="storage">
+            <column name="entityId" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dataId" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
 
