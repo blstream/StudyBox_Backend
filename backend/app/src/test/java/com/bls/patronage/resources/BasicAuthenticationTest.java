@@ -87,5 +87,8 @@ public class BasicAuthenticationTest {
         reset(userDAO);
         reset(deckDao);
         reset(resultDAO);
+        reset(tipDAO);
+        reset(storageService);
+        reset(flashcardDAO);
     }
 }

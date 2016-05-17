@@ -5,7 +5,7 @@ import com.bls.patronage.db.model.Flashcard;
 import com.bls.patronage.db.model.Tip;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -43,8 +43,8 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     @Captor
     private ArgumentCaptor<Flashcard> flashcardCaptor;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @Before
+    public void setUpClass() throws Exception {
         deckId = UUID.randomUUID();
         flashcardId = UUID.randomUUID();
         tipId = UUID.randomUUID();
