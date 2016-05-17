@@ -3,7 +3,7 @@ package com.bls.patronage.db.model;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Flashcard extends IdentifiableEntity {
+public class Flashcard extends AuditableEntity {
     private final String question;
     private final String answer;
     private final UUID deckId;

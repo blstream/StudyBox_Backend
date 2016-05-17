@@ -3,7 +3,7 @@ package com.bls.patronage.db.model;
 
 import java.util.UUID;
 
-public class Tip extends IdentifiableEntity {
+public class Tip extends AuditableEntity {
 
     private String essence;
     private int difficult;

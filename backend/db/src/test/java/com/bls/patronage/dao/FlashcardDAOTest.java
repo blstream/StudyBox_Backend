@@ -21,12 +21,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FlashcardDAOTest extends DAOTest {
 
     private FlashcardDAO dao;
+    private UUID defaultUserUUID;
 
     @Override
     @BeforeTest
     public void buildDatabase() {
         super.buildDatabase();
         dao = dbi.onDemand(FlashcardDAO.class);
+        defaultUserUUID = UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e");
     }
 
     @Override
@@ -59,7 +61,7 @@ public class FlashcardDAOTest extends DAOTest {
 
     public void createFlashcard() {
         final Flashcard flashcard = new Flashcard(UUID.randomUUID(), "foos", "bars", UUID.randomUUID(), false);
-        dao.createFlashcard(flashcard);
+        dao.createFlashcard(flashcard, defaultUserUUID);
         assertThat(dao.getFlashcardById(flashcard.getId())).isEqualTo(flashcard);
     }
 
@@ -72,7 +74,7 @@ public class FlashcardDAOTest extends DAOTest {
     public void updateFlashcard() throws Exception {
         Flashcard flashcard = getFlashcardsFromDatabase().get(0);
         Flashcard newFlascard = new Flashcard(flashcard.getId(), "foo", "baz", flashcard.getDeckId(), true);
-        dao.updateFlashcard(newFlascard);
+        dao.updateFlashcard(newFlascard, defaultUserUUID);
         assertThat(getFlashcardsFromDatabase()).doesNotContain(flashcard);
         assertThat(getFlashcardsFromDatabase()).contains(newFlascard);
     }

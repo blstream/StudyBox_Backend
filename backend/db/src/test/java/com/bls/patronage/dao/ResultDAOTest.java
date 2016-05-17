@@ -20,12 +20,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ResultDAOTest extends DAOTest {
 
     private ResultDAO dao;
+    private UUID defaultUserUUID;
 
     @Override
     @BeforeTest
     public void buildDatabase() {
         super.buildDatabase();
         dao = dbi.onDemand(ResultDAO.class);
+        defaultUserUUID = UUID.fromString("b3f3882b-b138-4bc0-a96b-cd25e087ff4e");
     }
 
 
@@ -60,7 +62,7 @@ public class ResultDAOTest extends DAOTest {
 
     public void createResult() throws Exception {
         final Result result = new Result(UUID.randomUUID(), new Random().nextInt(), UUID.randomUUID());
-        dao.createResult(result);
+        dao.createResult(result, defaultUserUUID);
         assertThat(getResultsFromDatabase()).contains(result);
     }
 
@@ -73,7 +75,7 @@ public class ResultDAOTest extends DAOTest {
     public void updateResult() throws Exception {
         final Result result = getResultsFromDatabase().get(0);
         final Result newResult = new Result(result.getId(), new Random().nextInt(), result.getUserId());
-        dao.updateResult(newResult);
+        dao.updateResult(newResult, defaultUserUUID);
         assertThat(getResultsFromDatabase()).doesNotContain(result);
         assertThat(getResultsFromDatabase()).contains(newResult);
     }

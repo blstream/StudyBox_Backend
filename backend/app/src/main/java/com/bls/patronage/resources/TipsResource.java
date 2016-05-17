@@ -2,6 +2,8 @@ package com.bls.patronage.resources;
 
 import com.bls.patronage.api.TipRepresentation;
 import com.bls.patronage.db.dao.TipDAO;
+import com.bls.patronage.db.model.User;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 
 import javax.validation.Valid;
@@ -11,8 +13,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,16 +32,20 @@ public class TipsResource {
     }
 
     @POST
-    public Response createTip(@Valid TipRepresentation tip,
+    public Response createTip(@Auth @Valid TipRepresentation tip,
                          @Valid @PathParam("flashcardId") UUIDParam flashcardId,
-                         @Valid @PathParam("deckId") UUIDParam deckId){
+                         @Valid @PathParam("deckId") UUIDParam deckId,
+                              @Context SecurityContext context){
+
+        final User user = (User) context.getUserPrincipal();
 
         tipDAO.createTip(
                 tip
                         .setId(UUID.randomUUID())
                         .setFlashcardId(flashcardId.get())
                         .setDeckId(deckId.get())
-                        .map()
+                        .map(),
+                user.getId()
         );
 
 
@@ -49,7 +57,7 @@ public class TipsResource {
 
         return tipDAO.getAllTips(id.get())
                 .stream()
-                .map(tip -> new TipRepresentation(tip))
+                .map(tip -> new TipRepresentation(tip).setAuditFields(tipDAO.getTipAuditFields(tip.getId())))
                 .collect(Collectors.toList());
     }
 }

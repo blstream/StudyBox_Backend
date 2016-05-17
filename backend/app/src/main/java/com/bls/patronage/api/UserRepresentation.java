@@ -1,11 +1,13 @@
 package com.bls.patronage.api;
 
+import com.bls.patronage.db.model.AuditableEntity;
 import com.bls.patronage.db.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.Date;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,6 +18,10 @@ public class UserRepresentation extends EmailRepresentation implements DbMappabl
     @NotEmpty
     @Length(min = 8)
     private String password;
+    private Date createdAt;
+    private Date modifiedAt;
+    private UUID createdBy;
+    private UUID modifiedBy;
 
     public UserRepresentation(String email) {
         super(email);
@@ -69,6 +75,30 @@ public class UserRepresentation extends EmailRepresentation implements DbMappabl
 
     public UserRepresentation setId(UUID id) {
         this.id = id;
+        return this;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public UUID getCreatedBy() {
+        return createdBy;
+    }
+
+    public UUID getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public UserRepresentation setAuditFields(AuditableEntity auditableEntity) {
+        this.createdAt=auditableEntity.getCreatedAt();
+        this.modifiedAt=auditableEntity.getModifiedAt();
+        this.createdBy=auditableEntity.getCreatedBy();
+        this.modifiedBy=auditableEntity.getModifiedBy();
         return this;
     }
 }

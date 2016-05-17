@@ -20,7 +20,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.UUID;
@@ -49,16 +51,20 @@ public class TipResource {
     }
 
     @PUT
-    public TipRepresentation updateTip(@Valid @PathParam("tipId") UUIDParam tipId,
+    public TipRepresentation updateTip(@Auth @Valid @PathParam("tipId") UUIDParam tipId,
                                        @Valid TipRepresentation tip,
                                        @Valid @PathParam("flashcardId") UUIDParam flashcardId,
-                                       @Valid @PathParam("deckId") UUIDParam deckId){
+                                       @Valid @PathParam("deckId") UUIDParam deckId,
+                                       @Context SecurityContext context){
+        final User user = (User) context.getUserPrincipal();
+
         tipDAO.getTipById(tipId.get());
         tipDAO.updateTip(
                 tip.setId(tipId.get())
                         .setFlashcardId(flashcardId.get())
                         .setDeckId(deckId.get())
-                        .map()
+                        .map(),
+                user.getId()
         );
 
         return tip;
@@ -78,7 +84,7 @@ public class TipResource {
         URI essenceImageURI = storageService.createPublicURI(StorageResource.class, essenceImageId, StorageContexts.TIPS, user.getId());
 
         Tip result = tipDAO.getTipById(tipId.get()).setEssenceImageURL(essenceImageURI.toString());
-        tipDAO.updateTip(result);
+        tipDAO.updateTip(result, user.getId());
 
         return new TipRepresentation(result);
     }

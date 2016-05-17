@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 
 import java.util.UUID;
 
-public class Result extends IdentifiableEntity {
+public class Result extends AuditableEntity {
     private int correctAnswers;
     private UUID userId;
 

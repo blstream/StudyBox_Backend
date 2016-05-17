@@ -75,6 +75,7 @@ public class DecksResource {
                     .stream()
                     .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
                             .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                            .withAuditFields(decksDAO.getDeckAuditFields(deck.getId()))
                             .build())
                     .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,
                             Comparator.nullsLast(Comparator.reverseOrder())))
@@ -90,7 +91,8 @@ public class DecksResource {
         final DeckRepresentation.DeckRepresentationBuilder builder
                 = new DeckRepresentation.DeckRepresentationBuilder(deck)
                 .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
-                .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()));
+                .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                .withAuditFields(decksDAO.getDeckAuditFields(deck.getId()));
 
         if (Boolean.TRUE.equals(flashcardsCount)) {
             builder.withFlashcardsCount(decksDAO.getFlashcardsCount(deck.getId()));
@@ -106,6 +108,7 @@ public class DecksResource {
                 .map(deck -> new DeckRepresentation.DeckRepresentationBuilder(deck)
                         .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
                         .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                        .withAuditFields(decksDAO.getDeckAuditFields(deck.getId()))
                         .build())
                 .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,
                         Comparator.nullsLast(Comparator.reverseOrder())))
@@ -186,6 +189,7 @@ public class DecksResource {
                             .withFlashcardsCount(numberIterator.next())
                             .withCreatorEmail(decksDAO.getCreatorEmailFromDeckId(deck.getId()))
                             .withCreationDate(decksDAO.getDeckCreationDate(deck.getId()))
+                            .withAuditFields(decksDAO.getDeckAuditFields(deck.getId()))
                             .build())
                     .sorted(Comparator.comparing(DeckRepresentation::getCreationDate,
                             Comparator.nullsLast(Comparator.reverseOrder())))

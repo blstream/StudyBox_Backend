@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 
 import java.util.UUID;
 
-public class UserWithoutPassword extends IdentifiableEntity {
+public class UserWithoutPassword extends AuditableEntity {
     private String email;
     private String name;
 

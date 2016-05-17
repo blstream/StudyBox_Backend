@@ -44,11 +44,11 @@ public class ResultsResource {
             if((resultFromDb = resultDAO.getResult(result.getFlashcardId(), user.getId())).isPresent()) {
                 result.readFromDbModel((Result) resultFromDb.get())
                         .setCorrectAnswers(result.getCorrectAnswers() + (result.getCorrectAnswer() ? 1 : 0));
-                resultDAO.updateResult(result.map());
+                resultDAO.updateResult(result.map(), user.getId());
             } else {
                 result.setCorrectAnswers(result.getCorrectAnswer() ? 1 : 0)
                         .setUserId(user.getId());
-                resultDAO.createResult(result.map());
+                resultDAO.createResult(result.map(), user.getId());
             }
         }
 
@@ -64,7 +64,7 @@ public class ResultsResource {
 
         for(UUID uuid : flashcardsUUIDs) {
             if((result = resultDAO.getResult(uuid, user.getId())).isPresent()) {
-                results.add(new ResultRepresentation().readFromDbModel((Result) result.get()));
+                results.add(new ResultRepresentation().readFromDbModel((Result) result.get()).setAuditFields(resultDAO.getResultAuditFields(uuid)));
             }
         }
 

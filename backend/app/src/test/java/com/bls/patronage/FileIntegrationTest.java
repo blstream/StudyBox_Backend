@@ -32,17 +32,17 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 
 @Ignore("This test has Authorization issues, but with real users it should work")
 public class FileIntegrationTest {
     private static final String TMP_FILE = createTempFile();
     private static final String CONFIG_PATH = ResourceHelpers.resourceFilePath("test-config.yml");
+    private UUID userUUID;
+
 
     @ClassRule
     public static final DropwizardAppRule<StudyBoxConfiguration> RULE = new DropwizardAppRule<>(
@@ -79,6 +79,7 @@ public class FileIntegrationTest {
     @Before
     public void setUp() throws Exception {
         client = ClientBuilder.newClient().register(MultiPartFeature.class);
+        userUUID = UUID.randomUUID();
     }
 
     @After
@@ -98,14 +99,12 @@ public class FileIntegrationTest {
         flashcards.add(new FlashcardRepresentation("testQuestion", "testAnswer", true));
         flashcards.add(new FlashcardRepresentation("testQuestion2", "testAnswer2", false));
 
-        when(flashcardDAO.createFlashcard(any(Flashcard.class))).thenReturn(null);
-
         final Response response = client.target(fileURI)
                 .request()
                 .post(Entity.entity(multipart, multipart.getMediaType()));
 
         assertThat(response.getStatus()).isEqualTo(201);
-        verify(flashcardDAO, times(2)).createFlashcard(flashcardCaptior.capture());
+        verify(flashcardDAO, times(2)).createFlashcard(flashcardCaptior.capture(), userUUID);
 
         assertThat(flashcardCaptior.getValue().getDeckId()).isInstanceOf(UUID.class);
         assertThat(flashcardCaptior.getValue().getId()).isInstanceOf(UUID.class);

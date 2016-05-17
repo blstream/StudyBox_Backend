@@ -1,5 +1,6 @@
 package com.bls.patronage.api;
 
+import com.bls.patronage.db.model.AuditableEntity;
 import com.bls.patronage.db.model.Flashcard;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -25,6 +27,10 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
     private Integer tipsCount;
     private String questionImageURL;
     private String answerImageURL;
+    private Date createdAt;
+    private Date modifiedAt;
+    private UUID createdBy;
+    private UUID modifiedBy;
 
     public FlashcardRepresentation(@JsonProperty("question") String question,
                                    @JsonProperty("answer") String answer,
@@ -106,6 +112,30 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return this;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public UUID getCreatedBy() {
+        return createdBy;
+    }
+
+    public UUID getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public FlashcardRepresentation setAuditFields(AuditableEntity auditableEntity) {
+        this.createdAt=auditableEntity.getCreatedAt();
+        this.modifiedAt=auditableEntity.getModifiedAt();
+        this.createdBy=auditableEntity.getCreatedBy();
+        this.modifiedBy=auditableEntity.getModifiedBy();
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,11 +148,15 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
                 Objects.equals(getDeckId(), that.getDeckId()) &&
                 Objects.equals(getTipsCount(), that.getTipsCount()) &&
                 Objects.equals(getQuestionImageURL(), that.getQuestionImageURL()) &&
-                Objects.equals(getAnswerImageURL(), that.getAnswerImageURL());
+                Objects.equals(getAnswerImageURL(), that.getAnswerImageURL()) &&
+                Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
+                Objects.equals(getModifiedAt(), that.getModifiedAt()) &&
+                Objects.equals(getCreatedBy(), that.getCreatedBy()) &&
+                Objects.equals(getModifiedBy(), that.getModifiedBy());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getQuestion(), getAnswer(), getIsHidden(), getDeckId(), getTipsCount(), getQuestionImageURL(), getAnswerImageURL());
+        return Objects.hash(getId(), getQuestion(), getAnswer(), getIsHidden(), getDeckId(), getTipsCount(), getQuestionImageURL(), getAnswerImageURL(), getCreatedAt(), getModifiedAt(), getCreatedBy(), getModifiedBy());
     }
 }

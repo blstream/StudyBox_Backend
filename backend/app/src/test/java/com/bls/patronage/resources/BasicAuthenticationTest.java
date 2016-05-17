@@ -52,7 +52,9 @@ public class BasicAuthenticationTest {
             .addResource(new DecksResource(deckDao))
             .addResource(new DeckResource(deckDao))
             .addResource(new TipResource(tipDAO, storageService))
+            .addResource(new TipsResource(tipDAO))
             .addResource(new FlashcardResource(flashcardDAO, storageService))
+            .addResource(new FlashcardsResource(flashcardDAO))
             .addResource(new StorageResource(storageService))
             .addResource(new ResultsResource(flashcardDAO, resultDAO))
             .build();

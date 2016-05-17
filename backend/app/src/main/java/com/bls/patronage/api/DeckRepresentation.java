@@ -1,5 +1,6 @@
 package com.bls.patronage.api;
 
+import com.bls.patronage.db.model.AuditableEntity;
 import com.bls.patronage.db.model.Deck;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,6 +11,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -22,6 +25,10 @@ public class DeckRepresentation implements DbMappable<Deck> {
     private final Integer flashcardsCount;
     private final String creatorEmail;
     private final String creationDate;
+    private final Date createdAt;
+    private final Date modifiedAt;
+    private final UUID createdBy;
+    private final UUID modifiedBy;
 
     private DeckRepresentation(DeckRepresentationBuilder builder) {
         this.id = builder.id;
@@ -30,6 +37,10 @@ public class DeckRepresentation implements DbMappable<Deck> {
         this.flashcardsCount = builder.flashcardsCount;
         this.creationDate = builder.creationDate;
         this.creatorEmail = builder.creatorEmail;
+        this.createdAt = builder.createdAt;
+        this.modifiedAt = builder.modifiedAt;
+        this.createdBy = builder.createdBy;
+        this.modifiedBy = builder.modifiedBy;
     }
 
     public Deck map() {
@@ -60,6 +71,22 @@ public class DeckRepresentation implements DbMappable<Deck> {
         return creationDate;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public UUID getCreatedBy() {
+        return createdBy;
+    }
+
+    public UUID getModifiedBy() {
+        return modifiedBy;
+    }
+
     @JsonPOJOBuilder
     public static class DeckRepresentationBuilder {
 
@@ -73,6 +100,11 @@ public class DeckRepresentation implements DbMappable<Deck> {
         @Email
         private String creatorEmail;
         private String creationDate;
+
+        private Date createdAt;
+        private Date modifiedAt;
+        private UUID createdBy;
+        private UUID modifiedBy;
 
         public DeckRepresentationBuilder(@JsonProperty("name") String name,
                                          @JsonProperty("isPublic") Boolean isPublic) {
@@ -106,6 +138,34 @@ public class DeckRepresentation implements DbMappable<Deck> {
             return this;
         }
 
+        public DeckRepresentationBuilder withcreatedAt(Timestamp createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public DeckRepresentationBuilder withmodifiedAt(Timestamp modifiedAt) {
+            this.modifiedAt = modifiedAt;
+            return this;
+        }
+
+        public DeckRepresentationBuilder withcreatedBy(UUID createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public DeckRepresentationBuilder withModifiedBy(UUID modifiedBy) {
+            this.modifiedBy = modifiedBy;
+            return this;
+        }
+
+        public DeckRepresentationBuilder withAuditFields(AuditableEntity auditableEntity) {
+            this.createdAt = auditableEntity.getCreatedAt();
+            this.modifiedAt = auditableEntity.getModifiedAt();
+            this.createdBy = auditableEntity.getCreatedBy();
+            this.modifiedBy = auditableEntity.getModifiedBy();
+            return this;
+        }
+
         public DeckRepresentation build() {
             return new DeckRepresentation(this);
         }
@@ -120,6 +180,10 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 ", flashcardsCount=" + flashcardsCount +
                 ", creatorEmail='" + creatorEmail + '\'' +
                 ", creationDate='" + creationDate + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", modifiedAt='" + modifiedAt + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
                 '}';
     }
 
@@ -133,11 +197,16 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 Objects.equals(isPublic, that.isPublic) &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(creatorEmail, that.creatorEmail) &&
-                Objects.equals(creationDate, that.creationDate);
+                Objects.equals(creationDate, that.creationDate) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(modifiedAt, that.modifiedAt) &&
+                Objects.equals(createdBy, that.createdBy) &&
+                Objects.equals(modifiedBy, that.modifiedBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, isPublic, id, flashcardsCount, creatorEmail, creationDate);
+        return Objects.hash(name, isPublic, id, flashcardsCount, creatorEmail, creationDate, createdAt, modifiedAt, createdBy, modifiedBy);
     }
 }
+
