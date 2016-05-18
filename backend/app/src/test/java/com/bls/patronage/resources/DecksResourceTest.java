@@ -19,10 +19,10 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,19 +80,19 @@ public class DecksResourceTest extends BasicAuthenticationTest {
     @Before
     public void setUp() {
         super.setUp();
-        deckId=UUID.randomUUID();
-        deck2Id=UUID.randomUUID();
-        userDeckId=UUID.randomUUID();
+        deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
+        deck2Id = UUID.fromString("c50636a3-b7c8-4b23-8a5c-791faf0afa54");
+        userDeckId = UUID.fromString("ad6ff35e-5fdd-4a54-be01-39d80f01d174");
         auditEntity = new AuditableEntity(deckId,
-                new Timestamp(new Long("1461219791000")),
-                new Timestamp(new Long("1463234622000")),
-                user.getId().toString(),
-                user.getId().toString());
+                new Date(),
+                new Date(),
+                user.getId(),
+                user.getId());
         auditEntity2 = new AuditableEntity(deck2Id,
-                new Timestamp(new Long("1464502991000")),
-                new Timestamp(new Long("1464592375000")),
-                user.getId().toString(),
-                user.getId().toString());
+                new Date(),
+                new Date(),
+                user.getId(),
+                user.getId());
         deck = new DeckRepresentation.DeckRepresentationBuilder("foo", false)
                 .withId(UUID.randomUUID())
                 .withCreationDate("2016-04-21 08:23:11.0")
@@ -112,10 +112,10 @@ public class DecksResourceTest extends BasicAuthenticationTest {
         decks.add(deck.map());
         decks.add(deck2.map());
         userDeckAuditEntity = new AuditableEntity(userDeckId,
-                new Timestamp(new Long("1462185942000")),
-                new Timestamp(new Long("1462293942000")),
-                user.getId().toString(),
-                user.getId().toString());
+                new Date(),
+                new Date(),
+                user.getId(),
+                user.getId());
         userDeck = new DeckRepresentation.DeckRepresentationBuilder("baz", false)
                 .withId(UUID.randomUUID())
                 .withAuditFields(userDeckAuditEntity)

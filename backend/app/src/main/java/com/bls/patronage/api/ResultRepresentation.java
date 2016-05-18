@@ -6,22 +6,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResultRepresentation implements DbMappable<Result> {
+public class ResultRepresentation extends AuditableRepresentation implements DbMappable<Result> {
     @NotNull
     private UUID flashcardId;
     private UUID userId;
 
     private Boolean isCorrectAnswer;
     private Integer correctAnswers;
-    private Date createdAt;
-    private Date modifiedAt;
-    private UUID createdBy;
-    private UUID modifiedBy;
 
     public ResultRepresentation() {
     }
@@ -85,27 +80,11 @@ public class ResultRepresentation implements DbMappable<Result> {
         return this;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public UUID getCreatedBy() {
-        return createdBy;
-    }
-
-    public UUID getModifiedBy() {
-        return modifiedBy;
-    }
-
     public ResultRepresentation setAuditFields(AuditableEntity auditableEntity) {
-        this.createdAt=auditableEntity.getCreatedAt();
-        this.modifiedAt=auditableEntity.getModifiedAt();
-        this.createdBy=auditableEntity.getCreatedBy();
-        this.modifiedBy=auditableEntity.getModifiedBy();
+        setCreatedAt(auditableEntity.getCreatedAt());
+        setModifiedAt(auditableEntity.getModifiedAt());
+        setCreatedBy(auditableEntity.getCreatedBy());
+        setModifiedBy(auditableEntity.getModifiedBy());
         return this;
     }
 
@@ -117,15 +96,15 @@ public class ResultRepresentation implements DbMappable<Result> {
         return isCorrectAnswer == that.isCorrectAnswer &&
                 correctAnswers == that.correctAnswers &&
                 Objects.equals(flashcardId, that.flashcardId) &&
-                Objects.equals(userId, that.userId)&&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(modifiedAt, that.modifiedAt) &&
-                Objects.equals(createdBy, that.createdBy) &&
-                Objects.equals(modifiedBy, that.modifiedBy);
+                Objects.equals(userId, that.userId) &&
+                Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
+                Objects.equals(getModifiedAt(), that.getModifiedAt()) &&
+                Objects.equals(getCreatedBy(), that.getCreatedBy()) &&
+                Objects.equals(getModifiedBy(), that.getModifiedBy());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flashcardId, isCorrectAnswer, correctAnswers, userId, createdAt, modifiedAt, createdBy, modifiedBy);
+        return Objects.hash(flashcardId, isCorrectAnswer, correctAnswers, userId, getCreatedAt(), getModifiedAt(), getCreatedBy(), getModifiedBy());
     }
 }

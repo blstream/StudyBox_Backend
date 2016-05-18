@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RegisterMapper(FlashcardMapper.class)
-abstract public class FlashcardDAO extends AuditDAO{
+abstract public class FlashcardDAO extends AuditDAO {
 
     @SqlQuery("select id, question, answer, deckId, isHidden, questionImageURL, answerImageURL from flashcards where id = :id")
     abstract Flashcard get(@Bind("id") UUID id);

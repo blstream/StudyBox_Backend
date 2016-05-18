@@ -13,8 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,8 +41,8 @@ public class UserResourceTest extends BasicAuthenticationTest {
         loggingURI = UriBuilder.fromResource(UserResource.class).build().toString()
                 + UriBuilder.fromMethod(UserResource.class, "logInUser").build().toString();
         auditEntity = new AuditableEntity(UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"),
-                new Timestamp(new Long("1461219791000")),
-                new Timestamp(new Long("1463234622000")),
+                new Date(),
+                new Date(),
                 user.getId(),
                 user.getId());
         user.setAuditFields(auditEntity);

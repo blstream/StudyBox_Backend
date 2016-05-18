@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RegisterMapper(TipMapper.class)
-public abstract class TipDAO extends AuditDAO{
+public abstract class TipDAO extends AuditDAO {
 
     @SqlQuery("select id, essence, difficult, flashcardId, deckId, essenceImageURL from tips where id = :id")
     abstract Tip getTip(@Bind("id") UUID id);

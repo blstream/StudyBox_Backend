@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RegisterMapper(UserMapper.class)
-abstract public class UserDAO extends AuditDAO{
+abstract public class UserDAO extends AuditDAO {
 
     @SqlQuery("select id,email,name,password from users where id = :id")
     abstract User get(@Bind("id") UUID id);

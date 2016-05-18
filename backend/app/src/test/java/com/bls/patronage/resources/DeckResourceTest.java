@@ -15,7 +15,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,10 +61,10 @@ public class DeckResourceTest extends BasicAuthenticationTest {
         deckId = UUID.fromString("a04692bc-4a70-4696-9815-24b8c0de5398");
         fakeId = UUID.fromString("12345678-9012-3456-7890-123456789012");
         auditEntity = new AuditableEntity(deckId,
-                new Timestamp(new Long("1461219791000")),
-                new Timestamp(new Long("1463234622000")),
-                user.getId().toString(),
-                user.getId().toString());
+                new Date(),
+                new Date(),
+                user.getId(),
+                user.getId());
         deck = new DeckRepresentation.DeckRepresentationBuilder("biology", false).withId(deckId).withAuditFields(auditEntity).build();
         deckURI = UriBuilder.fromResource(DeckResource.class).build(deckId).toString();
         fakeURI = UriBuilder.fromResource(DeckResource.class).build(fakeId).toString();

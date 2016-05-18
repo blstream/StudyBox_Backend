@@ -194,7 +194,19 @@
             <column name="essenceImageURL" type="text"/>
         </addColumn>
     </changeSet>
-    <changeSet id="16" author="arka">
+    <changeSet id="16" author="toja">
+        <loadUpdateData primaryKey="id" tableName="decks" file="initialData/decksUpdated.csv">
+            <column name="id" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="isPublic" type="BOOLEAN"/>
+        </loadUpdateData>
+        <loadUpdateData primaryKey="deckId,userId" tableName="usersDecks" file="initialData/usersDecksUpdated.csv">
+            <column name="deckId" type="STRING"/>
+            <column name="userId" type="STRING"/>
+            <column name="creationDate" type="TIMESTAMP"/>
+        </loadUpdateData>
+    </changeSet>
+    <changeSet id="17" author="arka">
         <addColumn tableName="decks">
             <column name="createdAt" type="TIMESTAMP"/>
         </addColumn>

@@ -18,7 +18,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,8 +58,8 @@ public class TipsResourceTest extends BasicAuthenticationTest{
         tip = new Tip(UUID.fromString("12345678-9012-3456-7890-123456789012"), "Like a blue", 4, UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), UUID.fromString("68d7fd99-4bd9-45f6-85bb-86331f5c274d"));
         tipRepresentation = new TipRepresentation("Im testing", 2);
         auditEntity = new AuditableEntity(UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"),
-                new Timestamp(new Long("1461219791000")),
-                new Timestamp(new Long("1463234622000")),
+                new Date(),
+                new Date(),
                 userId,
                 userId);
         tipRepresentation.setAuditFields(auditEntity);

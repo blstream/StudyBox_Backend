@@ -1,13 +1,12 @@
 package com.bls.patronage.db.model;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 public class AuditableEntity extends IdentifiableEntity {
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Date createdAt;
+    private Date modifiedAt;
     private UUID createdBy;
     private UUID modifiedBy;
 
@@ -53,13 +52,8 @@ public class AuditableEntity extends IdentifiableEntity {
 
     public AuditableEntity(UUID id, Date createdAt, Date modifiedAt, UUID createdBy, UUID modifiedBy) {
         super(id);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(createdAt);
-        cal.set(Calendar.MILLISECOND, 0);
-        this.createdAt = new Timestamp(createdAt.getTime());
-        cal.setTime(createdAt);
-        cal.set(Calendar.MILLISECOND, 0);
-        this.modifiedAt = new Timestamp(modifiedAt.getTime());
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
         this.createdBy = createdBy;
         this.modifiedBy = modifiedBy;
     }
@@ -88,11 +82,12 @@ public class AuditableEntity extends IdentifiableEntity {
         this.modifiedBy = UUID.fromString(modifiedBy);
         }
 
-    public Timestamp getCreatedAt() {
+
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public Timestamp getModifiedAt() {
+    public Date getModifiedAt() {
         return modifiedAt;
     }
 

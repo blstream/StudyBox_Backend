@@ -19,9 +19,9 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,8 +64,8 @@ public class FlashcardsResourceTest extends BasicAuthenticationTest{
                 UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), false);
         flashcardRepresentation = new FlashcardRepresentation("Im testing", "ok", false);
         auditEntity = new AuditableEntity(flashcard.getId(),
-                new Timestamp(new Long("1461219791000")),
-                new Timestamp(new Long("1463234622000")),
+                new Date(),
+                new Date(),
                 userId,
                 userId);
         flashcardRepresentation.setAuditFields(auditEntity);
@@ -111,7 +111,7 @@ public class FlashcardsResourceTest extends BasicAuthenticationTest{
                 });
 
         verify(flashcardDAO).getAllFlashcards(flashcard.getDeckId());
-        assertThat(response).contains(new FlashcardRepresentation(flashcard));
+        assertThat(response).contains(new FlashcardRepresentation(flashcard).setAuditFields(auditEntity));
     }
 
     @Test

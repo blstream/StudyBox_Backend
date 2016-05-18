@@ -102,12 +102,18 @@ public abstract class DeckDAO extends AuditDAO {
     }
 
     public Collection<Deck> getDecksByName(String name, UUID userId) {
-        List<Deck> decks = getDecksUsingName(String.format("%%%s%%", name), userId);
+        List<Deck> decks = getDecksUsingName(name, userId);
+        if (decks.isEmpty()) {
+            decks = getDecksUsingName(String.format("%%%s%%", name), userId);
+        }
         return decks;
     }
 
     public Collection<Deck> getUserDecksByName(String name, UUID userId) {
-        List<Deck> decks = getUserDecksUsingName(String.format("%%%s%%", name), userId);
+        List<Deck> decks = getUserDecksUsingName(name, userId);
+        if (decks.isEmpty()) {
+            decks = getUserDecksUsingName(String.format("%%%s%%", name), userId);
+        }
         return decks;
     }
 

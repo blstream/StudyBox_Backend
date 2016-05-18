@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RegisterMapper(ResultMapper.class)
-abstract public class ResultDAO extends AuditDAO{
+abstract public class ResultDAO extends AuditDAO {
 
     @SqlQuery("select flashcardId, correctAnswers, userId from results " +
             "where flashcardId = :flashcardId and userId = :userId")

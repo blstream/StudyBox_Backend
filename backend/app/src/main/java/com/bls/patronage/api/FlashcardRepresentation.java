@@ -8,12 +8,11 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FlashcardRepresentation implements DbMappable<Flashcard> {
+public class FlashcardRepresentation extends AuditableRepresentation implements DbMappable<Flashcard> {
     @NotEmpty
     @Length(max = 1000)
     private final String question;
@@ -27,10 +26,7 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
     private Integer tipsCount;
     private String questionImageURL;
     private String answerImageURL;
-    private Date createdAt;
-    private Date modifiedAt;
-    private UUID createdBy;
-    private UUID modifiedBy;
+
 
     public FlashcardRepresentation(@JsonProperty("question") String question,
                                    @JsonProperty("answer") String answer,
@@ -112,27 +108,11 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return this;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public UUID getCreatedBy() {
-        return createdBy;
-    }
-
-    public UUID getModifiedBy() {
-        return modifiedBy;
-    }
-
     public FlashcardRepresentation setAuditFields(AuditableEntity auditableEntity) {
-        this.createdAt=auditableEntity.getCreatedAt();
-        this.modifiedAt=auditableEntity.getModifiedAt();
-        this.createdBy=auditableEntity.getCreatedBy();
-        this.modifiedBy=auditableEntity.getModifiedBy();
+        setCreatedAt(auditableEntity.getCreatedAt());
+        setModifiedAt(auditableEntity.getModifiedAt());
+        setCreatedBy(auditableEntity.getCreatedBy());
+        setModifiedBy(auditableEntity.getModifiedBy());
         return this;
     }
 

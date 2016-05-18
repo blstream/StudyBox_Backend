@@ -43,7 +43,7 @@ public class FlashcardResource {
             @Valid @PathParam("flashcardId") UUIDParam flashcardId) {
 
         return new FlashcardRepresentation(
-                flashcardDAO.getFlashcardById(flashcardId.get())
+                flashcardDAO.getFlashcardById(flashcardId.get())).setAuditFields(flashcardDAO.getFlashcardAuditFields(flashcardId.get())
         );
     }
 

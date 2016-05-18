@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.Date;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,10 +17,6 @@ public class UserRepresentation extends EmailRepresentation implements DbMappabl
     @NotEmpty
     @Length(min = 8)
     private String password;
-    private Date createdAt;
-    private Date modifiedAt;
-    private UUID createdBy;
-    private UUID modifiedBy;
 
     public UserRepresentation(String email) {
         super(email);
@@ -78,27 +73,11 @@ public class UserRepresentation extends EmailRepresentation implements DbMappabl
         return this;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public UUID getCreatedBy() {
-        return createdBy;
-    }
-
-    public UUID getModifiedBy() {
-        return modifiedBy;
-    }
-
     public UserRepresentation setAuditFields(AuditableEntity auditableEntity) {
-        this.createdAt=auditableEntity.getCreatedAt();
-        this.modifiedAt=auditableEntity.getModifiedAt();
-        this.createdBy=auditableEntity.getCreatedBy();
-        this.modifiedBy=auditableEntity.getModifiedBy();
+        setCreatedAt(auditableEntity.getCreatedAt());
+        setModifiedAt(auditableEntity.getModifiedAt());
+        setCreatedBy(auditableEntity.getCreatedBy());
+        setModifiedBy(auditableEntity.getModifiedBy());
         return this;
     }
 }

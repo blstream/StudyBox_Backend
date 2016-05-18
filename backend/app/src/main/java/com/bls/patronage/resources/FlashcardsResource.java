@@ -54,7 +54,7 @@ public class FlashcardsResource {
             return flashcardDAO.getAllFlashcards(id.get())
                     .stream()
                     .map(flashcard -> ((tipsCount == null || !tipsCount ) ?
-                            new FlashcardRepresentation(flashcard) :
+                            new FlashcardRepresentation(flashcard).setAuditFields(flashcardDAO.getFlashcardAuditFields(flashcard.getId())) :
                             new FlashcardRepresentation(flashcard)
                                     .setTipsCount(flashcardDAO.getTipsCount(flashcard.getId()))
                                     .setAuditFields(flashcardDAO.getFlashcardAuditFields(flashcard.getId()))))
@@ -63,7 +63,7 @@ public class FlashcardsResource {
             return flashcardDAO.getRandomFlashcards(amount.getValue(), id.get())
                     .stream()
                     .map(flashcard -> ((tipsCount == null || !tipsCount ) ?
-                            new FlashcardRepresentation(flashcard) :
+                            new FlashcardRepresentation(flashcard).setAuditFields(flashcardDAO.getFlashcardAuditFields(flashcard.getId())) :
                             new FlashcardRepresentation(flashcard).setTipsCount(
                                     flashcardDAO.getTipsCount(flashcard.getId()))
                                     .setAuditFields(flashcardDAO.getFlashcardAuditFields(flashcard.getId()))))

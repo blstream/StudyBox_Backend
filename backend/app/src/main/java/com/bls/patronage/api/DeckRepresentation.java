@@ -11,24 +11,19 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 @JsonDeserialize(builder = DeckRepresentation.DeckRepresentationBuilder.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DeckRepresentation implements DbMappable<Deck> {
+public class DeckRepresentation extends AuditableRepresentation implements DbMappable<Deck> {
     private final UUID id;
     private final String name;
     private final Boolean isPublic;
     private final Integer flashcardsCount;
     private final String creatorEmail;
     private final String creationDate;
-    private final Date createdAt;
-    private final Date modifiedAt;
-    private final UUID createdBy;
-    private final UUID modifiedBy;
 
     private DeckRepresentation(DeckRepresentationBuilder builder) {
         this.id = builder.id;
@@ -37,10 +32,10 @@ public class DeckRepresentation implements DbMappable<Deck> {
         this.flashcardsCount = builder.flashcardsCount;
         this.creationDate = builder.creationDate;
         this.creatorEmail = builder.creatorEmail;
-        this.createdAt = builder.createdAt;
-        this.modifiedAt = builder.modifiedAt;
-        this.createdBy = builder.createdBy;
-        this.modifiedBy = builder.modifiedBy;
+        setCreatedAt(builder.createdAt);
+        setModifiedAt(builder.modifiedAt);
+        setCreatedBy(builder.createdBy);
+        setModifiedBy(builder.modifiedBy);
     }
 
     public Deck map() {
@@ -69,22 +64,6 @@ public class DeckRepresentation implements DbMappable<Deck> {
 
     public String getCreationDate() {
         return creationDate;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public UUID getCreatedBy() {
-        return createdBy;
-    }
-
-    public UUID getModifiedBy() {
-        return modifiedBy;
     }
 
     @JsonPOJOBuilder
@@ -138,12 +117,12 @@ public class DeckRepresentation implements DbMappable<Deck> {
             return this;
         }
 
-        public DeckRepresentationBuilder withcreatedAt(Timestamp createdAt) {
+        public DeckRepresentationBuilder withcreatedAt(Date createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public DeckRepresentationBuilder withmodifiedAt(Timestamp modifiedAt) {
+        public DeckRepresentationBuilder withmodifiedAt(Date modifiedAt) {
             this.modifiedAt = modifiedAt;
             return this;
         }
@@ -180,10 +159,10 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 ", flashcardsCount=" + flashcardsCount +
                 ", creatorEmail='" + creatorEmail + '\'' +
                 ", creationDate='" + creationDate + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", modifiedAt='" + modifiedAt + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", modifiedBy='" + modifiedBy + '\'' +
+                ", createdAt='" + getCreatedAt() + '\'' +
+                ", modifiedAt='" + getModifiedAt() + '\'' +
+                ", createdBy='" + getCreatedBy() + '\'' +
+                ", modifiedBy='" + getModifiedBy() + '\'' +
                 '}';
     }
 
@@ -198,15 +177,15 @@ public class DeckRepresentation implements DbMappable<Deck> {
                 Objects.equals(id, that.id) &&
                 Objects.equals(creatorEmail, that.creatorEmail) &&
                 Objects.equals(creationDate, that.creationDate) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(modifiedAt, that.modifiedAt) &&
-                Objects.equals(createdBy, that.createdBy) &&
-                Objects.equals(modifiedBy, that.modifiedBy);
+                Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
+                Objects.equals(getModifiedAt(), that.getModifiedAt()) &&
+                Objects.equals(getCreatedBy(), that.getCreatedBy()) &&
+                Objects.equals(getModifiedBy(), that.getModifiedBy());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, isPublic, id, flashcardsCount, creatorEmail, creationDate, createdAt, modifiedAt, createdBy, modifiedBy);
+        return Objects.hash(name, isPublic, id, flashcardsCount, creatorEmail, creationDate, getCreatedAt(), getModifiedAt(), getCreatedBy(), getModifiedBy());
     }
 }
 

@@ -9,12 +9,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TipRepresentation implements DbMappable<Tip> {
+public class TipRepresentation extends AuditableRepresentation implements DbMappable<Tip> {
     @NotEmpty
     @Length(max = 1000)
     private final String essence;
@@ -25,11 +24,6 @@ public class TipRepresentation implements DbMappable<Tip> {
     private UUID flashcardId;
     private UUID deckId;
     private String essenceImageURL;
-    private Date createdAt;
-    private Date modifiedAt;
-    private UUID createdBy;
-    private UUID modifiedBy;
-
 
     public TipRepresentation(@JsonProperty("essence") String essence,
                              @JsonProperty("difficult") int difficult) {
@@ -95,27 +89,11 @@ public class TipRepresentation implements DbMappable<Tip> {
         return this;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public UUID getCreatedBy() {
-        return createdBy;
-    }
-
-    public UUID getModifiedBy() {
-        return modifiedBy;
-    }
-
     public TipRepresentation setAuditFields(AuditableEntity auditableEntity) {
-        this.createdAt=auditableEntity.getCreatedAt();
-        this.modifiedAt=auditableEntity.getModifiedAt();
-        this.createdBy=auditableEntity.getCreatedBy();
-        this.modifiedBy=auditableEntity.getModifiedBy();
+        setCreatedAt(auditableEntity.getCreatedAt());
+        setModifiedAt(auditableEntity.getModifiedAt());
+        setCreatedBy(auditableEntity.getCreatedBy());
+        setModifiedBy(auditableEntity.getModifiedBy());
         return this;
     }
 

@@ -1,18 +1,16 @@
 package com.bls.patronage.auth;
 
-import java.util.UUID;
-
-import org.glassfish.jersey.internal.util.Base64;
-import org.mindrot.jbcrypt.BCrypt;
-
 import com.bls.patronage.StudyBoxConfiguration;
 import com.bls.patronage.db.dao.UserDAO;
 import com.bls.patronage.db.model.User;
 import com.google.common.base.Optional;
-
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
+import org.glassfish.jersey.internal.util.Base64;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkState;
 

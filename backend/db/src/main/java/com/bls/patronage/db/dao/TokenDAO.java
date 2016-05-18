@@ -9,7 +9,6 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ abstract public class TokenDAO {
 
     @SqlQuery("select token,isActive,email,expirationDate from passwordTokens " +
             "where token = :token and isActive = 'true' and email = :email")
-    abstract ResetPasswordToken find(@Bind("token") UUID token,@Bind("email") String email);
+    abstract ResetPasswordToken find(@Bind("token") UUID token, @Bind("email") String email);
 
     @SqlUpdate("insert into passwordTokens values (:token, :isActive, :email, :expirationDate)")
     abstract void insert(@BindBean ResetPasswordToken token);

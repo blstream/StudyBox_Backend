@@ -17,7 +17,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,8 +61,8 @@ public class TipResourceTest extends BasicAuthenticationTest{
         tip = new Tip(UUID.fromString("12345678-9012-3456-7890-123456789012"), "Like sky", 9, UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"), UUID.fromString("68d7fd99-4bd9-45f6-85bb-86331f5c274d"));
         tipRepresentation = new TipRepresentation("Testing", 2);
         auditEntity = new AuditableEntity(UUID.fromString("8ad4b503-5bfc-4d8a-a761-0908374892b1"),
-                new Timestamp(new Long("1461219791000")),
-                new Timestamp(new Long("1463234622000")),
+                new Date(),
+                new Date(),
                 userId,
                 userId);
         tipRepresentation.setAuditFields(auditEntity);
@@ -96,6 +96,6 @@ public class TipResourceTest extends BasicAuthenticationTest{
                 .get(TipRepresentation.class);
 
         verify(tipDAO).getTipById(tip.getId());
-        assertThat(recievedTip).isEqualTo(new TipRepresentation(tip));
+        assertThat(recievedTip).isEqualTo(new TipRepresentation(tip).setAuditFields(auditEntity));
     }
 }
