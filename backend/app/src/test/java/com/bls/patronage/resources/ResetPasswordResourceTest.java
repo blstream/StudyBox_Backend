@@ -39,7 +39,6 @@ import static org.mockito.Mockito.when;
 public class ResetPasswordResourceTest extends BasicAuthenticationTest{
 
     private static final TokenDAO tokenDAO = mock(TokenDAO.class);
-//    private static final ResetPasswordConfiguration mailConfig = mock(ResetPasswordConfiguration.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
@@ -77,11 +76,6 @@ public class ResetPasswordResourceTest extends BasicAuthenticationTest{
 
         when(userDAO.getUserByEmail(user.getEmail())).thenReturn(user);
         when(userDAO.getUserByEmail(fakeEmail)).thenThrow(new DataAccessException(""));
-
-//        when(mailConfig.getMail().getEnableAuth()).thenReturn(true);
-//        when(mailConfig.getMail().getEnableTls()).thenReturn(true);
-//        when(mailConfig.getMail().getPort()).thenReturn("587");
-//        when(mailConfig.getMail().getPort()).thenReturn("587");
     }
 
     @After
@@ -102,7 +96,6 @@ public class ResetPasswordResourceTest extends BasicAuthenticationTest{
         assertThat(tokenCaptor.getValue().getIsActive()).isTrue();
         assertThat(tokenCaptor.getValue().getEmail()).isEqualTo(user.getEmail());
         assertThat(tokenCaptor.getValue().getExpirationDate()).isNotNull();
-//        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
     @Test
