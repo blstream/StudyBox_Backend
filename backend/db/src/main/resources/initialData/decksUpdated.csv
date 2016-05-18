@@ -1,0 +1,8 @@
+id, name, isPublic
+8ad10ff4-59d6-410a-a544-98e4a75e510b, testName1, true
+1cbe9936-0163-430f-b72d-7423d6ea2828, testName2, false
+fcd61e79-1139-42f7-b3d1-6ba61e6d3ba0, testName3, true
+c91e68bf-d909-4391-a585-23f83336fd60, testName4, false
+72e7af30-ece5-416f-a2b3-fc0ace9f2d8d, testName5, true
+618ef2c1-44c4-4453-9a20-2a3a86042f77, test, true
+7cf2b338-980f-4203-a982-4f8b083c006a, testN, true
