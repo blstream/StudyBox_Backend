@@ -96,21 +96,19 @@ public abstract class DeckDAO {
     }
 
     public Collection<Deck> getDecksByName(String name, UUID userId) {
-        List<Deck> decks;
-        if((decks = getDecksUsingName(name, userId)).isEmpty()) {
-            return getDecksUsingName(String.format("%%%s%%", name), userId);
-        } else {
-            return decks;
+        List<Deck> decks = getDecksUsingName(name, userId);
+        if (decks.isEmpty()) {
+            decks = getDecksUsingName(String.format("%%%s%%", name), userId);
         }
+        return decks;
     }
 
     public Collection<Deck> getUserDecksByName(String name, UUID userId) {
-        List<Deck> decks;
-        if((decks = getUserDecksUsingName(name, userId)).isEmpty()) {
-            return getUserDecksUsingName(String.format("%%%s%%", name), userId);
-        } else {
-            return decks;
+        List<Deck> decks = getUserDecksUsingName(name, userId);
+        if (decks.isEmpty()) {
+            decks = getUserDecksUsingName(String.format("%%%s%%", name), userId);
         }
+        return decks;
     }
 
     public Collection<Deck> getAllDecks(UUID userId) {
