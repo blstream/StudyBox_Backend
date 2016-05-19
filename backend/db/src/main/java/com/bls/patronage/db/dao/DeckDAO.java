@@ -50,13 +50,13 @@ public abstract class DeckDAO {
 
     @SqlQuery("select id, name, isPublic from decks " +
             "join usersDecks on decks.id = usersDecks.deckId " +
-            "where decks.name like :name and decks.isPublic='true' " +
+            "where lower(decks.name) like lower(:name) and decks.isPublic='true' " +
             "and usersDecks.userId != :id")
     abstract List<Deck> getDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
 
     @SqlQuery("select id, name, isPublic from decks " +
             "inner join usersDecks on decks.id = usersDecks.deckId " +
-            "where decks.name like :name and usersDecks.userId = :id")
+            "where lower(decks.name) like lower(:name) and usersDecks.userId = :id")
     abstract List<Deck> getUserDecksUsingName(@Bind("name") String name, @Bind("id") UUID userId);
 
     @SqlQuery("select id, name, isPublic from decks " +
