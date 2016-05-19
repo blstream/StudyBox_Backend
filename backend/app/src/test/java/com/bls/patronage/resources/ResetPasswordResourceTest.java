@@ -8,6 +8,7 @@ import com.bls.patronage.db.model.ResetPasswordToken;
 import com.bls.patronage.db.model.User;
 import com.bls.patronage.mapper.DataAccessExceptionMapper;
 import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
+import io.dropwizard.auth.CachingAuthenticator;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
 import org.junit.Before;
@@ -39,10 +40,12 @@ import static org.mockito.Mockito.when;
 public class ResetPasswordResourceTest extends BasicAuthenticationTest{
 
     private static final TokenDAO tokenDAO = mock(TokenDAO.class);
+    private static final CachingAuthenticator cachingAuthenticator = mock(CachingAuthenticator.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new ResetPasswordResource(userDAO, tokenDAO, new ResetPasswordConfiguration()))
+            .addResource(new ResetPasswordResource(userDAO, tokenDAO, new ResetPasswordConfiguration(),
+                    cachingAuthenticator))
             .addProvider(new DataAccessExceptionMapper())
             .build();
 

@@ -105,6 +105,18 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         // services
         final StorageService storageService = storageBundle.createStorageService();
 
+        // authentication
+        CachingAuthenticator cachingAuthenticator = new CachingAuthenticator(
+                environment.metrics(),
+                new BasicAuthenticator(userDAO),
+                configuration.getAuthCacheBuilder());
+        environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+                .setAuthenticator(cachingAuthenticator)
+                .buildAuthFilter()));
+
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+        environment.jersey().register(PreAuthenticationFilter.class);
+
         // resources
         environment.jersey().register(new DeckResource(decksDAO));
         environment.jersey().register(new DecksResource(decksDAO));
@@ -112,7 +124,9 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new FlashcardsResource(flashcardDAO));
         environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new UsersResource(userDAO));
-        environment.jersey().register(new ResetPasswordResource(userDAO, tokenDAO, configuration.getResetPasswordConfig()));
+        environment.jersey().register(new ResetPasswordResource(userDAO, tokenDAO,
+                configuration.getResetPasswordConfig(),
+                cachingAuthenticator));
         environment.jersey().register(new TipResource(tipDAO, storageService));
         environment.jersey().register(new TipsResource(tipDAO));
         environment.jersey().register(new ResultsResource(flashcardDAO, resultDAO));
@@ -122,15 +136,6 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new DataAccessExceptionMapper());
         environment.jersey().register(new PasswordResetExceptionMapper());
         environment.jersey().register(new StorageExceptionMapper());
-
-        // authentication
-        environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-                .setAuthenticator(new CachingAuthenticator(environment.metrics(),
-                        new BasicAuthenticator(userDAO), configuration.getAuthCacheBuilder()))
-                .buildAuthFilter()));
-
-        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
-        environment.jersey().register(PreAuthenticationFilter.class);
 
         // tasks
         environment.admin().addTask(new TokenExpirationTask(tokenDAO));
