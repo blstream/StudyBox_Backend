@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface StorageService {
 
-    default URI createPublicURI(final Class<?> storageResourceClass, UUID dataId, StorageContexts context, UUID userId) {
+    default URI createPublicURI(final Class<?> storageResourceClass, UUID userId, StorageContexts context, UUID dataId) {
         return FilePathsCoder.resolveURIToFile(storageResourceClass, userId, context, dataId);
     }
 

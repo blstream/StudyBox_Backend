@@ -32,7 +32,7 @@ public class FilePathsCoderTest {
     public void testURIToFile() throws MalformedURLException {
         URI uri = FilePathsCoder.resolveURIToFile(ResourceImitation.class, userId, context, fileId);
 
-        assertThat(uri.toString()).isEqualTo(encoded);
+        assertThat(uri.toString()).isEqualToIgnoringCase(encoded);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class FilePathsCoderTest {
         assertThat(path).isEqualTo(decoded);
     }
 
-    @javax.ws.rs.Path("/users/{userId}")
+    @javax.ws.rs.Path("/users/{userId}/{context}/{dataId}")
     private class ResourceImitation {
     }
 }
