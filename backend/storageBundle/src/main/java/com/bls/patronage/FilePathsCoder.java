@@ -12,15 +12,9 @@ class FilePathsCoder {
     }
 
     public static URI resolveURIToFile(final Class resourceClass, final UUID userId, final StorageContexts context, final UUID fileId) {
-        String uri = new StringBuilder(
-                UriBuilder
+        String uri = UriBuilder
                         .fromResource(resourceClass)
-                        .build(userId)
-                        .toString())
-                .append("/")
-                .append(context.getContext())
-                .append("/")
-                .append(fileId)
+                .build(fileId, context, userId)
                 .toString();
 
         return URI.create(uri);

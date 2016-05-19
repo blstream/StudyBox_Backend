@@ -13,6 +13,8 @@ import com.bls.patronage.db.model.User;
 import io.dropwizard.auth.Auth;
 import org.glassfish.jersey.client.JerseyWebTarget;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -31,6 +33,8 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 public class DecksCvMagicResource {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DecksCvMagicResource.class);
+
     private final StorageService storageService;
     private final FlashcardDAO flashcardDAO;
     private final DeckDAO deckDAO;
@@ -48,14 +52,21 @@ public class DecksCvMagicResource {
     public Response uploadFile(@Auth User user,
                                @FormDataParam("file") InputStream inputStream,
                                @QueryParam("fileType") AcceptableFileTypes type) throws StorageException {
-
+        LOG.debug("Data recieved: Stream - " + inputStream + " | Type - " + type);
         final UUID dataId = storageService.create(inputStream, StorageContexts.CV, user.getId());
+        LOG.debug("Successfully created file with id " + dataId + " for user " + user.getId());
         final URI publicURLToUploadedFile = storageService.createPublicURI(StorageResource.class, user.getId(), StorageContexts.CV, dataId);
+        LOG.debug("URI to file created - " + publicURLToUploadedFile);
 
-        final Response flashcards = recoginzeFlashcards(publicURLToUploadedFile, type.getFileType());
-        save(flashcards, user.getId());
+        LOG.debug("Sending CVRequest containing URI");
+        final Response rawCVResponse = recoginzeFlashcards(publicURLToUploadedFile, type.getFileType());
+        LOG.debug("Response recieved - " + rawCVResponse);
+        LOG.debug("Saving flashcards from response to database");
+        saveFlashcardsFromResponse(rawCVResponse, user.getId());
 
+        LOG.debug("Save complete, deleting file");
         storageService.delete(user.getId(), StorageContexts.CV, dataId);
+        LOG.debug("Returning 201 response");
         return Response.ok()
                 .status(Response.Status.CREATED).build();
     }
@@ -67,7 +78,7 @@ public class DecksCvMagicResource {
                 .invoke();
     }
 
-    private void save(Response response, UUID userId) {
+    private void saveFlashcardsFromResponse(Response response, UUID userId) {
         final Deck deck = createNewDeck(userId);
 
         if (response.getEntity() != null) {
