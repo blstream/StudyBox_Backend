@@ -9,6 +9,8 @@ import com.bls.patronage.db.model.User;
 import com.bls.patronage.service.ResetPasswordService;
 import com.bls.patronage.service.TokenService;
 import com.bls.patronage.service.configuration.ResetPasswordConfiguration;
+import io.dropwizard.auth.CachingAuthenticator;
+import io.dropwizard.auth.basic.BasicCredentials;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -28,11 +30,14 @@ public class ResetPasswordResource {
     private final UserDAO userDAO;
     private final TokenDAO tokenDAO;
     private final ResetPasswordConfiguration resetPasswordConfig;
+    private final CachingAuthenticator<BasicCredentials, User> cachingAuthenticator;
 
-    public ResetPasswordResource(UserDAO userDAO, TokenDAO tokenDAO, ResetPasswordConfiguration resetPasswordConfig) {
+    public ResetPasswordResource(UserDAO userDAO, TokenDAO tokenDAO, ResetPasswordConfiguration resetPasswordConfig,
+                                 CachingAuthenticator<BasicCredentials, User> cachingAuthenticator) {
         this.userDAO = userDAO;
         this.tokenDAO = tokenDAO;
         this.resetPasswordConfig = resetPasswordConfig;
+        this.cachingAuthenticator = cachingAuthenticator;
     }
 
     @POST
@@ -56,7 +61,8 @@ public class ResetPasswordResource {
         final User user = userDAO.getUserByEmail(userInfo.getEmail());
         userDAO.updatePassword(new User(user.getId(), user.getEmail(), user.getName(),
                 generateSafeHash(userInfo.getPassword())));
-
+        
+        cachingAuthenticator.invalidateAll(p -> p.getUsername().equals(user.getEmail()));
         tokenDAO.deactivate(userInfo.getToken());
 
         return Response.ok().status(Response.Status.OK).build();
