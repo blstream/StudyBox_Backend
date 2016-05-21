@@ -1,22 +1,17 @@
 package com.bls.patronage;
 
-import io.dropwizard.validation.ValidationMethod;
+import javax.ws.rs.WebApplicationException;
 
 public enum StorageContexts {
-    CV("cv"), FLASHCARDS("flashcards"), TIPS("tips");
+    CV, FLASHCARDS, TIPS;
 
-    private final String context;
-
-    StorageContexts(String context) {
-        this.context = context;
+    private static StorageContexts fromString(String param) {
+        String toUpper = param.toUpperCase();
+        try {
+            return valueOf(toUpper);
+        } catch (Exception e) {
+            throw new WebApplicationException("Context is not valid", 400);
+        }
     }
 
-    @ValidationMethod
-    public boolean isValidContext() {
-        return context.equals(CV) || context.equals(FLASHCARDS) || context.equals(TIPS);
-    }
-
-    public String getContext() {
-        return context;
-    }
 }
