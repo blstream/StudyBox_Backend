@@ -20,7 +20,7 @@ class LocalFileService implements StorageService {
 
     @Override
     public UUID create(InputStream stream, StorageContexts contexts, UUID userId) throws StorageException {
-        Path path = Paths.get(STORAGE_PATH.toString(), userId.toString(), contexts.getContext());
+        Path path = Paths.get(STORAGE_PATH.toString(), userId.toString(), contexts.toString());
         UUID dataId = UUID.randomUUID();
         try {
             createPathToFile(path);
@@ -55,7 +55,10 @@ class LocalFileService implements StorageService {
     @Override
     public OutputStream get(UUID userId, StorageContexts context, UUID dataId) throws StorageException {
         try {
-            return new FileOutputStream(FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId).toFile());
+
+            Path path = FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId);
+            System.out.println(path);
+            return new FileOutputStream(path.toFile());
         } catch (FileNotFoundException e) {
             throw new StorageException(e);
         }
