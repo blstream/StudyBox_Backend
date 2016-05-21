@@ -19,6 +19,7 @@ import com.bls.patronage.resources.FlashcardResource;
 import com.bls.patronage.resources.FlashcardsResource;
 import com.bls.patronage.resources.ResetPasswordResource;
 import com.bls.patronage.resources.ResultsResource;
+import com.bls.patronage.resources.StorageResource;
 import com.bls.patronage.resources.TipResource;
 import com.bls.patronage.resources.TipsResource;
 import com.bls.patronage.resources.UserResource;
@@ -117,6 +118,7 @@ public class StudyBox extends Application<StudyBoxConfiguration> {
         environment.jersey().register(new TipsResource(tipDAO));
         environment.jersey().register(new ResultsResource(flashcardDAO, resultDAO));
         environment.jersey().register(new DecksCvMagicResource(storageService, decksDAO, flashcardDAO, cvServer));
+        environment.jersey().register(new StorageResource(storageService));
 
         // Exception mappers
         environment.jersey().register(new DataAccessExceptionMapper());
