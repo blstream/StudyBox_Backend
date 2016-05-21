@@ -1,6 +1,7 @@
 package com.bls.patronage.mapper;
 
 import com.bls.patronage.StorageException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
@@ -16,7 +17,8 @@ public class StorageExceptionMapper implements ExceptionMapper<StorageException>
 
     @Override
     public Response toResponse(StorageException storageException) {
-        LoggerFactory.getLogger(StorageExceptionMapper.class).debug("Storage exception: ", storageException);
+        Logger LOG = LoggerFactory.getLogger(StorageExceptionMapper.class);
+        LOG.debug("Storage exception: ", storageException);
         return Response.status(Response.Status.fromStatusCode(502))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(storageException.getJSONMessage()).build();
