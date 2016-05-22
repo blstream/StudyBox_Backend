@@ -11,13 +11,13 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class StorageExceptionMapper implements ExceptionMapper<StorageException> {
+    final Logger LOG = LoggerFactory.getLogger(StorageExceptionMapper.class);
 
     public StorageExceptionMapper() {
     }
 
     @Override
     public Response toResponse(StorageException storageException) {
-        final Logger LOG = LoggerFactory.getLogger(StorageExceptionMapper.class);
         LOG.debug("Storage exception: ", storageException);
         return Response.status(Response.Status.fromStatusCode(502))
                 .type(MediaType.APPLICATION_JSON_TYPE)
