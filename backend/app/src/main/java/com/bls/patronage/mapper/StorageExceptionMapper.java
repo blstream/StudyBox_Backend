@@ -17,7 +17,7 @@ public class StorageExceptionMapper implements ExceptionMapper<StorageException>
 
     @Override
     public Response toResponse(StorageException storageException) {
-        Logger LOG = LoggerFactory.getLogger(StorageExceptionMapper.class);
+        final Logger LOG = LoggerFactory.getLogger(StorageExceptionMapper.class);
         LOG.debug("Storage exception: ", storageException);
         return Response.status(Response.Status.fromStatusCode(502))
                 .type(MediaType.APPLICATION_JSON_TYPE)

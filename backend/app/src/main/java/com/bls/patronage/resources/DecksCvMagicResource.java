@@ -63,26 +63,27 @@ public class DecksCvMagicResource {
                                @Context HttpServletRequest request) throws StorageException, MalformedURLException {
         LOG.debug("Data recieved: Stream - " + inputStream + " | Type - " + type);
         final UUID dataId = storageService.create(inputStream, StorageContexts.CV, user.getId());
+
         LOG.debug("Successfully created file with id " + dataId + " for user " + user.getId());
         final URL publicURLToUploadedFile = storageService.createPublicURL(request, StorageResource.class, user.getId(), StorageContexts.CV, dataId);
-        LOG.debug("URI to file created - " + publicURLToUploadedFile);
-        LOG.debug("Sending CVRequest containing URI");
+
+        LOG.debug("URI to file created - " + publicURLToUploadedFile + "; Sending CVRequest containing URI");
         final Response rawCVResponse = recoginzeFlashcards(
                 publicURLToUploadedFile,
                 type.toString());
-        LOG.debug("Response recieved - " + rawCVResponse);
-        LOG.debug("Saving flashcards from response to database");
+
+        LOG.debug("Response recieved - " + rawCVResponse + "; Saving flashcards from response to database");
         saveFlashcardsFromResponse(rawCVResponse, user.getId());
 
         LOG.debug("Save complete, deleting file");
         storageService.delete(user.getId(), StorageContexts.CV, dataId);
+
         LOG.debug("Returning response");
         return Response.ok().status(Response.Status.CREATED).build();
     }
 
     private Response recoginzeFlashcards(final URL publicURLToUploadedFile, String fileType) {
         Entity<CVRequest> json = Entity.json(CVRequest.createRecognizeRequest(publicURLToUploadedFile, fileType));
-        System.out.println(json);
         return cvServer
                 .request()
                 .buildPost(json)
@@ -96,7 +97,6 @@ public class DecksCvMagicResource {
             throw new WebApplicationException("No response recieved from CV server", 502);
         }
         CVResponse cvResponse = mapResponseToCvResponse(response);
-        System.out.println(cvResponse);
         switch (cvResponse.getStatus()) {
             case 0: {
                 throw new WebApplicationException("CV server error: " + cvResponse.getErrorDescription(), 502);
@@ -104,6 +104,7 @@ public class DecksCvMagicResource {
             case 1: {
                 List<Flashcard> flashcards = mapFlashcardsToDbModels(cvResponse.getFlashcards(), deck.getId());
                 saveFlashcardsToDatabase(flashcards);
+                break;
             }
 
             case 2: {
