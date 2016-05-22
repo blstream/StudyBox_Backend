@@ -99,7 +99,7 @@ public class DecksCvMagicResource {
         System.out.println(cvResponse);
         switch (cvResponse.getStatus()) {
             case 0: {
-                throw new WebApplicationException("CV server error: " + cvResponse.getError_description(), 502);
+                throw new WebApplicationException("CV server error: " + cvResponse.getErrorDescription(), 502);
             }
             case 1: {
                 List<Flashcard> flashcards = mapFlashcardsToDbModels(cvResponse.getFlashcards(), deck.getId());
@@ -107,7 +107,7 @@ public class DecksCvMagicResource {
             }
 
             case 2: {
-                throw new WebApplicationException("CV server response: " + cvResponse.getError_description(), 400);
+                throw new WebApplicationException("CV server response: " + cvResponse.getErrorDescription(), 400);
             }
             default: {
                 throw new WebApplicationException("CV server error: Unrecognized status field value", 502);

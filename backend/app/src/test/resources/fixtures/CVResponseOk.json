@@ -1,0 +1,17 @@
+{
+  "flashcards": [
+    {
+      "question": "Sample question?",
+      "answer": "Sample answer.",
+      "isHidden": false,
+      "id": "12345678-9012-3456-7890-123456789012"
+    },
+    {
+      "question": "Sample question2?",
+      "answer": "Sample answer2.",
+      "isHidden": true,
+      "id": "92345678-1019-3556-7850-129456789019"
+    }
+  ],
+  "status": 1
+}
