@@ -11,6 +11,7 @@ import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.params.UUIDParam;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,9 +21,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.UUID;
 
 @Path("/decks/{deckId}/flashcards/{flashcardId}")
@@ -74,12 +77,13 @@ public class FlashcardResource {
             @Auth User user,
             @Valid @PathParam("flashcardId") UUIDParam flashcardId,
             @Valid @PathParam("deckId") UUIDParam deckId,
-            @FormDataParam("file") InputStream inputStream) throws StorageException {
+            @FormDataParam("file") InputStream inputStream,
+            @Context HttpServletRequest request) throws StorageException, MalformedURLException {
 
         UUID questionImageId = storageService.create(inputStream, StorageContexts.FLASHCARDS, user.getId());
-        URI questionImageURI = storageService.createPublicURI(StorageResource.class, questionImageId, StorageContexts.FLASHCARDS, user.getId());
+        URL questionImageURL = storageService.createPublicURL(request, StorageResource.class, questionImageId, StorageContexts.FLASHCARDS, user.getId());
 
-        Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setQuestionImageURL(questionImageURI.toString());
+        Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setQuestionImageURL(questionImageURL.toString());
         flashcardDAO.updateFlashcard(result);
 
         return new FlashcardRepresentation(result);
@@ -92,12 +96,13 @@ public class FlashcardResource {
             @Auth User user,
             @Valid @PathParam("flashcardId") UUIDParam flashcardId,
             @Valid @PathParam("deckId") UUIDParam deckId,
-            @FormDataParam("file") InputStream inputStream) throws StorageException {
+            @FormDataParam("file") InputStream inputStream,
+            @Context HttpServletRequest request) throws StorageException, MalformedURLException {
 
         UUID answerImageId = storageService.create(inputStream, StorageContexts.FLASHCARDS, user.getId());
-        URI answerImageURI = storageService.createPublicURI(StorageResource.class, answerImageId, StorageContexts.FLASHCARDS, user.getId());
+        URL answerImageURL = storageService.createPublicURL(request, StorageResource.class, answerImageId, StorageContexts.FLASHCARDS, user.getId());
 
-        Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setAnswerImageURL(answerImageURI.toString());
+        Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setAnswerImageURL(answerImageURL.toString());
         flashcardDAO.updateFlashcard(result);
 
         return new FlashcardRepresentation(result);

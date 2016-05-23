@@ -3,7 +3,7 @@ package com.bls.patronage;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
-import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -18,21 +18,24 @@ public class FilePathsCoderTest {
     private StorageContexts context = StorageContexts.FLASHCARDS;
 
     private String encoded = new StringBuilder()
+            .append("http://localhost:2000")
             .append("/users")
             .append("/")
             .append(userId)
             .append("/")
-            .append(context.getContext())
+            .append(context.toString())
             .append("/")
             .append(fileId)
             .toString();
-    private Path decoded = Paths.get(baseLocation, userId.toString(), context.getContext(), fileId.toString());
+    private Path decoded = Paths.get(baseLocation, userId.toString(), context.toString(), fileId.toString());
+
 
     @Test
     public void testURIToFile() throws MalformedURLException {
-        URI uri = FilePathsCoder.resolveURIToFile(ResourceImitation.class, userId, context, fileId);
+        URL baseURL = new URL("http://localhost:2000");
+        URL url = FilePathsCoder.resolveURIToFile(baseURL, ResourceImitation.class, userId, context, fileId);
 
-        assertThat(uri.toString()).isEqualTo(encoded);
+        assertThat(url.toString()).isEqualToIgnoringCase(encoded);
     }
 
     @Test
@@ -42,7 +45,7 @@ public class FilePathsCoderTest {
         assertThat(path).isEqualTo(decoded);
     }
 
-    @javax.ws.rs.Path("/users/{userId}")
+    @javax.ws.rs.Path("/users/{userId}/{context}/{dataId}")
     private class ResourceImitation {
     }
 }

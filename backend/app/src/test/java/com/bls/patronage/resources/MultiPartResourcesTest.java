@@ -12,13 +12,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +39,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     private static String tipEssenceImageURI;
     private static String flashcardQuestionImageURI;
     private static String flashcardAnswerImageURI;
-    private static URI dataURI;
+    private static URL dataURL;
     @Captor
     private ArgumentCaptor<Tip> tipCaptor;
     @Captor
@@ -49,7 +51,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
         flashcardId = UUID.randomUUID();
         tipId = UUID.randomUUID();
         dataId = UUID.randomUUID();
-        dataURI = URI.create("/storage/" + UUID.randomUUID() + "/test/" + dataId);
+        dataURL = new URL("http://localhost:2000/storage/" + UUID.randomUUID() + "/test/" + dataId);
 
         multiPart = new FormDataMultiPart()
                 .field("file", new ByteArrayInputStream("foo".getBytes()), MediaType.MULTIPART_FORM_DATA_TYPE);
@@ -81,44 +83,44 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     }
 
     @Test
-    public void testTipEssenceMultipart() {
+    public void testTipEssenceMultipart() throws MalformedURLException {
         Tip tip = new Tip(tipId, "foo", 1, flashcardId, deckId);
         when(tipDAO.getTipById(tipId)).thenReturn(tip);
-        when(storageService.createPublicURI(eq(StorageResource.class), eq(dataId), eq(StorageContexts.TIPS), any(UUID.class)))
-                .thenReturn(dataURI);
+        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.TIPS), any(UUID.class)))
+                .thenReturn(dataURL);
 
         Response response = postMultipart(tipEssenceImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(tipDAO).updateTip(tipCaptor.capture());
-        assertThat(tipCaptor.getValue().getEssenceImageURL()).isEqualTo(dataURI.toString());
+        assertThat(tipCaptor.getValue().getEssenceImageURL()).isEqualTo(dataURL.toString());
     }
 
     @Test
-    public void testFlashcardQuestionMultipart() {
+    public void testFlashcardQuestionMultipart() throws MalformedURLException {
         Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
-        when(storageService.createPublicURI(eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
-                .thenReturn(dataURI);
+        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
+                .thenReturn(dataURL);
 
         Response response = postMultipart(flashcardQuestionImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
-        assertThat(flashcardCaptor.getValue().getQuestionImageURL()).isEqualTo(dataURI.toString());
+        assertThat(flashcardCaptor.getValue().getQuestionImageURL()).isEqualTo(dataURL.toString());
     }
 
     @Test
-    public void testFlashcardAnswerMultipart() {
+    public void testFlashcardAnswerMultipart() throws MalformedURLException {
         Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
-        when(storageService.createPublicURI(eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
-                .thenReturn(dataURI);
+        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
+                .thenReturn(dataURL);
 
         Response response = postMultipart(flashcardAnswerImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
-        assertThat(flashcardCaptor.getValue().getAnswerImageURL()).isEqualTo(dataURI.toString());
+        assertThat(flashcardCaptor.getValue().getAnswerImageURL()).isEqualTo(dataURL.toString());
     }
 }

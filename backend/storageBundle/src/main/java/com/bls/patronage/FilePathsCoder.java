@@ -1,28 +1,24 @@
 package com.bls.patronage;
 
 import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.UUID;
 
 class FilePathsCoder {
 
     public static Path resolvePathToFile(final Path storagePath, final UUID userId, final StorageContexts context, final UUID fileId) {
-        return storagePath.resolve(userId.toString()).resolve(context.getContext()).resolve(fileId.toString());
+        return storagePath.resolve(userId.toString()).resolve(context.toString()).resolve(fileId.toString());
     }
 
-    public static URI resolveURIToFile(final Class resourceClass, final UUID userId, final StorageContexts context, final UUID fileId) {
-        String uri = new StringBuilder(
+    public static URL resolveURIToFile(URL baseURL, final Class resourceClass, final UUID userId, final StorageContexts context, final UUID fileId) throws MalformedURLException {
+        String url = baseURL +
                 UriBuilder
                         .fromResource(resourceClass)
-                        .build(userId)
-                        .toString())
-                .append("/")
-                .append(context.getContext())
-                .append("/")
-                .append(fileId)
+                .build(userId, context, fileId)
                 .toString();
 
-        return URI.create(uri);
+        return new URL(url);
     }
 }

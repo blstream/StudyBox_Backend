@@ -4,7 +4,7 @@ database:
   password: sa
   url: jdbc:h2:./studybox
 
-cvServerURL: "http://www.example.com/api/flashcards"
+cvServerURL: http://78.133.154.71:9000/api/flashcards
 fileContentBaseLocation: "./storage"
 
 server:
