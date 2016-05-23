@@ -57,7 +57,6 @@ class LocalFileService implements StorageService {
         try {
 
             Path path = FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId);
-            System.out.println(path);
             return new FileOutputStream(path.toFile());
         } catch (FileNotFoundException e) {
             throw new StorageException(e);
