@@ -7,24 +7,27 @@ import java.net.URL;
 
 public class CVRequest {
 
-    public final URL url;
-    public final String action;
+    public String url;
+    public String action;
 
-    public CVRequest(URL url, String action) {
+    public CVRequest() {
+        //jackson deserialization
+    }
+
+    public CVRequest(String url, String action) {
         this.url = url;
         this.action = action;
     }
 
     public static CVRequest createRecognizeRequest(final URL publicURLToUploadedFile, String fileType) {
-        System.out.println(fileType);
         return new CVRequest(
-                publicURLToUploadedFile,
+                publicURLToUploadedFile.toString(),
                 fileType.equals(AcceptableFileType.IMAGE.toString()) ? "ImageToFlashcard" : "TextToFlashcard"
         );
     }
 
     @JsonProperty
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 

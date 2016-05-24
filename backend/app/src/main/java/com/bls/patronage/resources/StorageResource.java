@@ -11,16 +11,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.UUID;
 
 @Path("/storage/{userId}/{context}/{storageId}")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces("application/octet-stream")
 public class StorageResource {
 
     private final StorageService storageService;
@@ -32,16 +28,15 @@ public class StorageResource {
     @GET
     public StreamingOutput getFile(@Auth User user,
                                    @PathParam("userId") UUID userId,
-                                   @PathParam("context") StorageContexts context,
+                                   @PathParam("context") String context,
                                    @PathParam("storageId") UUID storageId) throws StorageException {
 
         assert user.getId().equals(userId);
 
         return os -> {
-            final Writer writer = new BufferedWriter(
-                    new OutputStreamWriter(
-                            storageService.get(userId, context, storageId)));
-            writer.flush();
+            byte[] fileStream = storageService.get(userId, StorageContexts.CV, storageId);
+            os.write(fileStream);
+            os.flush();
         };
     }
 

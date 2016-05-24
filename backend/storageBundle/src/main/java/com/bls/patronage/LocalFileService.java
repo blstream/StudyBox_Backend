@@ -1,10 +1,7 @@
 package com.bls.patronage;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,12 +50,12 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public OutputStream get(UUID userId, StorageContexts context, UUID dataId) throws StorageException {
+    public byte[] get(UUID userId, StorageContexts context, UUID dataId) throws StorageException {
         try {
 
             Path path = FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId);
-            return new FileOutputStream(path.toFile());
-        } catch (FileNotFoundException e) {
+            return Files.readAllBytes(path);
+        } catch (Exception e) {
             throw new StorageException(e);
         }
     }

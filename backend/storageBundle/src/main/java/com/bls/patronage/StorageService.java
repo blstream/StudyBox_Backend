@@ -2,7 +2,6 @@ package com.bls.patronage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
@@ -21,5 +20,5 @@ public interface StorageService {
 
     void delete(UUID userId, StorageContexts context, UUID dataId) throws StorageException;
 
-    OutputStream get(UUID userId, StorageContexts context, UUID dataId) throws StorageException;
+    byte[] get(UUID userId, StorageContexts context, UUID dataId) throws StorageException;
 }
