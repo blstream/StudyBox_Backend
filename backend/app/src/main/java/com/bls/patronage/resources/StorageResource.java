@@ -10,11 +10,13 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.UUID;
 
 @Path("/storage/{userId}/{context}/{storageId}")
+@Produces("application/octet-stream")
 public class StorageResource {
 
     private final StorageService storageService;
