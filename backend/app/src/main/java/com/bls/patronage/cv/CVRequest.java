@@ -16,15 +16,14 @@ public class CVRequest {
         url = null;
     }
 
-    public CVRequest(String url, String action) {
+    public CVRequest(final String url, final String action) {
         this.url = url;
         this.action = action;
     }
 
-    public static CVRequest createRecognizeRequest(final URL publicURLToUploadedFile, String fileType) {
+    public static CVRequest createRecognizeRequest(final URL publicURLToUploadedFile, final String fileType) {
         return new CVRequest(
-                //publicURLToUploadedFile.toString(),
-                "http://iv.pl/images/03441269865725431890.jpg",
+                publicURLToUploadedFile.toString(),
                 fileType.equals(AcceptableFileType.IMAGE.toString()) ? "ImageToFlashcard" : "TextToFlashcard"
         );
     }
