@@ -7,11 +7,13 @@ import java.net.URL;
 
 public class CVRequest {
 
-    public String url;
-    public String action;
+    public final String url;
+    public final String action;
 
     public CVRequest() {
         //jackson deserialization
+        action = null;
+        url = null;
     }
 
     public CVRequest(String url, String action) {
@@ -21,7 +23,8 @@ public class CVRequest {
 
     public static CVRequest createRecognizeRequest(final URL publicURLToUploadedFile, String fileType) {
         return new CVRequest(
-                publicURLToUploadedFile.toString(),
+                //publicURLToUploadedFile.toString(),
+                "http://iv.pl/images/03441269865725431890.jpg",
                 fileType.equals(AcceptableFileType.IMAGE.toString()) ? "ImageToFlashcard" : "TextToFlashcard"
         );
     }

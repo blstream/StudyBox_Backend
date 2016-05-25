@@ -12,8 +12,8 @@ class FilePathsCoder {
         return storagePath.resolve(userId.toString()).resolve(context.toString()).resolve(fileId.toString());
     }
 
-    public static URL resolveURIToFile(URL baseURL, final Class resourceClass, final UUID userId, final StorageContexts context, final UUID fileId) throws MalformedURLException {
-        String url = baseURL +
+    public static URL resolveURIToFile(final URL baseURL, final Class resourceClass, final UUID userId, final StorageContexts context, final UUID fileId) throws MalformedURLException {
+        final String url = baseURL +
                 UriBuilder
                         .fromResource(resourceClass)
                 .build(userId, context, fileId)

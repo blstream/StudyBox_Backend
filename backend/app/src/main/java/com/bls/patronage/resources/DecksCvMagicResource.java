@@ -48,7 +48,10 @@ public class DecksCvMagicResource {
     private final DeckDAO deckDAO;
     private final JerseyWebTarget cvServer;
 
-    public DecksCvMagicResource(StorageService storageService, DeckDAO deckDAO, FlashcardDAO flashcardDAO, final JerseyWebTarget cvServer) {
+    public DecksCvMagicResource(final StorageService storageService,
+                                final DeckDAO deckDAO,
+                                final FlashcardDAO flashcardDAO,
+                                final JerseyWebTarget cvServer) {
         this.storageService = storageService;
         this.deckDAO = deckDAO;
         this.flashcardDAO = flashcardDAO;
@@ -61,6 +64,7 @@ public class DecksCvMagicResource {
                                @FormDataParam("file") InputStream inputStream,
                                @QueryParam("fileType") @NotNull AcceptableFileType type,
                                @Context HttpServletRequest request) throws StorageException, MalformedURLException {
+
         LOG.debug("Data recieved: Stream - " + inputStream + " | Type - " + type);
         final UUID dataId = storageService.create(inputStream, StorageContexts.CV, user.getId());
 
@@ -72,7 +76,7 @@ public class DecksCvMagicResource {
                 publicURLToUploadedFile,
                 type.toString());
 
-        LOG.debug("Response recieved - " + rawCVResponse + "; Saving flashcards from response to database");
+        LOG.debug("Response recieved - " + rawCVResponse + "; Reading response and saving data");
         saveFlashcardsFromResponse(rawCVResponse, user.getId());
 
         LOG.debug("Save complete, deleting file");
@@ -82,52 +86,57 @@ public class DecksCvMagicResource {
         return Response.ok().status(Response.Status.CREATED).build();
     }
 
-    private Response recoginzeFlashcards(final URL publicURLToUploadedFile, String fileType) {
-        Entity<CVRequest> json = Entity.json(CVRequest.createRecognizeRequest(publicURLToUploadedFile, fileType));
+    private Response recoginzeFlashcards(final URL publicURLToUploadedFile, final String fileType) {
+        final Entity<CVRequest> json = Entity.json(CVRequest.createRecognizeRequest(publicURLToUploadedFile, fileType));
         return cvServer
                 .request()
                 .buildPost(json)
                 .invoke();
     }
 
-    private void saveFlashcardsFromResponse(Response response, UUID userId) {
+    private void saveFlashcardsFromResponse(final Response response, final UUID userId) {
         final Deck deck = createNewDeck(userId);
 
         if (response.getEntity() == null) {
+            LOG.debug("No entity included in response, throwing exception");
             throw new WebApplicationException("No response recieved from CV server", 502);
         }
-        CVResponse cvResponse = mapResponseToCvResponse(response);
+        final CVResponse cvResponse = mapResponseToCvResponse(response);
         switch (cvResponse.getStatus()) {
             case 0: {
+                LOG.debug("CV server reported an error: " + cvResponse.getErrorDescription());
                 throw new WebApplicationException("CV server error: " + cvResponse.getErrorDescription(), 502);
             }
             case 1: {
-                List<Flashcard> flashcards = mapFlashcardsToDbModels(cvResponse.getFlashcards(), deck.getId());
+                LOG.debug("Reading flashcards from CV response");
+                final List<Flashcard> flashcards = mapFlashcardsToDbModels(cvResponse.getFlashcards(), deck.getId());
+                LOG.debug("Saving flashcards to database");
                 saveFlashcardsToDatabase(flashcards);
                 break;
             }
 
             case 2: {
-                throw new WebApplicationException("CV server response: " + cvResponse.getErrorDescription(), 400);
+                LOG.debug("Ok, but there was no flashcards recognized");
+                throw new WebApplicationException("CV server could not recognize any flashcards from file", 400);
             }
             default: {
-                throw new WebApplicationException("CV server error: Unrecognized status field value", 502);
+                throw new WebApplicationException("CV communication problem: Unrecognized status field value", 502);
             }
         }
     }
 
-    private void saveFlashcardsToDatabase(List<Flashcard> flashcards) {
+    private void saveFlashcardsToDatabase(final List<Flashcard> flashcards) {
         flashcards.forEach(flashcard -> flashcardDAO.createFlashcard(flashcard));
     }
 
-    private List<Flashcard> mapFlashcardsToDbModels(List<FlashcardRepresentation> flashcards, UUID deckId) {
+    private List<Flashcard> mapFlashcardsToDbModels(final List<FlashcardRepresentation> flashcards, final UUID deckId) {
         return flashcards
                 .stream()
-                .map(flashcardRepresentation -> flashcardRepresentation.setDeckId(deckId).map())
+                .map(flashcardRepresentation -> flashcardRepresentation.setId(UUID.randomUUID()).setHidden(false).setDeckId(deckId).map())
                 .collect(Collectors.toList());
     }
 
-    private CVResponse mapResponseToCvResponse(Response response) {
+    private CVResponse mapResponseToCvResponse(final Response response) {
         return response
                 .readEntity(CVResponse.class);
     }
