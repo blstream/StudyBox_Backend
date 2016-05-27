@@ -57,6 +57,8 @@ public class StorageResource {
             final InputStream fileStream = storageService.get(userId, StorageContexts.CV, storageId);
             copyStream(fileStream, os);
             os.flush();
+            os.close();
+            fileStream.close();
         };
     }
 
