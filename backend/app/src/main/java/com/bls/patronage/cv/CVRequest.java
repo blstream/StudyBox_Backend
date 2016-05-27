@@ -1,6 +1,7 @@
 package com.bls.patronage.cv;
 
 import com.bls.patronage.api.AcceptableFileType;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.net.URL;
@@ -10,13 +11,8 @@ public class CVRequest {
     public final String url;
     public final String action;
 
-    public CVRequest() {
-        //jackson deserialization
-        action = null;
-        url = null;
-    }
-
-    public CVRequest(final String url, final String action) {
+    @JsonCreator
+    public CVRequest(@JsonProperty("url") final String url, @JsonProperty("action") final String action) {
         this.url = url;
         this.action = action;
     }
