@@ -75,12 +75,6 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     private Response postMultipart(String uri) {
         return authResources.client()
                 .register(MultiPartFeature.class)
-//                .register(new AbstractBinder() {
-//                    @Override
-//                    protected void configure() {
-//                        bind(request).to(HttpServletRequest.class);
-//                    }
-//                });
                 .target(uri)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .header("Authorization", "Basic " + encodedCredentials)
