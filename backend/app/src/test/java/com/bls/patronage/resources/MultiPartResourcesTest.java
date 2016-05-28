@@ -26,20 +26,41 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MultiPartResourcesTest extends BasicAuthenticationTest {
-    private static FormDataMultiPart multiPart;
-    private static UUID deckId;
-    private static UUID flashcardId;
-    private static UUID tipId;
-    private static UUID dataId;
-    private static String tipEssenceImageURI;
-    private static String flashcardQuestionImageURI;
-    private static String flashcardAnswerImageURI;
+    //IDs
+    private static final UUID deckId = UUID.randomUUID();
+    private static final UUID flashcardId = UUID.randomUUID();
+    private static final UUID tipId = UUID.randomUUID();
+    private static final UUID dataId = UUID.randomUUID();
+
+    //Requests
+    private static final HttpServletRequest request = mock(HttpServletRequest.class);
+    private static final FormDataMultiPart multiPart = new FormDataMultiPart()
+            .field("file", new ByteArrayInputStream("foo".getBytes()), MediaType.MULTIPART_FORM_DATA_TYPE);
+
+    //URIs
+    private static final String tipEssenceImageURI = UriBuilder
+            .fromResource(TipResource.class)
+            .build(deckId, flashcardId, tipId)
+            .toString() + UriBuilder.fromMethod(TipResource.class, "postEssenceImage").toString();
+    private static final String flashcardQuestionImageURI = UriBuilder
+            .fromResource(FlashcardResource.class)
+            .build(deckId, flashcardId)
+            .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postQuestionImage").toString();
+    private static final String flashcardAnswerImageURI = UriBuilder
+            .fromResource(FlashcardResource.class)
+            .build(deckId, flashcardId)
+            .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postAnswerImage").toString();
+
+    //URL
     private static URL dataURL;
+
+    //Captors
     @Captor
     private ArgumentCaptor<Tip> tipCaptor;
     @Captor
@@ -47,35 +68,21 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Before
     public void setUpClass() throws Exception {
-        deckId = UUID.randomUUID();
-        flashcardId = UUID.randomUUID();
-        tipId = UUID.randomUUID();
-        dataId = UUID.randomUUID();
         dataURL = new URL("http://localhost:2000/storage/" + UUID.randomUUID() + "/test/" + dataId);
 
-        multiPart = new FormDataMultiPart()
-                .field("file", new ByteArrayInputStream("foo".getBytes()), MediaType.MULTIPART_FORM_DATA_TYPE);
-
-        tipEssenceImageURI = UriBuilder
-                .fromResource(TipResource.class)
-                .build(deckId, flashcardId, tipId)
-                .toString() + UriBuilder.fromMethod(TipResource.class, "postEssenceImage").toString();
-        flashcardQuestionImageURI = UriBuilder
-                .fromResource(FlashcardResource.class)
-                .build(deckId, flashcardId)
-                .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postQuestionImage").toString();
-        flashcardAnswerImageURI = UriBuilder
-                .fromResource(FlashcardResource.class)
-                .build(deckId, flashcardId)
-                .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postAnswerImage").toString();
-
         when(storageService.create(any(InputStream.class), any(StorageContexts.class), any(UUID.class))).thenReturn(dataId);
-
     }
+
 
     private Response postMultipart(String uri) {
         return authResources.client()
                 .register(MultiPartFeature.class)
+//                .register(new AbstractBinder() {
+//                    @Override
+//                    protected void configure() {
+//                        bind(request).to(HttpServletRequest.class);
+//                    }
+//                });
                 .target(uri)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .header("Authorization", "Basic " + encodedCredentials)
@@ -100,7 +107,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     public void testFlashcardQuestionMultipart() throws MalformedURLException {
         Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
-        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
+        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), any(UUID.class), eq(StorageContexts.FLASHCARDS), eq(dataId)))
                 .thenReturn(dataURL);
 
         Response response = postMultipart(flashcardQuestionImageURI);
@@ -114,7 +121,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     public void testFlashcardAnswerMultipart() throws MalformedURLException {
         Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
-        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
+        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), any(UUID.class), eq(StorageContexts.FLASHCARDS), eq(dataId)))
                 .thenReturn(dataURL);
 
         Response response = postMultipart(flashcardAnswerImageURI);
