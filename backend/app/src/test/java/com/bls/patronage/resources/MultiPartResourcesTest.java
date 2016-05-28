@@ -26,7 +26,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,8 +37,7 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
     private static final UUID tipId = UUID.randomUUID();
     private static final UUID dataId = UUID.randomUUID();
 
-    //Requests
-    private static final HttpServletRequest request = mock(HttpServletRequest.class);
+    //Multipart
     private static final FormDataMultiPart multiPart = new FormDataMultiPart()
             .field("file", new ByteArrayInputStream("foo".getBytes()), MediaType.MULTIPART_FORM_DATA_TYPE);
 
