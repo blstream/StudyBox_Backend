@@ -1,5 +1,7 @@
 package com.bls.patronage;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,13 +18,14 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public UUID create(InputStream stream, StorageContexts contexts, UUID userId) throws StorageException {
-        Path path = Paths.get(STORAGE_PATH.toString(), userId.toString(), contexts.toString());
-        UUID dataId = UUID.randomUUID();
+    public UUID create(final InputStream stream, final StorageContexts contexts, final UUID userId) throws StorageException {
+        final Path location = Paths.get(STORAGE_PATH.toString(), userId.toString(), contexts.toString());
+        final UUID dataId = UUID.randomUUID();
+
         try {
-            createPathToFile(path);
-            path = path.resolve(dataId.toString());
-            Files.copy(stream, path);
+            createPath(location);
+            final Path filePath = location.resolve(dataId.toString());
+            Files.copy(stream, filePath);
         } catch (IOException e) {
             throw new StorageException(e);
         }
@@ -30,7 +33,7 @@ class LocalFileService implements StorageService {
         return dataId;
     }
 
-    public void createPathToFile(Path location) throws StorageException {
+    public void createPath(final Path location) throws StorageException {
         if (!Files.exists(location)) {
             try {
                 Files.createDirectories(location);
@@ -41,7 +44,7 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public void delete(UUID userId, StorageContexts context, UUID dataId) throws StorageException {
+    public void delete(final UUID userId, final StorageContexts context, final UUID dataId) throws StorageException {
         try {
             Files.delete(FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId));
         } catch (IOException e) {
@@ -50,12 +53,11 @@ class LocalFileService implements StorageService {
     }
 
     @Override
-    public byte[] get(UUID userId, StorageContexts context, UUID dataId) throws StorageException {
+    public InputStream get(final UUID userId, final StorageContexts context, final UUID dataId) throws StorageException {
         try {
-
-            Path path = FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId);
-            return Files.readAllBytes(path);
-        } catch (Exception e) {
+            final Path path = FilePathsCoder.resolvePathToFile(STORAGE_PATH, userId, context, dataId);
+            return new BufferedInputStream(new FileInputStream(path.toFile()));
+        } catch (IOException e) {
             throw new StorageException(e);
         }
     }

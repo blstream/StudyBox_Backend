@@ -5,8 +5,8 @@ import javax.ws.rs.WebApplicationException;
 public enum StorageContexts {
     CV, FLASHCARDS, TIPS;
 
-    private static StorageContexts fromString(String param) {
-        String toUpper = param.toUpperCase();
+    public static StorageContexts fromString(final String param) {
+        final String toUpper = param.toUpperCase();
         try {
             return valueOf(toUpper);
         } catch (Exception e) {

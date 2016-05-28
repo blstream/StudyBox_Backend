@@ -19,7 +19,7 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
     @Length(max = 1000)
     private final String answer;
     @NotNull
-    private final Boolean isHidden;
+    private Boolean isHidden;
     private UUID id;
     private UUID deckId;
     private Integer tipsCount;
@@ -88,6 +88,11 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
         return isHidden;
     }
 
+    public FlashcardRepresentation setHidden(Boolean hidden) {
+        isHidden = hidden;
+        return this;
+    }
+
     public String getQuestionImageURL() {
         return questionImageURL;
     }
@@ -124,5 +129,19 @@ public class FlashcardRepresentation implements DbMappable<Flashcard> {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getQuestion(), getAnswer(), getIsHidden(), getDeckId(), getTipsCount(), getQuestionImageURL(), getAnswerImageURL());
+    }
+
+    @Override
+    public String toString() {
+        return "FlashcardRepresentation{" +
+                "question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
+                ", isHidden=" + isHidden +
+                ", id=" + id +
+                ", deckId=" + deckId +
+                ", tipsCount=" + tipsCount +
+                ", questionImageURL='" + questionImageURL + '\'' +
+                ", answerImageURL='" + answerImageURL + '\'' +
+                '}';
     }
 }

@@ -4,6 +4,7 @@ import com.bls.patronage.StorageContexts;
 import com.bls.patronage.StorageException;
 import com.bls.patronage.StorageService;
 import com.bls.patronage.db.model.User;
+import com.google.common.io.ByteStreams;
 import io.dropwizard.auth.Auth;
 
 import javax.ws.rs.DELETE;
@@ -13,9 +14,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.InputStream;
 import java.util.UUID;
 
-@Path("/storage/{userId}/{context}/{storageId}")
+@Path("/storage/{userId: [0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}}/{context}/{storageId: [0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}}")
 @Produces("application/octet-stream")
 public class StorageResource {
 
@@ -28,15 +30,17 @@ public class StorageResource {
     @GET
     public StreamingOutput getFile(@Auth User user,
                                    @PathParam("userId") UUID userId,
-                                   @PathParam("context") String context,
+                                   @PathParam("context") StorageContexts context,
                                    @PathParam("storageId") UUID storageId) throws StorageException {
 
         assert user.getId().equals(userId);
 
         return os -> {
-            byte[] fileStream = storageService.get(userId, StorageContexts.CV, storageId);
-            os.write(fileStream);
+            final InputStream fileStream = storageService.get(userId, StorageContexts.CV, storageId);
+            ByteStreams.copy(fileStream, os);
             os.flush();
+            os.close();
+            fileStream.close();
         };
     }
 
