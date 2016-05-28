@@ -71,7 +71,6 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
         when(storageService.create(any(InputStream.class), any(StorageContexts.class), any(UUID.class))).thenReturn(dataId);
     }
 
-
     private Response postMultipart(String uri) {
         return authResources.client()
                 .register(MultiPartFeature.class)
