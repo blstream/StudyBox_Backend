@@ -100,7 +100,7 @@ public class FlashcardResource {
             @Context HttpServletRequest request) throws StorageException, MalformedURLException {
 
         UUID answerImageId = storageService.create(inputStream, StorageContexts.FLASHCARDS, user.getId());
-        URL answerImageURL = storageService.createPublicURL(request, StorageResource.class, answerImageId, StorageContexts.FLASHCARDS, user.getId());
+        URL answerImageURL = storageService.createPublicURL(request, StorageResource.class, user.getId(), StorageContexts.FLASHCARDS, answerImageId);
 
         Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setAnswerImageURL(answerImageURL.toString());
         flashcardDAO.updateFlashcard(result);
