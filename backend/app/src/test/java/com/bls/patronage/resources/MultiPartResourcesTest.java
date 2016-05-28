@@ -82,12 +82,12 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Test
     public void testTipEssenceMultipart() throws MalformedURLException {
-        Tip tip = new Tip(tipId, "foo", 1, flashcardId, deckId);
+        final Tip tip = new Tip(tipId, "foo", 1, flashcardId, deckId);
         when(tipDAO.getTipById(tipId)).thenReturn(tip);
         when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.TIPS), any(UUID.class)))
                 .thenReturn(dataURL);
 
-        Response response = postMultipart(tipEssenceImageURI);
+        final Response response = postMultipart(tipEssenceImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(tipDAO).updateTip(tipCaptor.capture());
@@ -96,12 +96,12 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Test
     public void testFlashcardQuestionMultipart() throws MalformedURLException {
-        Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
+        final Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
         when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), any(UUID.class), eq(StorageContexts.FLASHCARDS), eq(dataId)))
                 .thenReturn(dataURL);
 
-        Response response = postMultipart(flashcardQuestionImageURI);
+        final Response response = postMultipart(flashcardQuestionImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
@@ -110,12 +110,12 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Test
     public void testFlashcardAnswerMultipart() throws MalformedURLException {
-        Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
+        final Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
         when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), any(UUID.class), eq(StorageContexts.FLASHCARDS), eq(dataId)))
                 .thenReturn(dataURL);
 
-        Response response = postMultipart(flashcardAnswerImageURI);
+        final Response response = postMultipart(flashcardAnswerImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
