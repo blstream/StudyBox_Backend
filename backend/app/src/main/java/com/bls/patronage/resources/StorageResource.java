@@ -36,7 +36,7 @@ public class StorageResource {
         assert user.getId().equals(userId);
 
         return os -> {
-            final InputStream fileStream = storageService.get(userId, StorageContexts.CV, storageId);
+            final InputStream fileStream = storageService.get(userId, context, storageId);
             ByteStreams.copy(fileStream, os);
             os.flush();
             os.close();

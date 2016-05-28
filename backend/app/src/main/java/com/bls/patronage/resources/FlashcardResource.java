@@ -80,10 +80,10 @@ public class FlashcardResource {
             @FormDataParam("file") InputStream inputStream,
             @Context HttpServletRequest request) throws StorageException, MalformedURLException {
 
-        UUID questionImageId = storageService.create(inputStream, StorageContexts.FLASHCARDS, user.getId());
-        URL questionImageURL = storageService.createPublicURL(request, StorageResource.class, questionImageId, StorageContexts.FLASHCARDS, user.getId());
+        final UUID questionImageId = storageService.create(inputStream, StorageContexts.FLASHCARDS, user.getId());
+        final URL questionImageURL = storageService.createPublicURL(request, StorageResource.class, user.getId(), StorageContexts.FLASHCARDS, questionImageId);
 
-        Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setQuestionImageURL(questionImageURL.toString());
+        final Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setQuestionImageURL(questionImageURL.toString());
         flashcardDAO.updateFlashcard(result);
 
         return new FlashcardRepresentation(result);
@@ -99,10 +99,10 @@ public class FlashcardResource {
             @FormDataParam("file") InputStream inputStream,
             @Context HttpServletRequest request) throws StorageException, MalformedURLException {
 
-        UUID answerImageId = storageService.create(inputStream, StorageContexts.FLASHCARDS, user.getId());
-        URL answerImageURL = storageService.createPublicURL(request, StorageResource.class, answerImageId, StorageContexts.FLASHCARDS, user.getId());
+        final UUID answerImageId = storageService.create(inputStream, StorageContexts.FLASHCARDS, user.getId());
+        final URL answerImageURL = storageService.createPublicURL(request, StorageResource.class, user.getId(), StorageContexts.FLASHCARDS, answerImageId);
 
-        Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setAnswerImageURL(answerImageURL.toString());
+        final Flashcard result = flashcardDAO.getFlashcardById(flashcardId.get()).setAnswerImageURL(answerImageURL.toString());
         flashcardDAO.updateFlashcard(result);
 
         return new FlashcardRepresentation(result);

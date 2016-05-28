@@ -31,15 +31,34 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MultiPartResourcesTest extends BasicAuthenticationTest {
-    private static FormDataMultiPart multiPart;
-    private static UUID deckId;
-    private static UUID flashcardId;
-    private static UUID tipId;
-    private static UUID dataId;
-    private static String tipEssenceImageURI;
-    private static String flashcardQuestionImageURI;
-    private static String flashcardAnswerImageURI;
+    //IDs
+    private static final UUID deckId = UUID.randomUUID();
+    private static final UUID flashcardId = UUID.randomUUID();
+    private static final UUID tipId = UUID.randomUUID();
+    private static final UUID dataId = UUID.randomUUID();
+
+    //Multipart
+    private static final FormDataMultiPart multiPart = new FormDataMultiPart()
+            .field("file", new ByteArrayInputStream("foo".getBytes()), MediaType.MULTIPART_FORM_DATA_TYPE);
+
+    //URIs
+    private static final String tipEssenceImageURI = UriBuilder
+            .fromResource(TipResource.class)
+            .build(deckId, flashcardId, tipId)
+            .toString() + UriBuilder.fromMethod(TipResource.class, "postEssenceImage").toString();
+    private static final String flashcardQuestionImageURI = UriBuilder
+            .fromResource(FlashcardResource.class)
+            .build(deckId, flashcardId)
+            .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postQuestionImage").toString();
+    private static final String flashcardAnswerImageURI = UriBuilder
+            .fromResource(FlashcardResource.class)
+            .build(deckId, flashcardId)
+            .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postAnswerImage").toString();
+
+    //URL
     private static URL dataURL;
+
+    //Captors
     @Captor
     private ArgumentCaptor<Tip> tipCaptor;
     @Captor
@@ -47,30 +66,9 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Before
     public void setUpClass() throws Exception {
-        deckId = UUID.randomUUID();
-        flashcardId = UUID.randomUUID();
-        tipId = UUID.randomUUID();
-        dataId = UUID.randomUUID();
         dataURL = new URL("http://localhost:2000/storage/" + UUID.randomUUID() + "/test/" + dataId);
 
-        multiPart = new FormDataMultiPart()
-                .field("file", new ByteArrayInputStream("foo".getBytes()), MediaType.MULTIPART_FORM_DATA_TYPE);
-
-        tipEssenceImageURI = UriBuilder
-                .fromResource(TipResource.class)
-                .build(deckId, flashcardId, tipId)
-                .toString() + UriBuilder.fromMethod(TipResource.class, "postEssenceImage").toString();
-        flashcardQuestionImageURI = UriBuilder
-                .fromResource(FlashcardResource.class)
-                .build(deckId, flashcardId)
-                .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postQuestionImage").toString();
-        flashcardAnswerImageURI = UriBuilder
-                .fromResource(FlashcardResource.class)
-                .build(deckId, flashcardId)
-                .toString() + UriBuilder.fromMethod(FlashcardResource.class, "postAnswerImage").toString();
-
         when(storageService.create(any(InputStream.class), any(StorageContexts.class), any(UUID.class))).thenReturn(dataId);
-
     }
 
     private Response postMultipart(String uri) {
@@ -84,12 +82,12 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Test
     public void testTipEssenceMultipart() throws MalformedURLException {
-        Tip tip = new Tip(tipId, "foo", 1, flashcardId, deckId);
+        final Tip tip = new Tip(tipId, "foo", 1, flashcardId, deckId);
         when(tipDAO.getTipById(tipId)).thenReturn(tip);
         when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.TIPS), any(UUID.class)))
                 .thenReturn(dataURL);
 
-        Response response = postMultipart(tipEssenceImageURI);
+        final Response response = postMultipart(tipEssenceImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(tipDAO).updateTip(tipCaptor.capture());
@@ -98,12 +96,12 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Test
     public void testFlashcardQuestionMultipart() throws MalformedURLException {
-        Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
+        final Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
-        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
+        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), any(UUID.class), eq(StorageContexts.FLASHCARDS), eq(dataId)))
                 .thenReturn(dataURL);
 
-        Response response = postMultipart(flashcardQuestionImageURI);
+        final Response response = postMultipart(flashcardQuestionImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
@@ -112,12 +110,12 @@ public class MultiPartResourcesTest extends BasicAuthenticationTest {
 
     @Test
     public void testFlashcardAnswerMultipart() throws MalformedURLException {
-        Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
+        final Flashcard flashcard = new Flashcard(flashcardId, "foo", "baz", deckId, false);
         when(flashcardDAO.getFlashcardById(flashcardId)).thenReturn(flashcard);
-        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), eq(dataId), eq(StorageContexts.FLASHCARDS), any(UUID.class)))
+        when(storageService.createPublicURL(any(HttpServletRequest.class), eq(StorageResource.class), any(UUID.class), eq(StorageContexts.FLASHCARDS), eq(dataId)))
                 .thenReturn(dataURL);
 
-        Response response = postMultipart(flashcardAnswerImageURI);
+        final Response response = postMultipart(flashcardAnswerImageURI);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(flashcardDAO).updateFlashcard(flashcardCaptor.capture());
